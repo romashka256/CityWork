@@ -1,0 +1,27 @@
+package com.citywork.model.db;
+
+import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.Pomodoro;
+import com.citywork.model.interfaces.OnPomodoroLoaded;
+import io.realm.Realm;
+
+public class DataBaseHelper {
+
+    public void savePomodoro(Pomodoro pomodoro) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(pomodoro));
+        realm.close();
+    }
+
+    public void saveBuilding(Building building){
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(building));
+        realm.close();
+    }
+
+    public void getLastPomodoro(OnPomodoroLoaded onPomodoroLoaded) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> onPomodoroLoaded.onLoaded(realm1.where(Pomodoro.class).findAll().last()));
+        realm.close();
+    }
+}
