@@ -62,4 +62,9 @@ public class CustomTabLayout extends TabLayout {
 
         super.addOnTabSelectedListener(listener);
     }
+
+    @Override
+    public void addTab(@NonNull Tab tab) {
+        super.addTab(tab);
+    }
 }

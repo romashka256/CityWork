@@ -17,6 +17,7 @@
 
     <com.citywork.ui.CustomTabLayout
         android:id="@+id/tab_layout"
+        app:tabBackground="@color/transparent"
         android:layout_width="0dp"
         app:tabIndicatorHeight="3dp"
         app:tabIndicatorColor="@color/white"

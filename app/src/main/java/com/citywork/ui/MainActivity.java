@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setCustomView(R.layout.custom_tab).getCustomView().findViewById(R.id.custom_tab_iv).setBackgroundResource(R.drawable.ic_timer_icon_focused);
         tabLayout.getTabAt(1).setCustomView(R.layout.custom_tab).getCustomView().findViewById(R.id.custom_tab_iv).setBackgroundResource(R.drawable.ic_city_icon);
 
+        tabLayout.setTabRippleColor(null);
+
         tabLayout.setSelectedListener();
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
