@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.citywork.R;
 
 public class CityFragment extends Fragment {
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +19,7 @@ public class CityFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.city_fragment, container);
+        View view = inflater.inflate(R.layout.city_fragment, container, false);
 
         return view;
     }
