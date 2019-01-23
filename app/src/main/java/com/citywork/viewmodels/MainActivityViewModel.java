@@ -50,6 +50,8 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
         }
     }
 
+
+
     @Override
     public long getTimeToGo() {
         return timerManager.getRemainingTime();

@@ -11,6 +11,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public final static String INTENT_MESSAGE = "show_notification";
 
     private NotificationUtils notificationUtils;
+    private SharedPrefensecUtils sharedPrefensecUtils;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -20,9 +21,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //TODO INJECT
         notificationUtils = new NotificationUtils(context);
+        sharedPrefensecUtils = new SharedPrefensecUtils(context);
 
         if (message.equals(INTENT_MESSAGE)) {
             Timber.i("showAlarmNotification");
+            sharedPrefensecUtils.saveTimerState(TimerState.COMPLETED);
             notificationUtils.showAlarmNotification();
         }
 
