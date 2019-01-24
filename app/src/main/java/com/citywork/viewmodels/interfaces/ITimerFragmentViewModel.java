@@ -16,9 +16,11 @@ public interface ITimerFragmentViewModel {
 
     void onStop();
 
+    void onTimerValueChanged(long time);
+
     void onServiceConnected(Pomodoro pomodoro);
 
-    LiveData<String> getChangeTimeEvent();
+    LiveData<Long> getChangeTimeEvent();
     LiveData<Building> getTimerCompleteEvent();
 
 }

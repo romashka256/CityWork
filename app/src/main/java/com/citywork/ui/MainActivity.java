@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Timber.i("onStop");
-
         iMainActivityViewModel.onStop();
     }
 
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Timber.i("onDestroy");
-
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     TimerFragment timerFragment = (TimerFragment) mViewPager.getAdapter().instantiateItem(mViewPager, 0);
 
 //                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment2);
-//                ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
+//                 ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
 
                     timerFragment.iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
                 } catch (NullPointerException e) {

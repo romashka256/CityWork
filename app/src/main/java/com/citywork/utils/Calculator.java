@@ -2,15 +2,9 @@ package com.citywork.utils;
 
 public class Calculator {
     public static String getMinutesAndSecondsFromSeconds(long allseconds) {
-        if (allseconds > 0) {
             long minutes = allseconds / 60;
-            minutes = minutes <= 0 ? minutes : 0;
             long seconds = allseconds % 60;
-
-            return minutes + ":" + seconds;
-        } else {
-            return "00:00";
-        }
+            return String.format("%02d:%02d", minutes, seconds);
     }
 
     public static long getRemainingTime(long stopTimerTime) {

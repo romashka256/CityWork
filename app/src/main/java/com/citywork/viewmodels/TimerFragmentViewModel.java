@@ -18,10 +18,8 @@ import timber.log.Timber;
 
 public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
-    MutableLiveData<String> mChangeTimeEvent = new MutableLiveData<>();
+    MutableLiveData<Long> mChangeTimeEvent = new MutableLiveData<>();
     MutableLiveData<Building> mCompleteEvent = new MutableLiveData<>();
-
-    private int time = 5;
 
     private TimerManager mTimerManager;
     private CompositeDisposable mCompositeDisposable;
@@ -34,6 +32,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private Building currentBuilding;
 
     private TimerState currentTimerState;
+
+    private long timerValue;
 
     long startTimerTimeInMillis;
     long stopTimerTimeInMillis;
@@ -60,14 +60,14 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     private void initAndStartTimer() {
         startTimerTimeInMillis = System.currentTimeMillis();
-        stopTimerTimeInMillis = startTimerTimeInMillis + time * 1000;
+        stopTimerTimeInMillis = startTimerTimeInMillis + timerValue * 1000;
 
         currentPomodoro = new Pomodoro(startTimerTimeInMillis, stopTimerTimeInMillis, null, false);
         currentBuilding = new Building(currentPomodoro, 50);
 
         dataBaseHelper.savePomodoro(currentPomodoro);
 
-        startTimer(createTimer(time));
+        startTimer(createTimer(timerValue));
     }
 
     private BehaviorSubject<Long> createTimer(long timerTime) {
@@ -79,7 +79,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     private void startTimer(BehaviorSubject<Long> behaviorSubject) {
-        mCompositeDisposable.add(behaviorSubject.map(Calculator::getMinutesAndSecondsFromSeconds)
+        mCompositeDisposable.add(behaviorSubject
                 .doOnComplete(() -> {
                     //TODO SHOW WIN DIALOG
                     mCompleteEvent.postValue(currentBuilding);
@@ -118,7 +118,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     @Override
-    public LiveData<String> getChangeTimeEvent() {
+    public LiveData<Long> getChangeTimeEvent() {
         return mChangeTimeEvent;
     }
 
@@ -140,5 +140,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         }
     }
 
-
+    @Override
+    public void onTimerValueChanged(long time) {
+        timerValue = time;
+    }
 }

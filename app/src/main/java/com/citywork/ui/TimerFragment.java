@@ -26,6 +26,9 @@ public class TimerFragment extends Fragment {
     Button stopButton;
     @BindView(R.id.timer_fragment_time)
     TextView mTime;
+    @BindView(R.id.circle_timer)
+    CircleTimer circleTimer;
+
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
 
@@ -35,12 +38,12 @@ public class TimerFragment extends Fragment {
         Timber.i("onCreate");
 
         iTimerFragmentViewModel = ViewModelProviders.of(this).get(TimerFragmentViewModel.class);
-        iTimerFragmentViewModel.getChangeTimeEvent().observe(this, time -> mTime.setText(time));
+        iTimerFragmentViewModel.getChangeTimeEvent().observe(this, time -> circleTimer.setProgress(time));
         iTimerFragmentViewModel.getTimerCompleteEvent().observe(this, building -> {
             Timber.i("TimerCompleted Event Received");
+            circleTimer.setEnabled(false);
             new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
-
     }
 
     @Nullable
@@ -57,11 +60,33 @@ public class TimerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Timber.i("onActivityCreated");
 
-        startButton.setOnClickListener(v -> iTimerFragmentViewModel.onStartClicked());
+        startButton.setOnClickListener(v -> {
+            circleTimer.setEnabled(true);
+            iTimerFragmentViewModel.onStartClicked();
+        });
 
         stopButton.setOnClickListener(v -> {
+            circleTimer.setEnabled(false);
             iTimerFragmentViewModel.onStopClicked();
+            circleTimer.setEnabled(false);
             mTime.setText("STOPPED");
+        });
+
+        circleTimer.setCircleTimeListener(new CircleTimer.CircleTimerListener() {
+            @Override
+            public void onTimerTimingValueChanged(long time) {
+                iTimerFragmentViewModel.onTimerValueChanged(time);
+            }
+
+            @Override
+            public void onTimerSetValueChanged(int time) {
+
+            }
+
+            @Override
+            public void onTimerSetValueChange(int time) {
+
+            }
         });
     }
 
@@ -84,6 +109,7 @@ public class TimerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        circleTimer.setEnabled(false);
 
         Timber.i("onStop");
     }

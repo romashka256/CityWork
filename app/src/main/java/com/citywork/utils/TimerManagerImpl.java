@@ -2,6 +2,8 @@ package com.citywork.utils;
 
 import android.annotation.SuppressLint;
 import com.citywork.App;
+import io.reactivex.Flowable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
@@ -40,7 +42,7 @@ public class TimerManagerImpl implements TimerManager {
         sharedPrefensecUtils.saveTimerState(TimerState.ONGOING);
         timerTime = time;
         if(behaviorSubject.hasComplete()){
-            behaviorSubject = BehaviorSubject.create();
+            behaviorSubject = BehaviorSubject.createDefault(time);
         }
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {

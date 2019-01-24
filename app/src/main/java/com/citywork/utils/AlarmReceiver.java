@@ -29,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationUtils.showAlarmNotification();
         }
 
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(1000);
+//        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+//        vibrator.vibrate(1000);
     }
 }
