@@ -13,12 +13,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import android.widget.Toast;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.citywork.R;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Timer;
 import com.citywork.viewmodels.MainActivityViewModel;
+import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
 import butterknife.BindView;
@@ -59,7 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setSelectedListener();
 
-        iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        iMainActivityViewModel = mainActivityViewModel;
+
+        //Sending pomodoro object to Fragment
+        mainActivityViewModel.getPomodoroMutableLiveData().observe(this, pomodoro -> {
+            ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().postValue(pomodoro);
+        });
+
         iMainActivityViewModel.onCreate();
     }
 
@@ -110,16 +119,12 @@ public class MainActivity extends AppCompatActivity {
             if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 Timber.i("Stop Timer");
 
-                try {
-                    TimerFragment timerFragment = (TimerFragment) mViewPager.getAdapter().instantiateItem(mViewPager, 0);
+                TimerFragment timerFragment = (TimerFragment) mViewPager.getAdapter().instantiateItem(mViewPager, 0);
 
 //                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment2);
 //                 ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
 
-                    timerFragment.iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
-                } catch (NullPointerException e) {
-                    Timber.e(e);
-                }
+                timerFragment.iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
 
                 timerService.stopSelf();
             }

@@ -10,4 +10,7 @@ public class Constants {
 
 
     public final static String DIALOG_SUCCESS_TAG = "dialog_success";
+    public final static int DEFAULT_MIN_TIMER_VALUE = 600;
+
+    public final static int DEFAULT_PEOPLE_PER_30SEC = 3;
 }

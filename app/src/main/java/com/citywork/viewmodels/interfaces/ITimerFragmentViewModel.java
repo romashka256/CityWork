@@ -5,7 +5,6 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 
 public interface ITimerFragmentViewModel {
-
     void onStartClicked();
 
     void onStopClicked();
@@ -18,9 +17,11 @@ public interface ITimerFragmentViewModel {
 
     void onTimerValueChanged(long time);
 
+    void pomodoroReceived(Pomodoro pomodoro);
+
     void onServiceConnected(Pomodoro pomodoro);
 
     LiveData<Long> getChangeTimeEvent();
-    LiveData<Building> getTimerCompleteEvent();
 
+    LiveData<Building> getTimerCompleteEvent();
 }

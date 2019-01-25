@@ -70,7 +70,7 @@ public class TimerService extends Service {
         if (intent != null) {
             pomodoro = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_POMODORO));
 
-            startForeground(NotificationUtils.TIMER_NOTIFICATION_ID,notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
+            startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
                     Calculator.getRemainingTime(pomodoro.getStoptime()))));
 
 //            notificationUtils.showTimerNotification(

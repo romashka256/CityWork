@@ -82,6 +82,7 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         } else {
             mTimerNotificationBuilder = new Notification.Builder(context);
+            mTimerNotificationBuilder.setVibrate(null);
         }
 
         mTimerNotificationBuilder.setContentIntent(pendIntent)

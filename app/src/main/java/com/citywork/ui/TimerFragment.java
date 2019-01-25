@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.citywork.Constants;
 import com.citywork.R;
+import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 import timber.log.Timber;
@@ -36,12 +37,11 @@ public class TimerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.i("onCreate");
-
         iTimerFragmentViewModel = ViewModelProviders.of(this).get(TimerFragmentViewModel.class);
         iTimerFragmentViewModel.getChangeTimeEvent().observe(this, time -> circleTimer.setProgress(time));
         iTimerFragmentViewModel.getTimerCompleteEvent().observe(this, building -> {
             Timber.i("TimerCompleted Event Received");
-            circleTimer.setEnabled(false);
+            circleTimer.disable();
             new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
     }
@@ -61,14 +61,12 @@ public class TimerFragment extends Fragment {
         Timber.i("onActivityCreated");
 
         startButton.setOnClickListener(v -> {
-            circleTimer.setEnabled(true);
             iTimerFragmentViewModel.onStartClicked();
         });
 
         stopButton.setOnClickListener(v -> {
-            circleTimer.setEnabled(false);
+            circleTimer.disable();
             iTimerFragmentViewModel.onStopClicked();
-            circleTimer.setEnabled(false);
             mTime.setText("STOPPED");
         });
 
@@ -87,6 +85,11 @@ public class TimerFragment extends Fragment {
             public void onTimerSetValueChange(int time) {
 
             }
+        });
+
+        ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().observe(getActivity(), pomodoro -> {
+            Timber.i("new ");
+            iTimerFragmentViewModel.pomodoroReceived(pomodoro);
         });
     }
 
@@ -109,7 +112,6 @@ public class TimerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        circleTimer.setEnabled(false);
 
         Timber.i("onStop");
     }

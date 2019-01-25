@@ -41,9 +41,10 @@ public class TimerManagerImpl implements TimerManager {
         timerState = TimerState.ONGOING;
         sharedPrefensecUtils.saveTimerState(TimerState.ONGOING);
         timerTime = time;
-        if(behaviorSubject.hasComplete()){
-            behaviorSubject = BehaviorSubject.createDefault(time);
-        }
+
+        Timber.i("Creating new BehaviourSubject with initial time : %d", time);
+        behaviorSubject = BehaviorSubject.createDefault(time);
+
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {
                             Timber.i("ticktime %d", ticktime);
@@ -75,10 +76,12 @@ public class TimerManagerImpl implements TimerManager {
 
     @Override
     public void stopTimer() {
+        Timber.i("Stopping timer");
         timerState = TimerState.NOT_ONGOING;
         sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
         timer.stopTimer();
         if (disposable != null && !disposable.isDisposed()) {
+            Timber.i("Disposing");
             disposable.dispose();
         }
     }

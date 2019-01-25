@@ -5,9 +5,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import com.citywork.App;
+import com.citywork.Constants;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
+import com.citywork.ui.CircleTimer;
 import com.citywork.utils.*;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,10 +35,11 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     private TimerState currentTimerState;
 
-    private long timerValue;
+    private long timerValue = Constants.DEFAULT_MIN_TIMER_VALUE;
 
     long startTimerTimeInMillis;
     long stopTimerTimeInMillis;
+    private int peopleCount = 0;
 
     private Context appContext;
 
@@ -71,6 +74,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     private BehaviorSubject<Long> createTimer(long timerTime) {
+        Timber.i("createTimer");
         return mTimerManager.startTimer(timerTime);
     }
 
@@ -99,13 +103,13 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     @Override
     public void onPause() {
         if (sharedPrefensecUtils.getTimerState() == TimerState.ONGOING) {
-            mAlarmManager.setAlarmForTime(stopTimerTimeInMillis);
+            mAlarmManager.setAlarmForTime(currentPomodoro.getStoptime());
         }
     }
 
     @Override
     public void onStop() {
-        // mTimerManager.stopTimer();
+        mTimerManager.stopTimer();
         mCompositeDisposable.clear();
     }
 
@@ -130,18 +134,31 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     @Override
     public void onServiceConnected(Pomodoro pomodoro) {
         if (pomodoro.isCompleted()) {
-
+            //TODO CHANGE THIS
+            mCompleteEvent.postValue(new Building(pomodoro, 60));
         } else {
-            if (mTimerManager.getTimer() == null) {
-                startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
-            } else {
-                startTimer(getTimer());
-            }
+            checkAndStartTimer(pomodoro);
         }
     }
 
     @Override
     public void onTimerValueChanged(long time) {
+        peopleCount = Calculator.calculatePeopleCount(time);
         timerValue = time;
+    }
+
+    @Override
+    public void pomodoroReceived(Pomodoro pomodoro) {
+        currentPomodoro = pomodoro;
+        checkAndStartTimer(pomodoro);
+    }
+
+    private void checkAndStartTimer(Pomodoro pomodoro) {
+        Timber.i("checkAndStartTimer");
+        if (mTimerManager.getTimer() == null) {
+            startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
+        } else {
+            startTimer(getTimer());
+        }
     }
 }

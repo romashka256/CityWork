@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import com.citywork.utils.Calculator;
+import timber.log.Timber;
 
 import java.security.cert.CertificateEncodingException;
 
@@ -85,6 +86,10 @@ public class CircleTimer extends View {
     private long mCurrentTime;
     private final String HINT_TEXT = "минут";
     private boolean isEnabled;
+    private int minTime;
+    private float minRadian;
+
+    private final int DEFAULT_MIN_TIME = 600;
 
     private CircleTimerListener circleTimerListener;
 
@@ -131,6 +136,9 @@ public class CircleTimer extends View {
         mGapBetweenCircleAndLine = DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE;
         mTimerTextSize = DEFAULT_TIMER_TEXT_SIZE;
 
+        mCurrentTime = DEFAULT_MIN_TIME;
+        minTime = DEFAULT_MIN_TIME;
+
         mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTimeNumbersPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -165,7 +173,8 @@ public class CircleTimer extends View {
 
         mProgressArc = new RectF();
 
-        mCurrentTime = 0;
+        setMinTime(minTime);
+        mCurrentRadian = minRadian;
     }
 
     @Override
@@ -278,10 +287,14 @@ public class CircleTimer extends View {
                     } else if (mCurrentRadian < 0) {
                         mCurrentRadian = 0;
                     }
-                    mCurrentTime = (int) (60 / (2 * Math.PI) * mCurrentRadian * 60);
+                    if (mCurrentRadian >= minRadian) {
+                        mCurrentTime = (int) (60 / (2 * Math.PI) * mCurrentRadian * 60);
+                    } else {
+                        mCurrentRadian = minRadian;
+                        mCurrentTime = minTime;
+                    }
                     if (circleTimerListener != null)
                         circleTimerListener.onTimerTimingValueChanged(mCurrentTime);
-
                     invalidate();
                 }
                 break;
@@ -332,20 +345,33 @@ public class CircleTimer extends View {
     }
 
     public void setProgress(long currentTime) {
+        this.isEnabled = true;
         this.mCurrentTime = currentTime;
-        mCurrentRadian = (float) (((2 * Math.PI) / 3600) * mCurrentTime);
-       // mCurrentRadian -= (2 * Math.PI) / 3600;
+        mCurrentRadian = calculateRadianByTime(mCurrentTime);
+        // mCurrentRadian -= (2 * Math.PI) / 3600;
         invalidate();
     }
 
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
-        mCurrentRadian = (float) (((2 * Math.PI) / 3600) * mCurrentTime);
+    public void disable() {
+        this.isEnabled = false;
         invalidate();
     }
 
     public void setCircleTimeListener(CircleTimerListener circleTimeListener) {
         this.circleTimerListener = circleTimeListener;
+    }
+
+    private float calculateRadianByTime(long time) {
+        return (float) (((2 * Math.PI) / 3600) * time);
+    }
+
+    public void setMinTime(int minTime) {
+        minRadian = calculateRadianByTime(minTime);
+        this.minTime = minTime;
+    }
+
+    public int getMinTime() {
+        return minTime;
     }
 
     public interface CircleTimerListener {
