@@ -65,8 +65,12 @@ public class MainActivity extends AppCompatActivity {
         iMainActivityViewModel = mainActivityViewModel;
 
         //Sending pomodoro object to Fragment
-        mainActivityViewModel.getPomodoroMutableLiveData().observe(this, pomodoro -> {
-            ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().postValue(pomodoro);
+//        mainActivityViewModel.getPomodoroMutableLiveData().observe(this, pomodoro -> {
+//            ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().postValue(pomodoro);
+//        });
+
+        mainActivityViewModel.getBuildingMutableLiveData().observe(this, building -> {
+            ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
         });
 
         iMainActivityViewModel.onCreate();

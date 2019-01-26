@@ -20,6 +20,13 @@ public class TimerManagerImpl implements TimerManager {
 
     private Disposable disposable;
 
+    private TimerStateListener timerStateListener;
+
+    @Override
+    public void setTimerListener(TimerStateListener timerListener) {
+        timerStateListener = timerListener;
+    }
+
     @Getter
     @Setter
     public SharedPrefensecUtils sharedPrefensecUtils;
@@ -35,16 +42,16 @@ public class TimerManagerImpl implements TimerManager {
         this.timer = timer;
     }
 
+
     @SuppressLint("CheckResult")
     @Override
     public BehaviorSubject<Long> startTimer(long time) {
         timerState = TimerState.ONGOING;
         sharedPrefensecUtils.saveTimerState(TimerState.ONGOING);
         timerTime = time;
-
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
-
+        timerStateListener.onStart();
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {
                             Timber.i("ticktime %d", ticktime);
@@ -78,6 +85,7 @@ public class TimerManagerImpl implements TimerManager {
     public void stopTimer() {
         Timber.i("Stopping timer");
         timerState = TimerState.NOT_ONGOING;
+        timerStateListener.onStop();
         sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
         timer.stopTimer();
         if (disposable != null && !disposable.isDisposed()) {

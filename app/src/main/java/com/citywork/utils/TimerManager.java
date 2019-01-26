@@ -13,6 +13,8 @@ public interface TimerManager {
 
     String getReminingTimeInString();
 
+    void setTimerListener(TimerStateListener timerListener);
+
     TimerState getState();
 
 

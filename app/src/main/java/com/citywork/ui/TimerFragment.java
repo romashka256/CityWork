@@ -27,6 +27,10 @@ public class TimerFragment extends Fragment {
     Button stopButton;
     @BindView(R.id.timer_fragment_time)
     TextView mTime;
+    @BindView(R.id.timer_fragment_5min_rest)
+    Button m5minRest;
+    @BindView(R.id.timer_fragment_10min_rest)
+    Button m10minRest;
     @BindView(R.id.circle_timer)
     CircleTimer circleTimer;
 
@@ -44,7 +48,35 @@ public class TimerFragment extends Fragment {
             circleTimer.disable();
             new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
+        iTimerFragmentViewModel.getPeopleCountChangedEvent().observe(this, peopleCount -> {
+            mTime.setText(peopleCount + "");
+        });
+        iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
+            switch (timerState) {
+                case ONGOING:
+                    stopButton.setVisibility(View.VISIBLE);
+                    startButton.setVisibility(View.GONE);
+                    m5minRest.setVisibility(View.GONE);
+                    m10minRest.setVisibility(View.GONE);
+                    break;
+                case COMPLETED:
+                    stopButton.setVisibility(View.GONE);
+                    m5minRest.setVisibility(View.VISIBLE);
+                    m10minRest.setVisibility(View.VISIBLE);
+                    break;
+                case NOT_ONGOING:
+                    m5minRest.setVisibility(View.GONE);
+                    m10minRest.setVisibility(View.GONE);
+                    stopButton.setVisibility(View.GONE);
+                    startButton.setVisibility(View.VISIBLE);
+                    circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
+                    break;
+            }
+        });
+
+
     }
+
 
     @Nullable
     @Override
@@ -87,9 +119,17 @@ public class TimerFragment extends Fragment {
             }
         });
 
-        ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().observe(getActivity(), pomodoro -> {
+        ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().observe(getActivity(), building -> {
             Timber.i("new ");
-            iTimerFragmentViewModel.pomodoroReceived(pomodoro);
+            iTimerFragmentViewModel.buildingReceived(building);
+        });
+
+        m5minRest.setOnClickListener(v -> {
+            iTimerFragmentViewModel.on5MinRestClicked();
+        });
+
+        m10minRest.setOnClickListener(v -> {
+            iTimerFragmentViewModel.on10MinRestClicked();
         });
     }
 

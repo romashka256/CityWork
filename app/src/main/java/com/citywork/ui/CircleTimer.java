@@ -87,9 +87,11 @@ public class CircleTimer extends View {
     private final String HINT_TEXT = "минут";
     private boolean isEnabled;
     private int minTime;
+    private int maxTime;
     private float minRadian;
 
     private final int DEFAULT_MIN_TIME = 600;
+    private final int DEFAULT_MAX_TIME = 3600;
 
     private CircleTimerListener circleTimerListener;
 
@@ -138,6 +140,7 @@ public class CircleTimer extends View {
 
         mCurrentTime = DEFAULT_MIN_TIME;
         minTime = DEFAULT_MIN_TIME;
+        maxTime = DEFAULT_MAX_TIME;
 
         mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -362,12 +365,22 @@ public class CircleTimer extends View {
     }
 
     private float calculateRadianByTime(long time) {
-        return (float) (((2 * Math.PI) / 3600) * time);
+        return (float) (((2 * Math.PI) / 3600) * time * (3600 / maxTime));
     }
 
     public void setMinTime(int minTime) {
         minRadian = calculateRadianByTime(minTime);
         this.minTime = minTime;
+    }
+
+    public void setTime(long time){
+        this.mCurrentTime = time;
+        mCurrentRadian = calculateRadianByTime(time);
+        invalidate();
+    }
+
+    public void setMaxTime(int maxTime) {
+        this.maxTime = maxTime;
     }
 
     public int getMinTime() {

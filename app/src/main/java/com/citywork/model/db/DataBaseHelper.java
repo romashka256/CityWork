@@ -2,6 +2,7 @@ package com.citywork.model.db;
 
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
+import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
 import io.realm.Realm;
 import timber.log.Timber;
@@ -28,5 +29,14 @@ public class DataBaseHelper {
             Timber.i("Last pomodoro loaded : %s", pomodoro.toString());
         });
         realm.close();
+    }
+
+    public void getLastBuilding(OnLastBuildingLoadedListener onLastBuildingLoadedListener) {
+        Realm realm1 = Realm.getDefaultInstance();
+        realm1.executeTransaction(realm -> {
+            Building building = realm.where(Building.class).findAll().last();
+            onLastBuildingLoadedListener.OnLastBuildingLoaded(building);
+            Timber.i("Last building loaded : %s", building.toString());
+        });
     }
 }

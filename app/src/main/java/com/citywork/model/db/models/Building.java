@@ -2,6 +2,8 @@ package com.citywork.model.db.models;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Building extends RealmObject {
 
@@ -15,7 +17,11 @@ public class Building extends RealmObject {
 
     @PrimaryKey
     private int id;
+    @Getter
+    @Setter
     private Pomodoro pomodoro;
+    @Getter
+    @Setter
     private int people_count;
 
 

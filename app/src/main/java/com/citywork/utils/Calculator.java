@@ -17,4 +17,8 @@ public class Calculator {
     public static int calculatePeopleCount(long time) {
         return (int) ((time / 30) * Constants.DEFAULT_PEOPLE_PER_30SEC);
     }
+
+    public static long getTime(long startTime, long stopTime){
+        return (stopTime - startTime) / 1000;
+    }
 }
