@@ -5,5 +5,38 @@
             app:startDestination="@id/timerFragment">
 
     <fragment android:id="@+id/timerFragment" android:name="com.citywork.ui.TimerFragment"
-              android:label="timer_fragment" tools:layout="@layout/timer_fragment"/>
+              android:label="timer_fragment" tools:layout="@layout/timer_fragment">
+        <action
+            android:id="@+id/action_timerFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/timerFragment" />
+        <action
+            android:id="@+id/action_timerFragment_to_cityFragment"
+            app:destination="@id/cityFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.citywork.ui.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/cityFragment"
+        android:name="com.citywork.ui.CityFragment"
+        android:label="city_fragment"
+        tools:layout="@layout/city_fragment" >
+        <action
+            android:id="@+id/action_cityFragment_to_timerFragment"
+            app:destination="@id/timerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 </navigation>

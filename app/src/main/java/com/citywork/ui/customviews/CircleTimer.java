@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.ui.customviews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,10 +10,8 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.citywork.utils.Calculator;
-import timber.log.Timber;
 
-import java.security.cert.CertificateEncodingException;
+import com.citywork.utils.Calculator;
 
 public class CircleTimer extends View {
 

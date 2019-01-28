@@ -9,7 +9,6 @@ import com.citywork.Constants;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.ui.CircleTimer;
 import com.citywork.utils.*;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;

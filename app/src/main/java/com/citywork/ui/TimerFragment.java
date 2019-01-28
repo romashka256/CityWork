@@ -9,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.citywork.Constants;
 import com.citywork.R;
+import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class TimerFragment extends Fragment {
@@ -33,6 +37,10 @@ public class TimerFragment extends Fragment {
     Button m10minRest;
     @BindView(R.id.circle_timer)
     CircleTimer circleTimer;
+    @BindView(R.id.timer_fragment_settings)
+    ImageView mSettingsBtn;
+//    @BindView(R.id.timer_fragment_building)
+//    Building mBuidlingIV;
 
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
@@ -73,8 +81,6 @@ public class TimerFragment extends Fragment {
                     break;
             }
         });
-
-
     }
 
 
@@ -131,7 +137,16 @@ public class TimerFragment extends Fragment {
         m10minRest.setOnClickListener(v -> {
             iTimerFragmentViewModel.on10MinRestClicked();
         });
+
+        mSettingsBtn.setOnClickListener(v -> {
+
+        });
+
+
+
     }
+
+
 
     @Override
     public void onPause() {

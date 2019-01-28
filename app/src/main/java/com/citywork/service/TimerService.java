@@ -5,13 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+
 import com.citywork.App;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.utils.*;
+import com.citywork.utils.AlarmManagerImpl;
+import com.citywork.utils.Calculator;
+import com.citywork.utils.NotificationUtils;
+import com.citywork.utils.SharedPrefensecUtils;
+import com.citywork.utils.TimerManager;
+
+import org.parceler.Parcels;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import org.parceler.Parcels;
 import timber.log.Timber;
 
 public class TimerService extends Service {

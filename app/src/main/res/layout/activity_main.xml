@@ -6,37 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<android.support.v4.view.ViewPager-->
+        <!--android:id="@+id/view_pager"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-    <com.citywork.ui.CustomTabLayout
-        android:id="@+id/tab_layout"
-        app:tabBackground="@color/transparent"
-        android:layout_width="0dp"
-        app:tabIndicatorHeight="3dp"
-        app:tabIndicatorColor="@color/white"
-        android:layout_height="70dp"
-        android:background="@color/transparent_black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tabPaddingStart="55dp"
-        app:tabPaddingEnd="55dp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tabGravity="center" />
+    <!--<com.citywork.ui.CustomTabLayout-->
+        <!--android:id="@+id/tab_layout"-->
+        <!--app:tabBackground="@color/transparent"-->
+        <!--android:layout_width="0dp"-->
+        <!--app:tabIndicatorHeight="3dp"-->
+        <!--app:tabIndicatorColor="@color/white"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:background="@color/transparent_black"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:tabPaddingStart="55dp"-->
+        <!--app:tabPaddingEnd="55dp"-->
+        <!--app:layout_constraintHorizontal_bias="1.0"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:tabGravity="center" />-->
 
-    <!--<fragment-->
-        <!--android:id="@+id/fragment2"-->
-        <!--android:name="androidx.navigation.fragment.NavHostFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:defaultNavHost="true"-->
-        <!--app:navGraph="@navigation/navigation" />-->
+    <fragment
+        android:id="@+id/nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/navigation" />
 
 </android.support.constraint.ConstraintLayout>
