@@ -37,4 +37,6 @@ public interface ITimerFragmentViewModel {
     LiveData<Integer> getPeopleCountChangedEvent();
 
     LiveData<TimerState> getTimerStateChanged();
+
+    LiveData<Integer> getChangeTimeEventInPercent();
 }

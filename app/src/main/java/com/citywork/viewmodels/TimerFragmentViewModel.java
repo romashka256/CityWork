@@ -24,6 +24,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     MutableLiveData<Building> mCompleteEvent = new MutableLiveData<>();
     MutableLiveData<Integer> mPeopleCountChange = new MutableLiveData<>();
     MutableLiveData<TimerState> mTimerStateChangedEvent = new MutableLiveData<>();
+    MutableLiveData<Integer> mChangeTimeEventInPercent = new MutableLiveData<>();
 
     private TimerManager mTimerManager;
     private CompositeDisposable mCompositeDisposable;
@@ -111,7 +112,10 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(time -> mChangeTimeEvent.postValue(time), Timber::e));
+                .subscribe(time -> {
+                    mChangeTimeEvent.postValue(time);
+                    mChangeTimeEventInPercent.postValue(Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime())));
+                }, Timber::e));
     }
 
     @Override
@@ -200,5 +204,10 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     @Override
     public LiveData<Integer> getPeopleCountChangedEvent() {
         return mPeopleCountChange;
+    }
+
+    @Override
+    public LiveData<Integer> getChangeTimeEventInPercent() {
+        return mChangeTimeEventInPercent;
     }
 }

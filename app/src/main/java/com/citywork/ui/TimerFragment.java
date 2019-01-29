@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.citywork.Constants;
 import com.citywork.R;
+import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
@@ -39,8 +40,8 @@ public class TimerFragment extends Fragment {
     CircleTimer circleTimer;
     @BindView(R.id.timer_fragment_settings)
     ImageView mSettingsBtn;
-//    @BindView(R.id.timer_fragment_building)
-//    Building mBuidlingIV;
+    @BindView(R.id.timer_fragment_building)
+    BuldingProgressView mBuidlingView;
 
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
@@ -50,6 +51,7 @@ public class TimerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Timber.i("onCreate");
         iTimerFragmentViewModel = ViewModelProviders.of(this).get(TimerFragmentViewModel.class);
+        iTimerFragmentViewModel.getChangeTimeEventInPercent().observe(this, percent -> mBuidlingView.setProgress(percent));
         iTimerFragmentViewModel.getChangeTimeEvent().observe(this, time -> circleTimer.setProgress(time));
         iTimerFragmentViewModel.getTimerCompleteEvent().observe(this, building -> {
             Timber.i("TimerCompleted Event Received");
@@ -141,12 +143,7 @@ public class TimerFragment extends Fragment {
         mSettingsBtn.setOnClickListener(v -> {
 
         });
-
-
-
     }
-
-
 
     @Override
     public void onPause() {

@@ -2,6 +2,8 @@ package com.citywork.utils;
 
 import com.citywork.Constants;
 
+import timber.log.Timber;
+
 public class Calculator {
     public static String getMinutesAndSecondsFromSeconds(long allseconds) {
         long minutes = allseconds / 60;
@@ -20,5 +22,10 @@ public class Calculator {
 
     public static long getTime(long startTime, long stopTime){
         return (stopTime - startTime) / 1000;
+    }
+
+    public static int calculatePercentOfTime(long time, long fulltime){
+        Timber.i("Calculatin time. Current time : %d \n Full time : %d", time,fulltime);
+        return (int) (100 - ((100 * time) / fulltime));
     }
 }

@@ -12,13 +12,27 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.citywork.App;
 import com.citywork.R;
 
+import timber.log.Timber;
+
 public class BuldingProgressView extends View {
-    Bitmap bitmapOrg;
+    private Bitmap bitmapOrg;
+    private int screenWidth;
+
+
+    private Paint bottomLine;
+    private Paint progressPaint;
+    private Paint bgpaint;
+
+    private int bottomLineHeight;
+
+    private int currentProgress = 0;
+    private float progressStep;
 
     public BuldingProgressView(Context context) {
         super(context);
@@ -32,19 +46,44 @@ public class BuldingProgressView extends View {
 
     public BuldingProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public BuldingProgressView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
         init();
     }
 
     private void init() {
         bitmapOrg = getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.ic_icon_building1);
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        screenWidth = metrics.widthPixels;
+
+        bottomLine = new Paint();
+        progressPaint = new Paint();
+        bgpaint = new Paint();
+
+        bottomLineHeight = 6;
+        currentProgress = 0;
+
+
+        bgpaint.setAntiAlias(true);
+        bgpaint.setFilterBitmap(true);
+        bgpaint.setDither(true);
+        bgpaint.setAlpha(100);
+
+        progressPaint.setAntiAlias(true);
+        progressPaint.setFilterBitmap(true);
+        progressPaint.setDither(true);
+        progressPaint.setAlpha(255);
+
+        bottomLine.setAlpha(150);
+        bottomLine.setColor(0xfffffff);
+        bottomLine.setAntiAlias(true);
+        bottomLine.setStyle(Paint.Style.STROKE);
+        bottomLine.setStrokeWidth(bottomLineHeight);
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -62,35 +101,32 @@ public class BuldingProgressView extends View {
         return bitmap;
     }
 
+    public void setProgress(int progress) {
+        Timber.i("setProgress to building view : %d", progress);
+        currentProgress = (int) (progress * progressStep);
+        Timber.i("current progress in px : %d", currentProgress);
+        Timber.i("progress step in px : " + progressStep);
+        invalidate();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Paint bgpaint = new Paint();
-        bgpaint.setAntiAlias(true);
-        bgpaint.setFilterBitmap(true);
-        bgpaint.setDither(true);
-        bgpaint.setAlpha(100);
+        canvas.drawBitmap(bitmapOrg, (getWidth() / 2) - bitmapOrg.getWidth() / 2, 0, bgpaint);
 
-        canvas.drawBitmap(bitmapOrg, 0, 0, bgpaint);
+        canvas.drawBitmap(cropBitmap1(bitmapOrg), (getWidth() / 2) - bitmapOrg.getWidth() / 2, 0, progressPaint);
 
-        canvas.drawBitmap(cropBitmap1(bitmapOrg), 0, 0, bgpaint);
-
-//        Paint progresspaint = new Paint();
-//        progresspaint.setAntiAlias(true);
-//        progresspaint.setFilterBitmap(true);
-//        progresspaint.setDither(true);
-//        progresspaint.setAlpha(155);
-//
-//        Bitmap croppedBmp = Bitmap.createBitmap(bitmapOrg, 0, 0,
-//                bitmapOrg.getWidth(), bitmapOrg.getHeight()/2);
-//
-//        canvas.drawBitmap(croppedBmp, 0, 0, progresspaint);
+        canvas.drawLine(-getWidth(), bitmapOrg.getHeight(), getWidth(), bitmapOrg.getHeight(), bottomLine);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(bitmapOrg.getWidth());
         int height = MeasureSpec.getSize(bitmapOrg.getHeight());
+
+        width += screenWidth / 2;
+        height += bottomLineHeight;
+
+        progressStep = calculateStep(height);
 
         setMeasuredDimension(width, height);
     }
@@ -102,8 +138,13 @@ public class BuldingProgressView extends View {
         p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         Canvas c = new Canvas(bmOverlay);
         c.drawBitmap(bitmap, 0, 0, null);
-        c.drawRect(0, 0, bitmap.getWidth(), bitmapOrg.getHeight() - 100, p);
+        c.drawRect(0, 0, bitmap.getWidth(), bitmapOrg.getHeight() - currentProgress, p);
 
         return bmOverlay;
+    }
+
+    private float calculateStep(int height) {
+        float asd = (height - bottomLineHeight) / 100f;
+        return asd;
     }
 }
