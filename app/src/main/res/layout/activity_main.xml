@@ -6,37 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <!--<android.support.v4.view.ViewPager-->
-        <!--android:id="@+id/view_pager"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<com.citywork.ui.CustomTabLayout-->
-        <!--android:id="@+id/tab_layout"-->
-        <!--app:tabBackground="@color/transparent"-->
-        <!--android:layout_width="0dp"-->
-        <!--app:tabIndicatorHeight="3dp"-->
-        <!--app:tabIndicatorColor="@color/white"-->
-        <!--android:layout_height="70dp"-->
-        <!--android:background="@color/transparent_black"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:tabPaddingStart="55dp"-->
-        <!--app:tabPaddingEnd="55dp"-->
-        <!--app:layout_constraintHorizontal_bias="1.0"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:tabGravity="center" />-->
-
     <fragment
-        android:id="@+id/nav_host"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation" />
+            android:id="@+id/nav_host"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation"
+            tools:layout_editor_absoluteX="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.citywork.ui.customviews.BottomNaigationLayout
+            android:id="@+id/nav_item"
+            android:background="@color/transparent_black"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bottom_navigation_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0">
+
+        <com.citywork.ui.customviews.BottomNavigationItemView
+                android:id="@+id/bottom_navigation_timer_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/bottom_navigation_city_btn"
+                app:layout_constraintEnd_toStartOf="@+id/bottom_navigation_city_btn" android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"/>
+
+        <com.citywork.ui.customviews.BottomNavigationItemView
+                android:id="@+id/bottom_navigation_city_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="64dp"
+                android:layout_marginLeft="64dp"/>
+
+    </com.citywork.ui.customviews.BottomNaigationLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -9,15 +9,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.citywork.R;
 import com.citywork.service.TimerService;
+import com.citywork.ui.customviews.BottomNaigationLayout;
+import com.citywork.ui.customviews.BottomNavigationItemView;
 import com.citywork.viewmodels.MainActivityViewModel;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
-
-import androidx.navigation.fragment.NavHostFragment;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
     TimerService timerService;
     private boolean mBound = false;
     private Intent intent;
-
-//    @BindView(R.id.view_pager)
-//    ViewPager mViewPager;
-//    @BindView(R.id.tab_layout)
-//    CustomTabLayout tabLayout;
+    @BindView(R.id.nav_item)
+    BottomNaigationLayout bottomNaigationLayout;
+    @BindView(R.id.bottom_navigation_timer_btn)
+    BottomNavigationItemView timerTabBtn;
+    @BindView(R.id.bottom_navigation_city_btn)
+    BottomNavigationItemView cityTabBtn;
 
     private IMainActivityViewModel iMainActivityViewModel;
 
@@ -40,19 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+
         intent = new Intent(getApplicationContext(), TimerService.class);
-
-        CustomViewPagerAdapter customViewPagerAdapter = new CustomViewPagerAdapter(getSupportFragmentManager());
-
-//        mViewPager.setAdapter(customViewPagerAdapter);
-//        tabLayout.setupWithViewPager(mViewPager);
-//
-//        tabLayout.getTabAt(0).setCustomView(R.layout.custom_tab).getCustomView().findViewById(R.id.custom_tab_iv).setBackgroundResource(R.drawable.ic_timer_icon_focused);
-//        tabLayout.getTabAt(1).setCustomView(R.layout.custom_tab).getCustomView().findViewById(R.id.custom_tab_iv).setBackgroundResource(R.drawable.ic_city_icon);
-//
-//        tabLayout.setTabRippleColor(null);
-//
-//        tabLayout.setSelectedListener();
 
         MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         iMainActivityViewModel = mainActivityViewModel;
@@ -65,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         mainActivityViewModel.getBuildingMutableLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
         });
+
+        bottomNaigationLayout.addItem(timerTabBtn, () -> navController.navigate(R.id.action_cityFragment_to_timerFragment));
+        bottomNaigationLayout.addItem(cityTabBtn, () -> navController.navigate(R.id.action_timerFragment_to_cityFragment));
 
         iMainActivityViewModel.onCreate();
     }
@@ -116,12 +113,8 @@ public class MainActivity extends AppCompatActivity {
             if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 Timber.i("Stop Timer");
 
-//                TimerFragment timerFragment = (TimerFragment) mViewPager.getAdapter().instantiateItem(mViewPager, 0);
-
                 NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
-                 ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
-
-//                timerFragment.iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
+                ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
 
                 timerService.stopSelf();
             }

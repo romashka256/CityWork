@@ -28,7 +28,6 @@ public class SuccessDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         context = App.getsAppComponent().getApplicationContext();
-
     }
 
     @Nullable

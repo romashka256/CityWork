@@ -133,13 +133,14 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void onStop() {
-        mTimerManager.stopTimer();
+        mTimerManager.pauseTimer();
         mCompositeDisposable.clear();
     }
 
     @Override
     public void onResume() {
         currentTimerState = sharedPrefensecUtils.getTimerState();
+        mTimerStateChangedEvent.postValue(currentTimerState);
         mAlarmManager.deleteAlarmTask();
         notificationUtils.closeTimerNotification();
         notificationUtils.closeAlarmNotification();
@@ -162,6 +163,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void onServiceConnected(Pomodoro pomodoro) {
+        pomodoroManger.setPomodoro(pomodoro);
         if (pomodoro.isCompleted()) {
             //TODO CHANGE THIS
             mCompleteEvent.postValue(new Building(pomodoro, 60));

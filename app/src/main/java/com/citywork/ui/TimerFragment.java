@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.citywork.Constants;
 import com.citywork.R;
 import com.citywork.ui.customviews.BuldingProgressView;
@@ -19,9 +20,6 @@ import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class TimerFragment extends Fragment {
@@ -42,7 +40,6 @@ public class TimerFragment extends Fragment {
     ImageView mSettingsBtn;
     @BindView(R.id.timer_fragment_building)
     BuldingProgressView mBuidlingView;
-
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
 
@@ -92,6 +89,8 @@ public class TimerFragment extends Fragment {
         View view = inflater.inflate(R.layout.timer_fragment, null, false);
 
         ButterKnife.bind(this, view);
+
+
         return view;
     }
 
@@ -164,7 +163,8 @@ public class TimerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
         Timber.i("onStop");
+
+        iTimerFragmentViewModel.onStop();
     }
 }

@@ -1,29 +1,20 @@
 package com.citywork.ui.customviews;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.Drawable;
+import android.graphics.*;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
-
 import com.citywork.App;
 import com.citywork.R;
-
+import com.citywork.utils.VectorUtils;
 import timber.log.Timber;
 
 public class BuldingProgressView extends View {
     private Bitmap bitmapOrg;
     private int screenWidth;
-
 
     private Paint bottomLine;
     private Paint progressPaint;
@@ -56,7 +47,7 @@ public class BuldingProgressView extends View {
     }
 
     private void init() {
-        bitmapOrg = getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.ic_icon_building1);
+        bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.ic_icon_building1);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         screenWidth = metrics.widthPixels;
@@ -86,20 +77,7 @@ public class BuldingProgressView extends View {
         bottomLine.setStrokeWidth(bottomLineHeight);
     }
 
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
 
     public void setProgress(int progress) {
         Timber.i("setProgress to building view : %d", progress);

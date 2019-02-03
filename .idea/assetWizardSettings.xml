@@ -14,11 +14,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="height" value="126" />
-                            <entry key="outputName" value="ic_icon_building1" />
+                            <entry key="height" value="26" />
+                            <entry key="outputName" value="ic_timer_icon_focused" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\Roma\Downloads\Telegram Desktop\icon-building1.svg" />
-                            <entry key="width" value="39" />
+                            <entry key="sourceFile" value="C:\Users\Roma\Desktop\timer-icon.svg" />
+                            <entry key="width" value="21" />
                           </map>
                         </option>
                       </PersistentState>

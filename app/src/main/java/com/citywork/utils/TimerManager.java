@@ -11,34 +11,13 @@ public interface TimerManager {
 
     void stopTimer();
 
+    void pauseTimer();
+
     String getReminingTimeInString();
 
     void setTimerListener(TimerStateListener timerListener);
 
     TimerState getState();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

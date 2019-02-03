@@ -2,8 +2,6 @@ package com.citywork.utils;
 
 import android.annotation.SuppressLint;
 import com.citywork.App;
-import io.reactivex.Flowable;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
@@ -88,6 +86,18 @@ public class TimerManagerImpl implements TimerManager {
         timerStateListener.onStop();
         sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
         timer.stopTimer();
+        if (disposable != null && !disposable.isDisposed()) {
+            Timber.i("Disposing");
+            disposable.dispose();
+        }
+    }
+
+
+    @Override
+    public void pauseTimer() {
+        timerStateListener.onStop();
+        timer.stopTimer();
+
         if (disposable != null && !disposable.isDisposed()) {
             Timber.i("Disposing");
             disposable.dispose();
