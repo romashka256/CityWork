@@ -112,12 +112,7 @@ public class BottomNavigationItemView extends ViewGroup {
         backgroundAlphaAnim.setInterpolator(new AccelerateInterpolator());
         backgroundAlphaAnim.setDuration(100);
         final BottomNavigationItemView v = this;
-        backgroundAlphaAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                v.getBackground().setAlpha((Integer) animation.getAnimatedValue());
-            }
-        });
+        backgroundAlphaAnim.addUpdateListener(animation -> v.getBackground().setAlpha((Integer) animation.getAnimatedValue()));
         containerSizeAmin = ValueAnimator.ofFloat(0, widthWithText);
         containerSizeAmin.setDuration(100);
 
@@ -125,19 +120,16 @@ public class BottomNavigationItemView extends ViewGroup {
         Log.i("TAG", "startPoint : " + startPoint);
         Log.i("TAG", "fullwidth : " + fullwidth);
 
-        containerSizeAmin.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Log.i("TAG", "Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
-                if (textView.getVisibility() != VISIBLE) {
-                    if (Math.abs((Float) animation.getAnimatedValue()) > (widthWithText / 1.5)) {
-                        showTextAnim();
-                        showPressedImage();
-                    }
+        containerSizeAmin.addUpdateListener(animation -> {
+            Log.i("TAG", "Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
+            if (textView.getVisibility() != VISIBLE) {
+                if (Math.abs((Float) animation.getAnimatedValue()) > (widthWithText / 1.5)) {
+                    showTextAnim();
+                    showPressedImage();
                 }
-                currentwidth = Math.abs((Float) animation.getAnimatedValue());
-                requestLayout();
             }
+            currentwidth = Math.abs((Float) animation.getAnimatedValue());
+            requestLayout();
         });
 
         animatorSet.playTogether(containerSizeAmin, backgroundAlphaAnim);

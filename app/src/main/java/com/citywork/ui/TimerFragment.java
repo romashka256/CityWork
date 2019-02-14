@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.citywork.Constants;
 import com.citywork.R;
 import com.citywork.ui.customviews.BuldingProgressView;
@@ -20,6 +18,9 @@ import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class TimerFragment extends Fragment {
@@ -28,8 +29,6 @@ public class TimerFragment extends Fragment {
     Button startButton;
     @BindView(R.id.timer_fragment_stop_button)
     Button stopButton;
-    @BindView(R.id.timer_fragment_time)
-    TextView mTime;
     @BindView(R.id.timer_fragment_5min_rest)
     Button m5minRest;
     @BindView(R.id.timer_fragment_10min_rest)
@@ -56,7 +55,10 @@ public class TimerFragment extends Fragment {
             new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
         iTimerFragmentViewModel.getPeopleCountChangedEvent().observe(this, peopleCount -> {
-            mTime.setText(peopleCount + "");
+
+        });
+        iTimerFragmentViewModel.getProgressPeopleCountChangedEvent().observe(this, pair -> {
+            mBuidlingView.setProgress(pair.second, pair.first);
         });
         iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
             switch (timerState) {
@@ -67,6 +69,7 @@ public class TimerFragment extends Fragment {
                     m10minRest.setVisibility(View.GONE);
                     break;
                 case COMPLETED:
+                    startButton.setVisibility(View.GONE);
                     stopButton.setVisibility(View.GONE);
                     m5minRest.setVisibility(View.VISIBLE);
                     m10minRest.setVisibility(View.VISIBLE);
@@ -80,6 +83,8 @@ public class TimerFragment extends Fragment {
                     break;
             }
         });
+
+        iTimerFragmentViewModel.onCreate();
     }
 
 
@@ -90,14 +95,13 @@ public class TimerFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Timber.i("onActivityCreated");
+        Timber.i("onViewCreated");
 
         startButton.setOnClickListener(v -> {
             iTimerFragmentViewModel.onStartClicked();
@@ -106,7 +110,7 @@ public class TimerFragment extends Fragment {
         stopButton.setOnClickListener(v -> {
             circleTimer.disable();
             iTimerFragmentViewModel.onStopClicked();
-            mTime.setText("STOPPED");
+
         });
 
         circleTimer.setCircleTimeListener(new CircleTimer.CircleTimerListener() {
@@ -119,17 +123,12 @@ public class TimerFragment extends Fragment {
             public void onTimerSetValueChanged(int time) {
 
             }
-
             @Override
             public void onTimerSetValueChange(int time) {
 
             }
         });
 
-        ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().observe(getActivity(), building -> {
-            Timber.i("new ");
-            iTimerFragmentViewModel.buildingReceived(building);
-        });
 
         m5minRest.setOnClickListener(v -> {
             iTimerFragmentViewModel.on5MinRestClicked();
@@ -157,6 +156,10 @@ public class TimerFragment extends Fragment {
         super.onResume();
         Timber.i("onResume");
 
+        ViewModelProviders.of(getActivity()).get(SharedViewModel.class).getBuildingMutableLiveData().observe(getActivity(), building -> {
+            iTimerFragmentViewModel.buildingReceived(building);
+        });
+
         iTimerFragmentViewModel.onResume();
     }
 
@@ -166,5 +169,12 @@ public class TimerFragment extends Fragment {
         Timber.i("onStop");
 
         iTimerFragmentViewModel.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.i("onDestroy");
+
     }
 }

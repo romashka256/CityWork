@@ -12,7 +12,8 @@ import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.SharedPrefensecUtils;
-import com.citywork.utils.TimerManager;
+import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerState;
 
 import org.parceler.Parcels;
 
@@ -80,16 +81,12 @@ public class TimerService extends Service {
             startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
                     Calculator.getRemainingTime(pomodoro.getStoptime()))));
 
-//            notificationUtils.showTimerNotification(
-//                    );
-
             long timeRemaining = Calculator.getRemainingTime(pomodoro.getStoptime());
 
-            //  disposable = mTimerManager.startTimer(timeRemaining)
-            disposable = mTimerManager.getTimer()
+            disposable = mTimerManager.startTimer(timeRemaining)
                     .doOnComplete(() -> {
                         notificationUtils.showAlarmNotification();
-                        pomodoro.setCompleted(true);
+                        pomodoro.setTimerState(TimerState.WORK_COMPLETED);
                     })
                     .map(Calculator::getMinutesAndSecondsFromSeconds)
                     .subscribeOn(Schedulers.computation())

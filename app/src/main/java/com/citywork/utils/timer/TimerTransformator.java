@@ -1,11 +1,13 @@
-package com.citywork.utils;
+package com.citywork.utils.timer;
 
 import io.reactivex.subjects.BehaviorSubject;
 
-public interface TimerManager {
+public interface TimerTransformator {
     BehaviorSubject<Long> startTimer(long time);
 
     BehaviorSubject<Long> getTimer();
+
+    boolean isDisposed();
 
     long getRemainingTime();
 
@@ -16,8 +18,4 @@ public interface TimerManager {
     String getReminingTimeInString();
 
     void setTimerListener(TimerStateListener timerListener);
-
-    TimerState getState();
-
-
 }

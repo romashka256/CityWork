@@ -1,8 +1,9 @@
 package com.citywork.utils;
 
-import android.os.Build;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
+import com.citywork.utils.timer.TimerState;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,19 +11,25 @@ public class PomodoroManger {
 
     @Getter
     @Setter
-    public Pomodoro pomodoro;
+    //TODO INITIATE
+    private Pomodoro pomodoro;
     @Getter
-    @Setter
-    public Building building;
+    private Building building;
     @Setter
     @Getter
     private int peopleCount;
+
+    public void setBuilding(Building building) {
+        this.building = building;
+        this.pomodoro = building.getPomodoro();
+        this.peopleCount = building.getPeople_count();
+    }
 
     public void createNewInstance(long timerValue) {
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 
-        pomodoro = new Pomodoro(startTime, stopTime);
+        pomodoro = new Pomodoro(startTime, stopTime, TimerState.ONGOING);
         building = new Building(pomodoro, calculatePeopleCount(startTime, stopTime));
     }
 

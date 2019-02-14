@@ -1,9 +1,11 @@
 package com.citywork.viewmodels.interfaces;
 
 import android.arch.lifecycle.LiveData;
+import android.util.Pair;
+
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.utils.TimerState;
+import com.citywork.utils.timer.TimerState;
 
 public interface ITimerFragmentViewModel {
     void onStartClicked();
@@ -20,11 +22,11 @@ public interface ITimerFragmentViewModel {
 
     void onStop();
 
+    void onCreate();
+
     long getTimerValue();
 
     void onTimerValueChanged(long time);
-
-    void pomodoroReceived(Pomodoro pomodoro);
 
     void buildingReceived(Building building);
 
@@ -39,4 +41,6 @@ public interface ITimerFragmentViewModel {
     LiveData<TimerState> getTimerStateChanged();
 
     LiveData<Integer> getChangeTimeEventInPercent();
+
+    LiveData<Pair<Integer, Integer>> getProgressPeopleCountChangedEvent();
 }

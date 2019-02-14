@@ -28,23 +28,33 @@ public class BottomNaigationLayout extends ConstraintLayout {
         init();
     }
 
-    private void init(){
+    private void init() {
         bottomNavigationItemViews = new ArrayList<>();
-        Timber.i("getChildCount() : %d", getChildCount()) ;
+        Timber.i("getChildCount() : %d", getChildCount());
     }
 
     public void addItem(final BottomNavigationItemView bottomNavigationItemView, OnTabClickLinetener onTabClickLinetener) {
         bottomNavigationItemViews.add(bottomNavigationItemView);
 
         bottomNavigationItemView.setOnClickListener(v -> {
-            if (bottomNavigationItemView.getNavItemState() == BottomNavigationItemView.NavItemState.INACTIVE) {
-               if(previousActiveView != null)
-                previousActiveView.makeDisabled();
-                previousActiveView = bottomNavigationItemView;
-                bottomNavigationItemView.makeActivated();
+            if (activateTab(bottomNavigationItemView)) {
                 onTabClickLinetener.onClick();
             }
         });
+    }
+
+    public boolean activateTab(BottomNavigationItemView bottomNavigationItemView) {
+        if (bottomNavigationItemView.getNavItemState() == BottomNavigationItemView.NavItemState.INACTIVE) {
+            if (previousActiveView != null)
+                previousActiveView.makeDisabled();
+            previousActiveView = bottomNavigationItemView;
+
+            bottomNavigationItemView.makeActivated();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override

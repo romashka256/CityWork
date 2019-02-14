@@ -4,8 +4,9 @@ import android.content.Context;
 import com.citywork.di.modules.AppModule;
 import com.citywork.di.modules.TimerManagerModule;
 import com.citywork.model.db.DataBaseHelper;
+import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
-import com.citywork.utils.TimerManager;
+import com.citywork.utils.timer.TimerManager;
 import dagger.Component;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -19,4 +20,6 @@ public interface AppComponent {
     Context getApplicationContext();
     DataBaseHelper getDataBaseHelper();
     SharedPrefensecUtils getSharedPrefs();
+    PomodoroManger getPomdoromManager();
+
 }

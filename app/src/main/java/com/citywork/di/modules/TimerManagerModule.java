@@ -1,13 +1,14 @@
 package com.citywork.di.modules;
 
-import com.citywork.utils.Timer;
-import com.citywork.utils.TimerImpl;
-import com.citywork.utils.TimerManager;
-import com.citywork.utils.TimerManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import com.citywork.utils.timer.Timer;
+import com.citywork.utils.timer.TimerImpl;
+import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerManagerImpl;
 
 import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 
 @Module
 public class TimerManagerModule {

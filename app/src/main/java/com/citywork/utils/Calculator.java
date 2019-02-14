@@ -20,6 +20,10 @@ public class Calculator {
         return (int) ((time / 30) * Constants.DEFAULT_PEOPLE_PER_30SEC);
     }
 
+    public static int calculatePeopleCountByPercent(int all, float percent){
+        return (int) (all * (percent / 100));
+    }
+
     public static long getTime(long startTime, long stopTime){
         return (stopTime - startTime) / 1000;
     }

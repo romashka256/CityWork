@@ -1,18 +1,53 @@
 package com.citywork.ui.customviews;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.CornerPathEffect;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathEffect;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.utils.VectorUtils;
-import timber.log.Timber;
 
 public class BuldingProgressView extends View {
+
+    private Path path;
+    private Paint boxPaint;
+    private Paint textPaint;
+    private int radius;
+    private float DEFAULT_PADDING_LEFT = 15;
+    private float DEFAULT_ARR_RADIUS = 8;
+    private float DEFAULT_PADDING_RIGHT = 15;
+    private float DEFAULT_PADDING_TOP = 10;
+    private float DEFAULT_PADDING_BOTTOM = 10;
+
+    private float paddingLeft;
+    private float paddingTop;
+    private float paddingRight;
+    private float paddingBottom;
+
+    private float radius_arr;
+
+    private float textpaddingLeft;
+    private float textpaddingTop;
+    private float textpaddingRight;
+    private float textpaddingBottom;
+
+    private String text;
+    private float textWidth;
+    private float textHeight;
+
     private Bitmap bitmapOrg;
     private int screenWidth;
 
@@ -24,6 +59,9 @@ public class BuldingProgressView extends View {
 
     private int currentProgress = 0;
     private float progressStep;
+
+    private float buildingX, buildingY;
+    private float buildingWidth, buildingHeight;
 
     public BuldingProgressView(Context context) {
         super(context);
@@ -59,6 +97,10 @@ public class BuldingProgressView extends View {
         bottomLineHeight = 6;
         currentProgress = 0;
 
+        buildingWidth = bitmapOrg.getWidth();
+        buildingHeight = bitmapOrg.getHeight();
+
+        buildingX = (getWidth() / 2f) - bitmapOrg.getWidth() / 2f;
 
         bgpaint.setAntiAlias(true);
         bgpaint.setFilterBitmap(true);
@@ -75,25 +117,76 @@ public class BuldingProgressView extends View {
         bottomLine.setAntiAlias(true);
         bottomLine.setStyle(Paint.Style.STROKE);
         bottomLine.setStrokeWidth(bottomLineHeight);
+
+        path = new Path();
+        boxPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        textPaint.setColor(getResources().getColor(R.color.white));
+        float sp = spToPx(15);
+        textPaint.setTextSize(sp);
+
+        boxPaint.setColor(getResources().getColor(R.color.white));
+        boxPaint.setStrokeWidth(3);
+        boxPaint.setStyle(Paint.Style.STROKE);
+        //TODO INITIATE
+        text = "text";
+        textWidth = textPaint.measureText(text);
+        textHeight = getFontHeight(textPaint);
+
+        radius_arr = dpToPx(DEFAULT_ARR_RADIUS);
+
+
+        textpaddingRight = dpToPx(DEFAULT_PADDING_RIGHT);
+        textpaddingBottom = dpToPx(DEFAULT_PADDING_BOTTOM);
+
+        PathEffect pe1 = new CornerPathEffect(30);
+
+        boxPaint.setPathEffect(pe1);
     }
 
 
-
     public void setProgress(int progress) {
-        Timber.i("setProgress to building view : %d", progress);
         currentProgress = (int) (progress * progressStep);
-        Timber.i("current progress in px : %d", currentProgress);
-        Timber.i("progress step in px : " + progressStep);
+        invalidate();
+    }
+
+    public void setProgress(int peopleplus, int allpeople) {
+        text = peopleplus + "/" + allpeople;
+        textWidth = textPaint.measureText(text);
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(bitmapOrg, (getWidth() / 2) - bitmapOrg.getWidth() / 2, 0, bgpaint);
+        buildingX = (getWidth() / 2f) - bitmapOrg.getWidth() / 2f;
 
-        canvas.drawBitmap(cropBitmap1(bitmapOrg), (getWidth() / 2) - bitmapOrg.getWidth() / 2, 0, progressPaint);
+        paddingLeft = dpToPx(radius / 2f + radius_arr) + buildingWidth + buildingX;
+        paddingTop = dpToPx(radius / 2f) + buildingHeight / 2;
 
-        canvas.drawLine(-getWidth(), bitmapOrg.getHeight(), getWidth(), bitmapOrg.getHeight(), bottomLine);
+        textpaddingLeft = paddingLeft + dpToPx(DEFAULT_PADDING_LEFT);
+        textpaddingTop = paddingTop + dpToPx(DEFAULT_PADDING_TOP);
+
+        canvas.drawBitmap(bitmapOrg, buildingX, 0, bgpaint);
+
+        canvas.drawBitmap(cropBitmap1(bitmapOrg), (getWidth() / 2f) - bitmapOrg.getWidth() / 2f, 0, progressPaint);
+
+        canvas.drawLine(-getWidth(), buildingHeight, getWidth(), buildingHeight, bottomLine);
+
+        path.reset();
+        path.moveTo(paddingLeft, paddingTop);
+        path.lineTo(textpaddingLeft + textpaddingRight + textWidth, paddingTop);
+        path.lineTo(textWidth + textpaddingLeft + textpaddingRight, textHeight + textpaddingTop + textpaddingBottom);
+        path.lineTo(paddingLeft, textHeight + textpaddingTop + textpaddingBottom);
+        path.lineTo(paddingLeft, textHeight + textpaddingTop);
+        path.lineTo(paddingLeft - radius_arr, textHeight / 2f + textpaddingTop);
+        path.lineTo(paddingLeft, textpaddingTop);
+        path.lineTo(paddingLeft, paddingTop);
+        path.close();
+
+        canvas.drawText(text, textpaddingLeft, textpaddingTop + textHeight, textPaint);
+
+        canvas.drawPath(path, boxPaint);
     }
 
     @Override
@@ -124,5 +217,21 @@ public class BuldingProgressView extends View {
     private float calculateStep(int height) {
         float asd = (height - bottomLineHeight) / 100f;
         return asd;
+    }
+
+    public float spToPx(float px) {
+        return px * getResources().getDisplayMetrics().scaledDensity;
+    }
+
+    public float dpToPx(float dp) {
+        return dp * getResources().getDisplayMetrics().density;
+    }
+
+    private float getFontHeight(Paint paint) {
+        // FontMetrics sF = paint.getFontMetrics();
+        // return sF.descent - sF.ascent;
+        Rect rect = new Rect();
+        paint.getTextBounds("1", 0, 1, rect);
+        return rect.height();
     }
 }

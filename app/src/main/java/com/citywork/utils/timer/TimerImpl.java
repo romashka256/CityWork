@@ -1,4 +1,4 @@
-package com.citywork.utils;
+package com.citywork.utils.timer;
 
 import io.reactivex.Flowable;
 import timber.log.Timber;

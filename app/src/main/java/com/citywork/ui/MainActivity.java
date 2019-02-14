@@ -9,11 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.citywork.R;
 import com.citywork.service.TimerService;
 import com.citywork.ui.customviews.BottomNaigationLayout;
@@ -21,6 +17,12 @@ import com.citywork.ui.customviews.BottomNavigationItemView;
 import com.citywork.viewmodels.MainActivityViewModel;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,20 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
         intent = new Intent(getApplicationContext(), TimerService.class);
 
-        MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        iMainActivityViewModel = mainActivityViewModel;
+        iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        //Sending pomodoro object to Fragment
-//        mainActivityViewModel.getPomodoroMutableLiveData().observe(this, pomodoro -> {
-//            ViewModelProviders.of(this).get(SharedViewModel.class).getPomodoroMutableLiveData().postValue(pomodoro);
-//        });
-
-        mainActivityViewModel.getBuildingMutableLiveData().observe(this, building -> {
+        iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
+            Timber.i("Last pomodoro posted");
         });
 
         bottomNaigationLayout.addItem(timerTabBtn, () -> navController.navigate(R.id.action_cityFragment_to_timerFragment));
         bottomNaigationLayout.addItem(cityTabBtn, () -> navController.navigate(R.id.action_timerFragment_to_cityFragment));
+        bottomNaigationLayout.activateTab(timerTabBtn);
 
         iMainActivityViewModel.onCreate();
     }

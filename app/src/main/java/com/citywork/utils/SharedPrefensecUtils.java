@@ -2,7 +2,10 @@ package com.citywork.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import com.citywork.Constants;
+import com.citywork.utils.timer.TimerState;
+
 import timber.log.Timber;
 
 public class SharedPrefensecUtils {
@@ -41,9 +44,9 @@ public class SharedPrefensecUtils {
         sharedPreferences.edit().putString(TIMER_STATE, timerState.toString()).apply();
     }
 
-    public TimerState getTimerState() {
-        String timerState = sharedPreferences.getString(TIMER_STATE, TimerState.NOT_ONGOING.toString());
-        Timber.i("Get TimerState to : %s", timerState);
-        return TimerState.valueOf(timerState);
-    }
+//    public TimerState getTimerState() {
+//        String timerState = sharedPreferences.getString(TIMER_STATE, TimerState.NOT_ONGOING.toString());
+//        Timber.i("Get TimerState to : %s", timerState);
+//        return TimerState.valueOf(timerState);
+//    }
 }

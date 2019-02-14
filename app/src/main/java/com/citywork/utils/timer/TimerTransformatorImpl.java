@@ -1,14 +1,13 @@
-package com.citywork.utils;
+package com.citywork.utils.timer;
 
-import android.annotation.SuppressLint;
-import com.citywork.App;
+import com.citywork.utils.Calculator;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
-import lombok.Setter;
 import timber.log.Timber;
 
-public class TimerManagerImpl implements TimerManager {
+public class TimerTransformatorImpl implements TimerTransformator {
 
     private Timer timer;
     @Getter
@@ -16,40 +15,26 @@ public class TimerManagerImpl implements TimerManager {
 
     BehaviorSubject<Long> behaviorSubject;
 
+    @Getter
     private Disposable disposable;
 
     private TimerStateListener timerStateListener;
 
-    @Override
-    public void setTimerListener(TimerStateListener timerListener) {
-        timerStateListener = timerListener;
-    }
-
-    @Getter
-    @Setter
-    public SharedPrefensecUtils sharedPrefensecUtils;
-
     private long timerTime;
-    private TimerState timerState;
 
-    public TimerManagerImpl(Timer timer) {
+
+    public TimerTransformatorImpl(Timer timer) {
         //TODO INJECT
-        sharedPrefensecUtils = new SharedPrefensecUtils(App.getsAppComponent().getApplicationContext());
         behaviorSubject = BehaviorSubject.create();
 
         this.timer = timer;
     }
 
-
-    @SuppressLint("CheckResult")
     @Override
     public BehaviorSubject<Long> startTimer(long time) {
-        timerState = TimerState.ONGOING;
-        sharedPrefensecUtils.saveTimerState(TimerState.ONGOING);
         timerTime = time;
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
-        timerStateListener.onStart();
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {
                             Timber.i("ticktime %d", ticktime);
@@ -60,31 +45,29 @@ public class TimerManagerImpl implements TimerManager {
                         }, e -> {
                             Timber.e(e);
                             behaviorSubject.onError(e);
-                            sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
+                            //sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
+                            Timber.i(e);
                         },
                         () -> {
                             behaviorSubject.onComplete();
-                            sharedPrefensecUtils.saveTimerState(TimerState.COMPLETED);
+                            //sharedPrefensecUtils.saveTimerState(TimerState.COMPLETED);
                             Timber.i("onComplete");
                         });
         return behaviorSubject;
     }
 
+    @Override
     public BehaviorSubject<Long> getTimer() {
         return behaviorSubject;
     }
 
-    @Override
-    public String getReminingTimeInString() {
-        return Calculator.getMinutesAndSecondsFromSeconds(remainingTime);
-    }
 
     @Override
     public void stopTimer() {
         Timber.i("Stopping timer");
-        timerState = TimerState.NOT_ONGOING;
-        timerStateListener.onStop();
-        sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
+        //timerState = TimerState.NOT_ONGOING;
+
+        //sharedPrefensecUtils.saveTimerState(TimerState.NOT_ONGOING);
         timer.stopTimer();
         if (disposable != null && !disposable.isDisposed()) {
             Timber.i("Disposing");
@@ -92,6 +75,14 @@ public class TimerManagerImpl implements TimerManager {
         }
     }
 
+    @Override
+    public boolean isDisposed() {
+        if (disposable != null) {
+            return disposable.isDisposed();
+        } else {
+            return true;
+        }
+    }
 
     @Override
     public void pauseTimer() {
@@ -105,7 +96,12 @@ public class TimerManagerImpl implements TimerManager {
     }
 
     @Override
-    public TimerState getState() {
-        return timerState;
+    public String getReminingTimeInString() {
+        return Calculator.getMinutesAndSecondsFromSeconds(remainingTime);
+    }
+
+    @Override
+    public void setTimerListener(TimerStateListener timerListener) {
+        this.timerStateListener = timerListener;
     }
 }

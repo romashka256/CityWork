@@ -1,19 +1,23 @@
 package com.citywork.viewmodels;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.os.Build;
+
 import com.citywork.App;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.service.TimerService;
+import com.citywork.utils.Calculator;
+import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
-import com.citywork.utils.TimerManager;
-import com.citywork.utils.TimerState;
+import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
+
 import lombok.Getter;
 import timber.log.Timber;
 
@@ -23,35 +27,50 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     MutableLiveData<Long> mChangeRemainingTimeEvent = new MutableLiveData<>();
     @Getter
     MutableLiveData<Pomodoro> pomodoroMutableLiveData = new MutableLiveData<>();
-    @Getter
+
     MutableLiveData<Building> buildingMutableLiveData = new MutableLiveData<>();
+
+    @Override
+    public LiveData<Building> getBuildingLiveData() {
+        return buildingMutableLiveData;
+    }
 
     private TimerManager timerManager;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private Context context;
     private DataBaseHelper dataBaseHelper;
+    private PomodoroManger pomodoroManger;
 
     public MainActivityViewModel() {
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         context = App.getsAppComponent().getApplicationContext();
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
+        pomodoroManger = App.getsAppComponent().getPomdoromManager();
     }
 
     @Override
     public void onCreate() {
-        if (sharedPrefensecUtils.getTimerState() == TimerState.ONGOING) {
             dataBaseHelper.getLastBuilding(building -> {
+                if (building == null) {
+                    return;
+                }
+
+                pomodoroManger.setBuilding(building);
+
+                if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                    Timber.i("building.getPomodoro().getStoptime()) <= 0");
+                    return;
+                }
+
                 buildingMutableLiveData.postValue(building);
-                Timber.i("Last pomodoro posted");
             });
-        }
 
         timerManager = App.getsAppComponent().getTimerManager();
     }
 
     @Override
     public void onStop() {
-        if (sharedPrefensecUtils.getTimerState() == TimerState.ONGOING) {
+        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
             dataBaseHelper.getLastPomodoro(pomodoro -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(TimerService.getIntent(context, pomodoro));

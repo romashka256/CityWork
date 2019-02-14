@@ -2,6 +2,7 @@ package com.citywork.di.modules;
 
 import android.content.Context;
 import com.citywork.model.db.DataBaseHelper;
+import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import dagger.Module;
 import dagger.Provides;
@@ -40,5 +41,11 @@ public class AppModule {
     @Singleton
     public SharedPrefensecUtils provideSharedPreferences() {
         return new SharedPrefensecUtils(context);
+    }
+
+    @Singleton
+    @Provides
+    public PomodoroManger provideModoroManager(){
+        return new PomodoroManger();
     }
 }

@@ -3,7 +3,9 @@ package com.citywork.utils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Vibrator;
+
+import com.citywork.utils.timer.TimerState;
+
 import timber.log.Timber;
 
 public class AlarmReceiver extends BroadcastReceiver {

@@ -1,4 +1,4 @@
-package com.citywork.utils;
+package com.citywork.utils.timer;
 
 public interface TimerStateListener {
     void onStop();

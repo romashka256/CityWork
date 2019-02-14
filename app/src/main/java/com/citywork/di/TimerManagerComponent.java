@@ -2,7 +2,7 @@ package com.citywork.di;
 
 
 import com.citywork.di.modules.TimerManagerModule;
-import com.citywork.utils.TimerManager;
+import com.citywork.utils.timer.TimerManager;
 import dagger.Component;
 
 import javax.inject.Singleton;
