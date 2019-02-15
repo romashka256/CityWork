@@ -5,13 +5,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-public class WorkTimer implements TimerBase {
+public class RestTimer implements TimerBase {
 
     private TimerTransformator timerTransformator;
     private TimerListener timerListener;
     private Disposable disposable;
 
-    public WorkTimer(TimerTransformator timerTransformator) {
+    public RestTimer(TimerTransformator timerTransformator) {
         this.timerTransformator = timerTransformator;
     }
 
@@ -23,7 +23,6 @@ public class WorkTimer implements TimerBase {
     @Override
     public void setTimerListener(TimerListener timerListener) {
         this.timerListener = timerListener;
-
     }
 
     @Override
@@ -35,7 +34,6 @@ public class WorkTimer implements TimerBase {
                 }, e -> {
                     timerListener.onTimerError();
                 }, () -> {
-                    pomodoro.setTimerState(TimerState.WORK_COMPLETED);
                     timerListener.onTimerComplete();
                 });
     }

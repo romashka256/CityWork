@@ -12,6 +12,7 @@ import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.SharedPrefensecUtils;
+import com.citywork.utils.timer.TimerListener;
 import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 
@@ -83,16 +84,25 @@ public class TimerService extends Service {
 
             long timeRemaining = Calculator.getRemainingTime(pomodoro.getStoptime());
 
-            disposable = mTimerManager.startTimer(timeRemaining)
-                    .doOnComplete(() -> {
-                        notificationUtils.showAlarmNotification();
-                        pomodoro.setTimerState(TimerState.WORK_COMPLETED);
-                    })
-                    .map(Calculator::getMinutesAndSecondsFromSeconds)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(timeInString -> notificationUtils.updateTimerNotification(timeInString))
-                    .subscribe();
+            mTimerManager.startTimer(timeRemaining, pomodoro.getTimerState());
+            mTimerManager.setTimerListener(new TimerListener() {
+                @Override
+                public void onTimerTick(long time) {
+                    notificationUtils.updateTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(time));
+                }
+
+                @Override
+                public void onTimerComplete() {
+                    notificationUtils.showAlarmNotification();
+
+
+                }
+
+                @Override
+                public void onTimerError() {
+
+                }
+            });
         }
 
         return Service.START_STICKY;

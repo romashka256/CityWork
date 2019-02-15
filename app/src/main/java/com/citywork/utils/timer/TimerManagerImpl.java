@@ -20,19 +20,20 @@ public class TimerManagerImpl implements TimerManager {
 
     private TimerListener timerListener;
     private TimerStateListener timerStateListener;
+    private TimerTransformator timerTransformator;
 
     @Getter
     @Setter
     public SharedPrefensecUtils sharedPrefensecUtils;
 
-    private long timerTime;
 
+
+    private long timerTime;
 
     public TimerManagerImpl() {
         //TODO INJECT
         sharedPrefensecUtils = new SharedPrefensecUtils(App.getsAppComponent().getApplicationContext());
         behaviorSubject = BehaviorSubject.create();
-
     }
 
 
@@ -46,8 +47,27 @@ public class TimerManagerImpl implements TimerManager {
         this.timerListener = timerListener;
     }
 
+    @Override
+    public void setRestTimer() {
+        timer = new RestTimer(timerTransformator);
+    }
+
+    @Override
+    public void setWorkTimer() {
+        timer = new WorkTimer(timerTransformator);
+    }
+
     @SuppressLint("CheckResult")
-    public void startTimer(long time) {
+    public void startTimer(long time, TimerState timerState) {
+        if (timerState == TimerState.NOT_ONGOING ||
+                timerState == TimerState.CANCELED ||
+                timerState == TimerState.REST_CANCELED ||
+                timerState == TimerState.COMPLETED) {
+            setWorkTimer();
+        } else if (timerState == TimerState.WORK_COMPLETED) {
+            setRestTimer();
+        }
+
         timerStateListener.onStart();
         timer.setTimerListener(new TimerListener() {
             @Override
@@ -66,14 +86,17 @@ public class TimerManagerImpl implements TimerManager {
             }
         });
 
-        timer.startTimer(time);
+        timer.startTimer(timer.createTimer(time));
     }
 
     @Override
     public boolean resumeTimer() {
-        if(timer.resumeTimer()){
+        boolean resume = timer.resumeTimer();
+        if (resume) {
 
         }
+
+        return resume;
     }
 
     @Override

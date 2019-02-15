@@ -142,14 +142,14 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         startTimer(timerTime);
     }
 
-    private BehaviorSubject<Long> getTimer() {
-        Timber.i("getTimer");
-        //Timber.i("isDisposed : " + mTimerManager.isDisposed() + "");
-        return mTimerManager.getTimer();
-    }
+//    private BehaviorSubject<Long> getTimer() {
+//        Timber.i("getTimer");
+//        //Timber.i("isDisposed : " + mTimerManager.isDisposed() + "");
+//        return mTimerManager.getTimer();
+//    }
 
     private void startTimer(long time) {
-        mTimerManager.startTimer(time);
+        mTimerManager.startTimer(time, pomodoroManger.getPomodoro().getTimerState());
     }
 
     @Override
@@ -225,13 +225,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
         Timber.i("checkAndStartTimer");
         if (pomodoro != null) {
-            if (mTimerManager.getTimer() == null ||
-                    mTimerManager.getTimer() == null ||
-                    mTimerManager.isDisposed()) {
+            if (!mTimerManager.resumeTimer())
                 startTimer(Calculator.getRemainingTime(pomodoro.getStoptime()));
-            } else {
-                startTimer(getTimer());
-            }
         } else {
             Timber.i("pomodoro = null");
         }

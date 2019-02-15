@@ -1,7 +1,11 @@
 package com.citywork.utils.timer;
 
 public interface TimerManager {
-    void startTimer(long time);
+    void startTimer(long time, TimerState timerState);
+
+    void setRestTimer();
+
+    void setWorkTimer();
 
     boolean resumeTimer();
 
@@ -14,8 +18,8 @@ public interface TimerManager {
     String getReminingTimeInString();
 
     void setTimerStateListener(TimerStateListener timerListener);
-    void setTimerListener(TimerListener timerListener);
 
+    void setTimerListener(TimerListener timerListener);
 
 
 }
