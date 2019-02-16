@@ -1,5 +1,7 @@
 package com.citywork.utils.timer;
 
+import com.citywork.model.db.models.Pomodoro;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -26,26 +28,28 @@ public class RestTimer implements TimerBase {
     }
 
     @Override
-    public void startTimer(BehaviorSubject<Long> behaviorSubject) {
+    public void startTimer(BehaviorSubject<Long> behaviorSubject, Pomodoro pomodoro) {
         disposable = behaviorSubject.subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(t -> {
                     timerListener.onTimerTick(t);
                 }, e -> {
+                    pomodoro.setTimerState(TimerState.COMPLETED);
                     timerListener.onTimerError();
                 }, () -> {
+                    pomodoro.setTimerState(TimerState.COMPLETED);
                     timerListener.onTimerComplete();
                 });
     }
 
     @Override
-    public boolean resumeTimer() {
-        if(timerTransformator.getTimer() == null){
+    public boolean resumeTimer(Pomodoro pomodoro) {
+        if (timerTransformator.getTimer() == null) {
             return false;
-        }else if(disposable.isDisposed()){
+        } else if (disposable.isDisposed()) {
             return false;
-        }else{
-            startTimer(timerTransformator.getTimer());
+        } else {
+            startTimer(timerTransformator.getTimer(), pomodoro);
             return true;
         }
     }
