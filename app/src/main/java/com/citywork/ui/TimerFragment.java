@@ -63,28 +63,50 @@ public class TimerFragment extends Fragment {
         iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
             switch (timerState) {
                 case ONGOING:
-                    stopButton.setVisibility(View.VISIBLE);
-                    startButton.setVisibility(View.GONE);
-                    m5minRest.setVisibility(View.GONE);
-                    m10minRest.setVisibility(View.GONE);
+                    timerongoingView();
                     break;
-                case COMPLETED:
-                    startButton.setVisibility(View.GONE);
-                    stopButton.setVisibility(View.GONE);
-                    m5minRest.setVisibility(View.VISIBLE);
-                    m10minRest.setVisibility(View.VISIBLE);
+                case WORK_COMPLETED:
+                    restView();
                     break;
                 case NOT_ONGOING:
-                    m5minRest.setVisibility(View.GONE);
-                    m10minRest.setVisibility(View.GONE);
-                    stopButton.setVisibility(View.GONE);
-                    startButton.setVisibility(View.VISIBLE);
-                    circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
+                    notongoingView();
+                    break;
+                case REST_ONGOING:
+                    timerongoingView();
+                    break;
+                case CANCELED:
+                    notongoingView();
+                    break;
+                case REST_CANCELED:
+                    notongoingView();
+                    break;
+                case COMPLETED:
+                    notongoingView();
                     break;
             }
         });
+    }
 
-        iTimerFragmentViewModel.onCreate();
+    private void timerongoingView() {
+        stopButton.setVisibility(View.VISIBLE);
+        startButton.setVisibility(View.GONE);
+        m5minRest.setVisibility(View.GONE);
+        m10minRest.setVisibility(View.GONE);
+    }
+
+    private void restView() {
+        startButton.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+        m5minRest.setVisibility(View.VISIBLE);
+        m10minRest.setVisibility(View.VISIBLE);
+    }
+
+    private void notongoingView() {
+        m5minRest.setVisibility(View.GONE);
+        m10minRest.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+        startButton.setVisibility(View.VISIBLE);
+        circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
 
 
@@ -123,6 +145,7 @@ public class TimerFragment extends Fragment {
             public void onTimerSetValueChanged(int time) {
 
             }
+
             @Override
             public void onTimerSetValueChange(int time) {
 
@@ -156,11 +179,11 @@ public class TimerFragment extends Fragment {
         super.onResume();
         Timber.i("onResume");
 
+        iTimerFragmentViewModel.onResume();
+
         ViewModelProviders.of(getActivity()).get(SharedViewModel.class).getBuildingMutableLiveData().observe(getActivity(), building -> {
             iTimerFragmentViewModel.buildingReceived(building);
         });
-
-        iTimerFragmentViewModel.onResume();
     }
 
     @Override

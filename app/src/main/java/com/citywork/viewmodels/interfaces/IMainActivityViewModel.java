@@ -10,4 +10,5 @@ public interface IMainActivityViewModel {
     void onServiceConnected(Pomodoro pomodoro);
     LiveData<Building> getBuildingLiveData();
     long getTimeToGo();
+    void closeNotifications();
 }

@@ -1,25 +1,21 @@
 package com.citywork.utils.timer;
 
+import com.citywork.model.db.models.Pomodoro;
+
+import io.reactivex.subjects.BehaviorSubject;
+
 public interface TimerManager {
-    void startTimer(long time, TimerState timerState);
+    BehaviorSubject<Long> startTimer(long time, Pomodoro pomodoro);
 
-    void setRestTimer();
-
-    void setWorkTimer();
-
-    boolean resumeTimer();
+    BehaviorSubject<Long> getTimer();
 
     long getRemainingTime();
 
-    void stopTimer();
+    void stopTimer(Pomodoro pomodoro);
 
     void pauseTimer();
 
     String getReminingTimeInString();
 
-    void setTimerStateListener(TimerStateListener timerListener);
-
-    void setTimerListener(TimerListener timerListener);
-
-
+    void setTimerListener(TimerStateListener timerListener);
 }

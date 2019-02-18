@@ -6,6 +6,7 @@ import com.citywork.utils.timer.TimerState;
 
 import lombok.Getter;
 import lombok.Setter;
+import timber.log.Timber;
 
 public class PomodoroManger {
 
@@ -26,6 +27,7 @@ public class PomodoroManger {
     }
 
     public void createNewInstance(long timerValue) {
+        Timber.i("createNewInstance : %d", timerValue);
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 

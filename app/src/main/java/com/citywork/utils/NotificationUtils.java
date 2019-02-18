@@ -69,6 +69,7 @@ public class NotificationUtils {
     }
 
     public Notification buildTimerNotification(String time) {
+        Timber.i("buildTimerNotification : %s", time);
         // Create an Intent for the activity you want to start
         Intent intentNotif = new Intent(context, MainActivity.class);
         PendingIntent pendIntent = PendingIntent.getActivity(context, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -100,10 +101,12 @@ public class NotificationUtils {
     }
 
     public void closeTimerNotification() {
+        Timber.i("Closing Timer Notification");
         notificationManager.cancel(TIMER_NOTIFICATION_ID);
     }
 
     public void closeAlarmNotification() {
+        Timber.i("Closing Alarm Notification");
         notificationManager.cancel(ALARM_NOTIFICATION_ID);
     }
 }

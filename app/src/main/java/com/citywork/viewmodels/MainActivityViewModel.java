@@ -12,6 +12,7 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
+import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.timer.TimerManager;
@@ -40,12 +41,16 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     private Context context;
     private DataBaseHelper dataBaseHelper;
     private PomodoroManger pomodoroManger;
+    private NotificationUtils notificationUtils;
 
     public MainActivityViewModel() {
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         context = App.getsAppComponent().getApplicationContext();
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
+
+        //TODO INJECT
+        notificationUtils = new NotificationUtils(context);
     }
 
     @Override
@@ -69,8 +74,15 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     }
 
     @Override
+    public void closeNotifications() {
+        notificationUtils.closeTimerNotification();
+        notificationUtils.closeAlarmNotification();
+    }
+
+    @Override
     public void onStop() {
-        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+
+        if (pomodoroManger.getPomodoro() != null && pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
             dataBaseHelper.getLastPomodoro(pomodoro -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(TimerService.getIntent(context, pomodoro));

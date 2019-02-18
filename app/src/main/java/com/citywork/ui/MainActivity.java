@@ -68,14 +68,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Timber.i("onResume");
-
         bindService(intent, serviceConnection, 0);
-
-        if (mBound) {
-            Timber.i("Stop Timer");
-            iMainActivityViewModel.onServiceConnected(timerService.getPomodoro());
-
+        if(mBound){
+            timerService.stopForeground(true);
             timerService.stopSelf();
+            timerService.cancelTimer();
         }
     }
 
@@ -111,10 +108,12 @@ public class MainActivity extends AppCompatActivity {
             if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 Timber.i("Stop Timer");
 
+                timerService.stopForeground(true);
+                timerService.stopSelf();
+                timerService.cancelTimer();
+
                 NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
                 ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
-
-                timerService.stopSelf();
             }
         }
 

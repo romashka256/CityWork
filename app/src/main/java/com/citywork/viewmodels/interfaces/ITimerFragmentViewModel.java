@@ -22,8 +22,6 @@ public interface ITimerFragmentViewModel {
 
     void onStop();
 
-    void onCreate();
-
     long getTimerValue();
 
     void onTimerValueChanged(long time);
