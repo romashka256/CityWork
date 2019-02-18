@@ -76,6 +76,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
             @Override
             public void onStart() {
+                pomodoroManger.prepareBeforeStart();
                 mTimerStateChangedEvent.postValue(TimerState.ONGOING);
             }
         });
@@ -89,22 +90,22 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private void initAndStartTimer() {
         pomodoroManger.createNewInstance(timerValue);
         dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
-        startTimer(createTimer(timerValue, pomodoroManger.getPomodoro()));
+        startTimer(createTimer(timerValue));
     }
 
     @Override
     public void on5MinRestClicked() {
-
+        startTimer(createTimer(300));
     }
 
     @Override
     public void on10MinRestClicked() {
-
+        startTimer(createTimer(600));
     }
 
-    private BehaviorSubject<Long> createTimer(long timerTime, Pomodoro pomodoro) {
+    private BehaviorSubject<Long> createTimer(long timerTime) {
         Timber.i("createTimer");
-        return mTimerManager.startTimer(timerTime, pomodoro);
+        return mTimerManager.startTimer(timerTime);
     }
 
     private BehaviorSubject<Long> getTimer() {
@@ -113,23 +114,33 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     private void startTimer(BehaviorSubject<Long> behaviorSubject) {
         compositeDisposable.add(behaviorSubject
-                .doOnComplete(() -> {
-                    //TODO SHOW WIN DIALOG
-                    mTimerStateChangedEvent.postValue(TimerState.COMPLETED);
-                    notificationUtils.closeTimerNotification();
-                })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(time -> {
                     mChangeTimeEvent.postValue(time);
-                    mChangeTimeEventInPercent.postValue(Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime())));
-                }, Timber::e));
+                    if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING)
+                        mChangeTimeEventInPercent.postValue(Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime())));
+                }, e -> {
+                    mTimerStateChangedEvent.postValue(TimerState.NOT_ONGOING);
+                    pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+                }, () -> {
+                    //TODO SHOW WIN DIALOG
+                    mTimerStateChangedEvent.postValue(pomodoroManger.setComleted());
+                    notificationUtils.closeAlarmNotification();
+                }));
     }
 
     @Override
     public void onStopClicked() {
-        mTimerManager.stopTimer(pomodoroManger.getPomodoro());
+        mTimerManager.stopTimer();
         mAlarmManager.deleteAlarmTask();
+        pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+    }
+
+    @Override
+    public void onDebugBtnClicked() {
+        timerValue = 10;
+        initAndStartTimer();
     }
 
     @Override
@@ -201,7 +212,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private void checkAndStartTimer(Pomodoro pomodoro) {
         Timber.i("checkAndStartTimer");
         if (mTimerManager.getTimer() == null) {
-            startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime()), pomodoro));
+            startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
         } else {
             startTimer(getTimer());
         }

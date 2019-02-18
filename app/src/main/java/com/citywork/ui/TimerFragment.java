@@ -135,6 +135,10 @@ public class TimerFragment extends Fragment {
 
         });
 
+        mBuidlingView.setOnClickListener(v -> {
+            iTimerFragmentViewModel.onDebugBtnClicked();
+        });
+
         circleTimer.setCircleTimeListener(new CircleTimer.CircleTimerListener() {
             @Override
             public void onTimerTimingValueChanged(long time) {

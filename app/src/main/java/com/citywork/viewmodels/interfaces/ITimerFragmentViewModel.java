@@ -16,6 +16,8 @@ public interface ITimerFragmentViewModel {
 
     void on10MinRestClicked();
 
+    void onDebugBtnClicked();
+
     void onPause();
 
     void onResume();

@@ -42,4 +42,26 @@ public class PomodoroManger {
     public int calculatePeopleCount(long time) {
         return Calculator.calculatePeopleCount(time);
     }
+
+    public TimerState setComleted() {
+        if (pomodoro.getTimerState() == TimerState.ONGOING) {
+            pomodoro.setTimerState(TimerState.WORK_COMPLETED);
+            return TimerState.WORK_COMPLETED;
+        } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING) {
+            pomodoro.setTimerState(TimerState.COMPLETED);
+            return TimerState.COMPLETED;
+        }
+
+        return TimerState.WORK_COMPLETED;
+    }
+
+    public TimerState prepareBeforeStart(){
+        if(pomodoro.getTimerState() != TimerState.WORK_COMPLETED){
+            pomodoro.setTimerState(TimerState.ONGOING);
+            return TimerState.ONGOING;
+        }else{
+            pomodoro.setTimerState(TimerState.REST_ONGOING);
+            return TimerState.REST_ONGOING;
+        }
+    }
 }

@@ -3,7 +3,6 @@ package com.citywork.utils.timer;
 import android.annotation.SuppressLint;
 
 import com.citywork.App;
-import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.SharedPrefensecUtils;
 
@@ -20,8 +19,6 @@ public class TimerManagerImpl implements TimerManager {
     private long remainingTime;
 
     BehaviorSubject<Long> behaviorSubject;
-
-    private Pomodoro pomodoro;
 
     private Disposable disposable;
 
@@ -47,9 +44,7 @@ public class TimerManagerImpl implements TimerManager {
 
     @SuppressLint("CheckResult")
     @Override
-    public BehaviorSubject<Long> startTimer(long time, Pomodoro pomodoro) {
-        this.pomodoro = pomodoro;
-        pomodoro.setTimerState(TimerState.ONGOING);
+    public BehaviorSubject<Long> startTimer(long time) {
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
         timerStateListener.onStart();
@@ -63,17 +58,16 @@ public class TimerManagerImpl implements TimerManager {
                         }, e -> {
                             Timber.e(e);
                             behaviorSubject.onError(e);
-                            pomodoro.setTimerState(TimerState.NOT_ONGOING);
                         },
                         () -> {
                             behaviorSubject.onComplete();
-                            pomodoro.setTimerState(TimerState.WORK_COMPLETED);
                             Timber.i("onComplete");
                         });
         return behaviorSubject;
     }
 
     public BehaviorSubject<Long> getTimer() {
+        timerStateListener.onStart();
         return behaviorSubject;
     }
 
@@ -83,10 +77,9 @@ public class TimerManagerImpl implements TimerManager {
     }
 
     @Override
-    public void stopTimer(Pomodoro pomodoro) {
+    public void stopTimer() {
         Timber.i("Stopping timer");
         timerStateListener.onStop();
-        pomodoro.setTimerState(TimerState.NOT_ONGOING);
         timer.stopTimer();
         if (disposable != null && !disposable.isDisposed()) {
             Timber.i("Disposing");

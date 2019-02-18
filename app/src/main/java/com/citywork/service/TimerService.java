@@ -11,6 +11,7 @@ import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
+import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
@@ -34,6 +35,7 @@ public class TimerService extends Service {
     private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationUtils notificationUtils;
     private AlarmManagerImpl alarmManager;
+    private PomodoroManger pomodoroManger;
 
     private Pomodoro pomodoro;
 
@@ -62,6 +64,7 @@ public class TimerService extends Service {
         notificationUtils = new NotificationUtils(getApplicationContext());
         alarmManager = new AlarmManagerImpl(App.getsAppComponent().getApplicationContext());
 
+        pomodoroManger = App.getsAppComponent().getPomdoromManager();
         mTimerManager = App.getsAppComponent().getTimerManager();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
     }
@@ -82,23 +85,23 @@ public class TimerService extends Service {
                     Calculator.getRemainingTime(pomodoro.getStoptime()))));
 
             disposable = mTimerManager.getTimer()
-                    .doOnComplete(() -> {
-                        notificationUtils.showAlarmNotification();
-                        pomodoro.setTimerState(TimerState.WORK_COMPLETED);
-                    })
                     .map(Calculator::getMinutesAndSecondsFromSeconds)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(timeInString -> {
-                        notificationUtils.updateTimerNotification(timeInString);
-                    })
-                    .subscribe();
+                    .subscribe(time -> {
+                        notificationUtils.updateTimerNotification(time);
+                    }, e -> {
+                        pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+                    }, () -> {
+                        notificationUtils.showAlarmNotification();
+                        pomodoro.setTimerState(TimerState.WORK_COMPLETED);
+                    });
         }
 
         return Service.START_STICKY;
     }
 
-    public void cancelTimer(){
+    public void cancelTimer() {
         disposable.dispose();
     }
 
