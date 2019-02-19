@@ -2,5 +2,6 @@
     <string name="app_name">City Work</string>
     <string name="alarm_notification_channel_name">alarm_notification_channel_name</string>
     <string name="timer_notification_channel_name">timer_notification_channel_name</string>
+    <string name="tasks_dialog_title">Задачи</string>
 
 </resources>

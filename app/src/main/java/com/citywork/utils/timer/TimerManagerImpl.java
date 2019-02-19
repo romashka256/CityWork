@@ -36,7 +36,6 @@ public class TimerManagerImpl implements TimerManager {
     public TimerManagerImpl(Timer timer) {
         //TODO INJECT
         sharedPrefensecUtils = new SharedPrefensecUtils(App.getsAppComponent().getApplicationContext());
-        behaviorSubject = BehaviorSubject.create();
 
         this.timer = timer;
     }
