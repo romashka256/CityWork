@@ -7,8 +7,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+
 import com.citywork.R;
 import com.citywork.ui.MainActivity;
+
 import timber.log.Timber;
 
 public class NotificationUtils {
@@ -77,7 +79,8 @@ public class NotificationUtils {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(TIMER_NOTIFICATION_CHANNEL_ID, context.getResources().getString(R.string.timer_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
             mTimerNotificationBuilder = new Notification.Builder(context, TIMER_NOTIFICATION_CHANNEL_ID);
-            mTimerNotificationBuilder.setChannelId(TIMER_NOTIFICATION_CHANNEL_ID);
+            mTimerNotificationBuilder.setChannelId(TIMER_NOTIFICATION_CHANNEL_ID)
+                    .setOnlyAlertOnce(true);
             notificationChannel.setDescription("Timer channel description");
             notificationChannel.enableVibration(false);
             notificationManager.createNotificationChannel(notificationChannel);
