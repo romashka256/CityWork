@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.*;
 import android.widget.Button;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import com.citywork.App;
 import com.citywork.R;
 
