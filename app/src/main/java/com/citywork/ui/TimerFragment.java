@@ -145,6 +145,7 @@ public class TimerFragment extends Fragment {
                 iTimerFragmentViewModel.onTimerValueChanged(time);
             }
 
+            
             @Override
             public void onTimerSetValueChanged(int time) {
 
@@ -155,7 +156,6 @@ public class TimerFragment extends Fragment {
 
             }
         });
-
 
         m5minRest.setOnClickListener(v -> {
             iTimerFragmentViewModel.on5MinRestClicked();

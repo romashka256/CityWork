@@ -4,6 +4,9 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
+import com.citywork.model.interfaces.OnTasksLoadedListener;
+
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -61,5 +64,18 @@ public class DataBaseHelper {
 
             }
         });
+        realm1.close();
+    }
+
+    public void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
+            if (realmResults != null)
+                onTasksLoadedListener.onTasksLoaded(realm1.copyFromRealm(realmResults));
+            else
+                onTasksLoadedListener.onTasksLoaded(new ArrayList<>());
+        });
+        realm.close();
     }
 }

@@ -13,4 +13,6 @@ public class Constants {
     public final static int DEFAULT_MIN_TIMER_VALUE = 600;
 
     public final static int DEFAULT_PEOPLE_PER_30SEC = 3;
+
+    public final static long DEFAULT_TIME_AFTER_NOT_SHOW = 86400000;
 }
