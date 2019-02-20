@@ -16,4 +16,7 @@ public interface ITasksDialogViewModel {
     void addTask(String text);
 
     LiveData<List<Pomodoro>> getPomodoroLoadedEvent();
+
+    void addDebugTasks();
+
 }

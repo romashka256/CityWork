@@ -62,6 +62,5 @@ public class SuccessDialogFragment extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
-
     }
 }

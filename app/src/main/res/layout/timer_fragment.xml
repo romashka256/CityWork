@@ -75,13 +75,13 @@
                 android:visibility="gone"
                 android:layout_marginEnd="8dp"
 
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/button"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn"
                 android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
 
         <Button
-                android:id="@+id/button"
+                android:id="@+id/timer_fragment_todobtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ToDo Btn"
@@ -107,7 +107,7 @@
                 android:text="5 минут"
                 android:visibility="gone" android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/timer_fragment_10min_rest"
-                app:layout_constraintStart_toEndOf="@+id/button" android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn" android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
@@ -118,7 +118,7 @@
                 android:text="Старт"
                 android:visibility="visible"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/button"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn"
                 android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

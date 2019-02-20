@@ -36,8 +36,14 @@ public class TasksDialog extends DialogFragment {
     @BindView(R.id.tasks_dialog_settings)
     ImageView settingIV;
 
+    public static final String TAG = "TasksDialog";
+
     private ITasksDialogViewModel iTasksDialogViewModel;
     private TaskListAdapter taskListAdapter;
+
+    public static TasksDialog getInstance() {
+        return new TasksDialog();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,14 +70,16 @@ public class TasksDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
             taskListAdapter = new TaskListAdapter(context, pomodoros);
             recyclerView.setAdapter(taskListAdapter);
+            taskListAdapter.notifyDataSetChanged();
         });
 
         closeIV.setOnClickListener(v -> {
+            iTasksDialogViewModel.addDebugTasks();
             //    this.dismiss();
         });
     }

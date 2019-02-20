@@ -38,7 +38,8 @@ public class Pomodoro extends io.realm.RealmObject {
 
     @PrimaryKey
     @Getter
-    int id;
+    @Setter
+    Integer id;
     @Getter
     @Setter
     long starttime;

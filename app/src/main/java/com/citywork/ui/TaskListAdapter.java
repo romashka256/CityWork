@@ -14,6 +14,7 @@ import com.citywork.R;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -22,11 +23,14 @@ import butterknife.ButterKnife;
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListVH> {
 
     private Context context;
-    private List<Pomodoro> pomodoros;
+    private List<Task> tasks;
 
     public TaskListAdapter(Context context, List<Pomodoro> pomodoros) {
         this.context = context;
-        this.pomodoros = pomodoros;
+        tasks = new ArrayList<>();
+        for (Pomodoro pom : pomodoros) {
+            tasks.addAll(pom.getTasks());
+        }
     }
 
     @NonNull
@@ -39,16 +43,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
     @Override
     public void onBindViewHolder(@NonNull TaskListVH taskListVH, int i) {
+        taskListVH.taskTextV.setText(tasks.get(i).getText());
 
     }
 
     @Override
     public int getItemCount() {
-        int count = 0;
-        for (Pomodoro pomodoro : pomodoros) {
-            count += pomodoro.getTasks().size();
-        }
-        return count;
+        return tasks.size();
     }
 
     public class TaskListVH extends RecyclerView.ViewHolder {
