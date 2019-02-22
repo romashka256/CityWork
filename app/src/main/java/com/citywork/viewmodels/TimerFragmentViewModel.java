@@ -128,7 +128,6 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
                 }, () -> {
                     //TODO SHOW WIN DIALOG
-                    pomodoroManger.createEmptyInstance();
                     mTimerStateChangedEvent.postValue(pomodoroManger.setComleted());
                     notificationUtils.closeAlarmNotification();
                 }));
