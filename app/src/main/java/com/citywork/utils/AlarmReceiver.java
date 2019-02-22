@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.DataBaseHelper;
 
 import timber.log.Timber;
@@ -14,7 +15,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private NotificationUtils notificationUtils;
     private SharedPrefensecUtils sharedPrefensecUtils;
-    private DataBaseHelper dataBaseHelper;
+    private DBHelper dataBaseHelper;
 
     @Override
     public void onReceive(Context context, Intent intent) {

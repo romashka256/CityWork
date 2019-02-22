@@ -22,6 +22,12 @@ public class Pomodoro extends io.realm.RealmObject {
     public Pomodoro() {
     }
 
+    public Pomodoro(TimerState timerState) {
+
+        this.tasks = new RealmList<>();
+        setTimerState(timerState);
+    }
+
     public Pomodoro(long starttime, long stoptime, TimerState timerState) {
         this.starttime = starttime;
         this.stoptime = stoptime;

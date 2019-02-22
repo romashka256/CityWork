@@ -8,6 +8,7 @@ import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.model.interfaces.OnTasksLoadedListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -15,39 +16,46 @@ import timber.log.Timber;
 
 public class DataBaseHelper implements DBHelper {
 
-    private Realm realm;
-
     public DataBaseHelper() {
     }
 
     @Override
     public void savePomodoro(Pomodoro pomodoro) {
-        realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(realm1 -> {
-            Task task;
-            for (int i = 0; i < pomodoro.getTasks().size() - 1; i++) {
-                task = pomodoro.getTasks().get(i);
-                if (task.getId() == null) {
-                    Number currentIdNum = realm.where(Task.class).max("id");
-                    int nextId;
-                    if (currentIdNum == null) {
-                        nextId = 1;
-                    } else {
-                        nextId = currentIdNum.intValue() + 1 + i;
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            realm.executeTransaction(realm1 -> {
+                Task task;
+                Number currentIdNum = realm.where(Task.class).max("id");
+                Integer nextId = null;
+                for (int i = 0; i < pomodoro.getTasks().size(); i++) {
+                    task = pomodoro.getTasks().get(i);
+                    if (task.getId() == null) {
+                        if (currentIdNum == null && nextId == null) {
+                            nextId = 1;
+                            currentIdNum = 0;
+                        } else {
+                            nextId = currentIdNum.intValue() + 1 + i;
+                        }
+                        task.setId(nextId);
                     }
-                    task.setId(nextId);
                 }
-            }
-            realm1.copyToRealmOrUpdate(pomodoro);
-        }, error -> {
-            error.getMessage();
-        });
-        realm.close();
+                realm1.copyToRealmOrUpdate(pomodoro);
+            });
+
+            realm.close();
+        } catch (IllegalStateException e) {
+            Timber.e(e);
+        } catch (NullPointerException e) {
+            Timber.e(e);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
     }
 
     @Override
     public void saveBuilding(Building building) {
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             if (building.getId() == null) {
                 Number currentIdNum = realm.where(Building.class).max("id");
@@ -80,7 +88,7 @@ public class DataBaseHelper implements DBHelper {
 
     @Override
     public void getLastPomodoro(OnPomodoroLoaded onPomodoroLoaded) {
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             Pomodoro pomodoro = realm1.where(Pomodoro.class).findAll().last();
             onPomodoroLoaded.onLoaded(pomodoro);
@@ -90,24 +98,25 @@ public class DataBaseHelper implements DBHelper {
 
     @Override
     public void getLastBuilding(OnLastBuildingLoadedListener onLastBuildingLoadedListener) {
-        realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm -> {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
 
-            RealmResults<Building> realmResults = realm.where(Building.class).findAll();
+            RealmResults<Building> realmResults = realm1.where(Building.class).findAll();
             if (realmResults.isEmpty()) {
                 onLastBuildingLoadedListener.OnLastBuildingLoaded(null);
             } else {
-                Building building = realm.copyFromRealm(realmResults.last());
+                Building building = realm1.copyFromRealm(realmResults.last());
                 Timber.i("Last building loaded : %s \n with Pomodoro : %s", building.toString(), building.getPomodoro().toString());
                 onLastBuildingLoadedListener.OnLastBuildingLoaded(building);
 
             }
         });
+        realm.close();
     }
 
     @Override
     public void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener) {
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
             if (realmResults != null)
@@ -116,12 +125,5 @@ public class DataBaseHelper implements DBHelper {
                 onTasksLoadedListener.onTasksLoaded(new ArrayList<>());
         });
         realm.close();
-    }
-
-    @Override
-    public void closeDB() {
-        if (!realm.isClosed()) {
-            realm.close();
-        }
     }
 }

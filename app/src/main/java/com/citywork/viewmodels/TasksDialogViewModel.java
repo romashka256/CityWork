@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.citywork.App;
 import com.citywork.Constants;
+import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {
 
-    private DataBaseHelper dataBaseHelper;
+    private DBHelper dataBaseHelper;
     private MutableLiveData<List<Pomodoro>> newPomodorosEvent = new MutableLiveData<>();
     private List<Pomodoro> pomodoros;
 
@@ -57,13 +58,9 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     public void addDebugTasks() {
         Pomodoro pomodoro = pomodoros.get(pomodoros.size() - 1);
         pomodoro.getTasks().add(new Task("Test task 1"));
-        pomodoro.getTasks().add(new Task("Test task 2"));
-        pomodoro.getTasks().add(new Task("Test task 3"));
-        Pomodoro pomodoro1 = pomodoros.get(pomodoros.size() - 2);
-        pomodoro1.getTasks().add(new Task("Test task 4"));
-        pomodoro1.getTasks().add(new Task("Test task 5"));
-        pomodoro1.getTasks().add(new Task("Test task 6"));
         dataBaseHelper.savePomodoro(pomodoro);
+        Pomodoro pomodoro1 = pomodoros.get(pomodoros.size() - 2);
+        pomodoro1.getTasks().add(new Task("Test task 2"));
         dataBaseHelper.savePomodoro(pomodoro1);
         List<Pomodoro> pomodoroList = new ArrayList<>();
         pomodoroList.add(pomodoro);

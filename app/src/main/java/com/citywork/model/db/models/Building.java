@@ -12,6 +12,10 @@ public class Building extends RealmObject {
         this.people_count = people_count;
     }
 
+    public Building(Pomodoro pomodoro) {
+        this.pomodoro = pomodoro;
+    }
+
     public Building() {
     }
 

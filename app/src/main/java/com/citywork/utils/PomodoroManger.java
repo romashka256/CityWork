@@ -26,13 +26,28 @@ public class PomodoroManger {
         this.peopleCount = building.getPeople_count();
     }
 
-    public void createNewInstance(long timerValue) {
+    public void createNewInstanceWithTime(long timerValue) {
         Timber.i("createNewInstance : %d", timerValue);
+
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 
         pomodoro = new Pomodoro(startTime, stopTime, TimerState.ONGOING);
         building = new Building(pomodoro, calculatePeopleCount(startTime, stopTime));
+    }
+
+    public void createEmptyInstance() {
+        pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
+        building = new Building(pomodoro);
+    }
+
+    public void setTimeToPomodoro(long timerValue) {
+        long startTime = System.currentTimeMillis();
+        long stopTime = startTime + timerValue * 1000;
+
+        pomodoro.setStarttime(startTime);
+        pomodoro.setStopresttime(stopTime);
+        building.setPeople_count(calculatePeopleCount(startTime, stopTime));
     }
 
     public int calculatePeopleCount(long starttime, long stopTime) {
@@ -55,11 +70,11 @@ public class PomodoroManger {
         return TimerState.WORK_COMPLETED;
     }
 
-    public TimerState prepareBeforeStart(){
-        if(pomodoro.getTimerState() != TimerState.WORK_COMPLETED){
+    public TimerState prepareBeforeStart() {
+        if (pomodoro.getTimerState() != TimerState.WORK_COMPLETED) {
             pomodoro.setTimerState(TimerState.ONGOING);
             return TimerState.ONGOING;
-        }else{
+        } else {
             pomodoro.setTimerState(TimerState.REST_ONGOING);
             return TimerState.REST_ONGOING;
         }

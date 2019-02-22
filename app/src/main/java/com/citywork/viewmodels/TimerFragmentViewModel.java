@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import com.citywork.App;
 import com.citywork.Constants;
+import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
@@ -28,7 +29,9 @@ import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
 import timber.log.Timber;
 
-public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
+public class
+
+TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     MutableLiveData<Long> mChangeTimeEvent = new MutableLiveData<>();
     MutableLiveData<Building> mCompleteEvent = new MutableLiveData<>();
@@ -39,7 +42,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     private TimerManager mTimerManager;
     private AlarmManagerImpl mAlarmManager;
-    private DataBaseHelper dataBaseHelper;
+    private DBHelper dataBaseHelper;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationUtils notificationUtils;
     private CompositeDisposable compositeDisposable;
@@ -88,7 +91,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     private void initAndStartTimer() {
-        pomodoroManger.createNewInstance(timerValue);
+        pomodoroManger.setTimeToPomodoro(timerValue);
         dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
         startTimer(createTimer(timerValue));
     }
@@ -125,6 +128,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                     pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
                 }, () -> {
                     //TODO SHOW WIN DIALOG
+                    pomodoroManger.createEmptyInstance();
                     mTimerStateChangedEvent.postValue(pomodoroManger.setComleted());
                     notificationUtils.closeAlarmNotification();
                 }));

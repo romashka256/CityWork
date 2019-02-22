@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        iMainActivityViewModel.onDestroy();
         Timber.i("onDestroy");
     }
 

@@ -11,4 +11,5 @@ public interface IMainActivityViewModel {
     LiveData<Building> getBuildingLiveData();
     long getTimeToGo();
     void closeNotifications();
+    void onDestroy();
 }

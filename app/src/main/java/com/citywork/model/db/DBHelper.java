@@ -12,5 +12,4 @@ public interface DBHelper {
     void getLastPomodoro(OnPomodoroLoaded onPomodoroLoaded);
     void getLastBuilding(OnLastBuildingLoadedListener onLastBuildingLoadedListener);
     void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener);
-    void closeDB();
 }

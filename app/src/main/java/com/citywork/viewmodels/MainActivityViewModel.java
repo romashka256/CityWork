@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.citywork.App;
+import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
@@ -39,7 +40,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     private TimerManager timerManager;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private Context context;
-    private DataBaseHelper dataBaseHelper;
+    private DBHelper dataBaseHelper;
     private PomodoroManger pomodoroManger;
     private NotificationUtils notificationUtils;
 
@@ -55,11 +56,10 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onCreate() {
-            dataBaseHelper.getLastBuilding(building -> {
-                if (building == null) {
-                    return;
-                }
-
+        dataBaseHelper.getLastBuilding(building -> {
+            if (building == null) {
+                pomodoroManger.createEmptyInstance();
+            } else {
                 pomodoroManger.setBuilding(building);
 
                 if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
@@ -68,7 +68,8 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                 }
 
                 buildingMutableLiveData.postValue(building);
-            });
+            }
+        });
 
         timerManager = App.getsAppComponent().getTimerManager();
     }
@@ -90,6 +91,11 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 
     @Override
