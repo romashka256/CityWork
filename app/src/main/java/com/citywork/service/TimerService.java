@@ -7,7 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.citywork.App;
-import com.citywork.model.db.models.Pomodoro;
+import com.citywork.model.db.models.Building;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
@@ -27,7 +27,7 @@ public class TimerService extends Service {
 
     private final IBinder mBinder = new TimerServiceBinder();
 
-    public final static String TIMERSERVICE_POMODORO = "pomodoro";
+    public final static String TIMERSERVICE_BUILDING = "building";
     public final static String TIMERSERVICE_TAG = "timerservice";
 
     private TimerManager mTimerManager;
@@ -37,7 +37,7 @@ public class TimerService extends Service {
     private AlarmManagerImpl alarmManager;
     private PomodoroManger pomodoroManger;
 
-    private Pomodoro pomodoro;
+    private Building building;
 
     private Disposable disposable;
 
@@ -47,9 +47,9 @@ public class TimerService extends Service {
         }
     }
 
-    public static Intent getIntent(Context context, Pomodoro pomodoro) {
+    public static Intent getIntent(Context context, Building building) {
         Intent intent = new Intent(context, TimerService.class);
-        intent.putExtra(TIMERSERVICE_POMODORO, Parcels.wrap(pomodoro));
+        intent.putExtra(TIMERSERVICE_BUILDING, Parcels.wrap(building));
         return intent;
     }
 
@@ -79,10 +79,10 @@ public class TimerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("onStartCommand");
         if (intent != null) {
-            pomodoro = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_POMODORO));
+            building = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_BUILDING));
 
             startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
-                    Calculator.getRemainingTime(pomodoro.getStoptime()))));
+                    Calculator.getRemainingTime(building.getPomodoro().getStoptime()))));
 
             disposable = mTimerManager.getTimer()
                     .map(Calculator::getMinutesAndSecondsFromSeconds)
@@ -91,10 +91,16 @@ public class TimerService extends Service {
                     .subscribe(time -> {
                         notificationUtils.updateTimerNotification(time);
                     }, e -> {
-                        pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+                        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                            pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
+                        } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
+                            pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
+                        }
                     }, () -> {
-                        notificationUtils.showAlarmNotification();
-                        pomodoro.setTimerState(TimerState.WORK_COMPLETED);
+                        stopForeground(true);
+                        if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+                        }
                     });
         }
 
@@ -105,8 +111,8 @@ public class TimerService extends Service {
         disposable.dispose();
     }
 
-    public Pomodoro getPomodoro() {
-        return pomodoro;
+    public Building getPomodoro() {
+        return building;
     }
 
     @Override

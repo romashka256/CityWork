@@ -9,7 +9,6 @@ import android.util.Pair;
 import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.model.db.DBHelper;
-import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.AlarmManagerImpl;
@@ -49,6 +48,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private PomodoroManger pomodoroManger;
 
+    private Integer percent;
+
     @Getter
     private long timerValue = Constants.DEFAULT_MIN_TIMER_VALUE;
 
@@ -69,7 +70,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         mTimerManager.setTimerListener(new TimerStateListener() {
             @Override
             public void onStop() {
-                mTimerStateChangedEvent.postValue(TimerState.NOT_ONGOING);
+                mTimerStateChangedEvent.postValue(TimerState.CANCELED);
             }
 
             @Override
@@ -121,11 +122,14 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(time -> {
                     mChangeTimeEvent.postValue(time);
-                    if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING)
-                        mChangeTimeEventInPercent.postValue(Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime())));
+                    if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                        percent = Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime()));
+                        mChangeTimeEventInPercent.postValue(percent);
+                        mProgressPeopleCountChangedEvent.postValue(new Pair(pomodoroManger.getBuilding().getPeople_count(), Calculator.calculatePeopleCountByPercent(pomodoroManger.getBuilding().getPeople_count(), percent)));
+                    }
                 }, e -> {
-                    mTimerStateChangedEvent.postValue(TimerState.NOT_ONGOING);
-                    pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+                    mTimerStateChangedEvent.postValue(TimerState.CANCELED);
+                    pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
                 }, () -> {
                     //TODO SHOW WIN DIALOG
                     mTimerStateChangedEvent.postValue(pomodoroManger.setComleted());
@@ -137,7 +141,11 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStopClicked() {
         mTimerManager.stopTimer();
         mAlarmManager.deleteAlarmTask();
-        pomodoroManger.getPomodoro().setTimerState(TimerState.NOT_ONGOING);
+        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING)
+            pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
+        else
+            pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
+        pomodoroManger.createEmptyInstance();
     }
 
     @Override
@@ -163,6 +171,9 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public void onResume() {
         if (pomodoroManger.getPomodoro() != null) {
+            if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING ||
+                    pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING)
+                checkAndStartTimer(pomodoroManger.getPomodoro());
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
             mAlarmManager.deleteAlarmTask();
             notificationUtils.closeTimerNotification();
@@ -186,13 +197,13 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     }
 
     @Override
-    public void onServiceConnected(Pomodoro pomodoro) {
-        pomodoroManger.setPomodoro(pomodoro);
-        if (pomodoro.getTimerState() == TimerState.WORK_COMPLETED) {
+    public void onServiceConnected(Building building) {
+        pomodoroManger.setBuilding(building);
+        if (building.getPomodoro().getTimerState() == TimerState.WORK_COMPLETED) {
             //TODO CHANGE THIS
-            mCompleteEvent.postValue(new Building(pomodoro, 60));
+            mCompleteEvent.postValue(building);
         } else {
-            checkAndStartTimer(pomodoro);
+            checkAndStartTimer(building.getPomodoro());
         }
     }
 
@@ -209,6 +220,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public void buildingReceived(Building building) {
         pomodoroManger.setBuilding(building);
+        mPeopleCountChange.postValue(building.getPeople_count());
         checkAndStartTimer(building.getPomodoro());
     }
 

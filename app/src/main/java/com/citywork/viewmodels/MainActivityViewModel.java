@@ -8,7 +8,6 @@ import android.os.Build;
 
 import com.citywork.App;
 import com.citywork.model.db.DBHelper;
-import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.service.TimerService;
@@ -57,7 +56,10 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onCreate() {
         dataBaseHelper.getLastBuilding(building -> {
-            if (building == null) {
+            if (building == null ||
+                    (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+                            building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+                            building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
                 pomodoroManger.createEmptyInstance();
             } else {
                 pomodoroManger.setBuilding(building);
@@ -83,13 +85,13 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onStop() {
         if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING && pomodoroManger.getPomodoro() != null && pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-            dataBaseHelper.getLastPomodoro(pomodoro -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(TimerService.getIntent(context, pomodoro));
-                } else {
-                    context.startService(TimerService.getIntent(context, pomodoro));
-                }
-            });
+            //  dataBaseHelper.getLastPomodoro(pomodoro -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+            } else {
+                context.startService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+            }
+            //  });
         }
     }
 

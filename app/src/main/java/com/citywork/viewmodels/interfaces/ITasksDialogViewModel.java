@@ -10,6 +10,7 @@ public interface ITasksDialogViewModel {
     void onCreate();
 
     void onPositionChanged();
+    void onAddClicked();
 
     void onChecked();
 
@@ -19,4 +20,5 @@ public interface ITasksDialogViewModel {
 
     void addDebugTasks();
 
+    void onTextChanged(String s);
 }

@@ -151,8 +151,14 @@ public class BuldingProgressView extends View {
         invalidate();
     }
 
-    public void setProgress(int peopleplus, int allpeople) {
+    public void setPeopleProgress(int peopleplus, int allpeople) {
         text = peopleplus + "/" + allpeople;
+        textWidth = textPaint.measureText(text);
+        invalidate();
+    }
+
+    public void setPeopleCount(int allpeople) {
+        text = 0 + "/" + allpeople;
         textWidth = textPaint.measureText(text);
         invalidate();
     }

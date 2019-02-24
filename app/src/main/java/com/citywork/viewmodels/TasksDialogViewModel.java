@@ -7,12 +7,11 @@ import android.arch.lifecycle.ViewModel;
 import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.model.db.DBHelper;
-import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
+import com.citywork.utils.TaskValidator;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {
@@ -20,11 +19,16 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     private DBHelper dataBaseHelper;
     private MutableLiveData<List<Pomodoro>> newPomodorosEvent = new MutableLiveData<>();
     private List<Pomodoro> pomodoros;
+    private TaskValidator taskValidator;
+    private String currentTask;
 
     @Override
     public void onCreate() {
 
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
+
+        //TODO INJECT
+        taskValidator = new TaskValidator();
 
         dataBaseHelper.getTasks(System.currentTimeMillis() - Constants.DEFAULT_TIME_AFTER_NOT_SHOW
                 , pomodoros -> {
@@ -59,12 +63,22 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
         Pomodoro pomodoro = pomodoros.get(pomodoros.size() - 1);
         pomodoro.getTasks().add(new Task("Test task 1"));
         dataBaseHelper.savePomodoro(pomodoro);
-        Pomodoro pomodoro1 = pomodoros.get(pomodoros.size() - 2);
-        pomodoro1.getTasks().add(new Task("Test task 2"));
-        dataBaseHelper.savePomodoro(pomodoro1);
-        List<Pomodoro> pomodoroList = new ArrayList<>();
-        pomodoroList.add(pomodoro);
-        pomodoroList.add(pomodoro1);
-        newPomodorosEvent.postValue(pomodoroList);
+        pomodoros.add(pomodoro);
+        newPomodorosEvent.postValue(pomodoros);
+    }
+
+    @Override
+    public void onTextChanged(String s) {
+        if (taskValidator.isValid(s)) {
+            currentTask = s;
+        }
+    }
+
+    @Override
+    public void onAddClicked() {
+        Pomodoro pomodoro = pomodoros.get(pomodoros.size() - 1);
+        pomodoro.getTasks().add(new Task(currentTask));
+        dataBaseHelper.savePomodoro(pomodoro);
+        newPomodorosEvent.postValue(pomodoros);
     }
 }

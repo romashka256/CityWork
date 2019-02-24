@@ -46,7 +46,7 @@ public class PomodoroManger {
         long stopTime = startTime + timerValue * 1000;
 
         pomodoro.setStarttime(startTime);
-        pomodoro.setStopresttime(stopTime);
+        pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
     }
 

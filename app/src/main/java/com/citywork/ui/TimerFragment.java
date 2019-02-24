@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,8 @@ import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import lombok.Setter;
 import timber.log.Timber;
 
 public class TimerFragment extends Fragment {
@@ -61,10 +57,10 @@ public class TimerFragment extends Fragment {
             new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
         iTimerFragmentViewModel.getPeopleCountChangedEvent().observe(this, peopleCount -> {
-
+            mBuidlingView.setPeopleCount(peopleCount);
         });
         iTimerFragmentViewModel.getProgressPeopleCountChangedEvent().observe(this, pair -> {
-            mBuidlingView.setProgress(pair.second, pair.first);
+            mBuidlingView.setPeopleProgress(pair.second, pair.first);
         });
         iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
             switch (timerState) {

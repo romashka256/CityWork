@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.util.Pair;
 
 import com.citywork.model.db.models.Building;
-import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.timer.TimerState;
 
 public interface ITimerFragmentViewModel {
@@ -30,7 +29,7 @@ public interface ITimerFragmentViewModel {
 
     void buildingReceived(Building building);
 
-    void onServiceConnected(Pomodoro pomodoro);
+    void onServiceConnected(Building building);
 
     LiveData<Long> getChangeTimeEvent();
 
