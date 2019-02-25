@@ -140,7 +140,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public void onStopClicked() {
         mTimerManager.stopTimer();
-        mAlarmManager.deleteAlarmTask();
+        mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
         if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING)
             pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
         else
@@ -157,7 +157,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public void onPause() {
         if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-            mAlarmManager.setAlarmForTime(pomodoroManger.getPomodoro().getStoptime());
+            mAlarmManager.setAlarmForTime(pomodoroManger.getPomodoro().getStoptime(), pomodoroManger.getPomodoro().getId());
         }
     }
 
@@ -175,7 +175,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING)
                 checkAndStartTimer(pomodoroManger.getPomodoro());
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
-            mAlarmManager.deleteAlarmTask();
+            mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
         }

@@ -11,6 +11,7 @@ import timber.log.Timber;
 
 public class AlarmReceiver extends BroadcastReceiver {
     public final static String INTENT_MESSAGE_KEY = "intent_message";
+    public final static String INTENT_POMODORO_ID_KEY = "intent_pomdoro_id";
     public final static String INTENT_MESSAGE = "show_notification";
 
     private NotificationUtils notificationUtils;

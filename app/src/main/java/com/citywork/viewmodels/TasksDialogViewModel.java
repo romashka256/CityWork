@@ -26,12 +26,13 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
     @Override
     public void onCreate() {
-
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
-        pomodoroManger  = App.getsAppComponent().getPomdoromManager();
+        pomodoroManger = App.getsAppComponent().getPomdoromManager();
 
         //TODO INJECT
         taskValidator = new TaskValidator();
+
+        currentTask = "";
 
         dataBaseHelper.getTasks(System.currentTimeMillis() - Constants.DEFAULT_TIME_AFTER_NOT_SHOW
                 , pomodoros -> {
@@ -63,17 +64,18 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
     @Override
     public void onTextChanged(String s) {
-        if (taskValidator.isValid(s)) {
-            currentTask = s;
-        }
+        currentTask = s;
     }
 
     @Override
     public void onAddClicked() {
-        pomodoroManger.getPomodoro().getTasks().add(new Task(currentTask));
-        dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
-        pomodoros.get(pomodoros.size() - 1).getTasks().add(new Task(currentTask));
-        newPomodorosEvent.postValue(pomodoros);
+        if (taskValidator.isValid(currentTask)) {
+            Task task = new Task(currentTask);
+            pomodoroManger.getPomodoro().getTasks().add(task);
+            dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+            pomodoros.get(pomodoros.size() - 1).getTasks().add(task);
+            newPomodorosEvent.postValue(pomodoros);
+        }
     }
 
     @Override

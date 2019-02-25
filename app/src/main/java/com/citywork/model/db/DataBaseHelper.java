@@ -9,7 +9,6 @@ import com.citywork.model.interfaces.OnTasksLoadedListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -35,7 +34,7 @@ public class DataBaseHelper implements DBHelper {
                             nextId = 1;
                             currentIdNum = 0;
                         } else {
-                            nextId = currentIdNum.intValue() + 1 + i;
+                            nextId = currentIdNum.intValue() + 1;
                         }
                         task.setId(nextId);
                     }
@@ -105,10 +104,11 @@ public class DataBaseHelper implements DBHelper {
             RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
             List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
             Pomodoro last = realm1.where(Pomodoro.class).findAll().last();
-            if (last != null) {
+            if (last != null && pomodoroList.isEmpty()) {
                 last = realm1.copyFromRealm(last);
+                pomodoroList.add(last);
             }
-            pomodoroList.add(last);
+
             if (realmResults != null)
                 onTasksLoadedListener.onTasksLoaded(pomodoroList);
             else
