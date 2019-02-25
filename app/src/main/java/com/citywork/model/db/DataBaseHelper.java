@@ -8,6 +8,7 @@ import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.model.interfaces.OnTasksLoadedListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import io.realm.Realm;
@@ -50,7 +51,6 @@ public class DataBaseHelper implements DBHelper {
         } catch (Exception e) {
             Timber.e(e);
         }
-
     }
 
     @Override
@@ -71,14 +71,8 @@ public class DataBaseHelper implements DBHelper {
 
             if (building.getPomodoro().getId() == null) {
                 Number currentIdNum = realm.where(Pomodoro.class).max("id");
-                int nextId;
-                if (currentIdNum == null) {
-                    nextId = 1;
-                } else {
-                    nextId = currentIdNum.intValue() + 1;
-                }
 
-                building.getPomodoro().setId(nextId);
+                building.getPomodoro().setId(System.currentTimeMillis());
             }
 
             realm1.copyToRealmOrUpdate(building);
@@ -94,6 +88,7 @@ public class DataBaseHelper implements DBHelper {
             onPomodoroLoaded.onLoaded(pomodoro);
             Timber.i("Last pomodoro loaded : %s", pomodoro.toString());
         });
+        realm.close();
     }
 
     @Override
@@ -108,7 +103,6 @@ public class DataBaseHelper implements DBHelper {
                 Building building = realm1.copyFromRealm(realmResults.last());
                 Timber.i("Last building loaded : %s \n with Pomodoro : %s", building.toString(), building.getPomodoro().toString());
                 onLastBuildingLoadedListener.OnLastBuildingLoaded(building);
-
             }
         });
         realm.close();
@@ -119,8 +113,14 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
+            List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
+            Pomodoro last = realm1.where(Pomodoro.class).findAll().last();
+            if (last != null) {
+                last = realm1.copyFromRealm(last);
+            }
+            pomodoroList.add(last);
             if (realmResults != null)
-                onTasksLoadedListener.onTasksLoaded(realm1.copyFromRealm(realmResults));
+                onTasksLoadedListener.onTasksLoaded(pomodoroList);
             else
                 onTasksLoadedListener.onTasksLoaded(new ArrayList<>());
         });

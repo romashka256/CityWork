@@ -19,6 +19,8 @@ import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import lombok.Getter;
 import timber.log.Timber;
 
@@ -55,12 +57,14 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onCreate() {
+        AtomicBoolean first = new AtomicBoolean(false);
         dataBaseHelper.getLastBuilding(building -> {
             if (building == null ||
                     (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
                             building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
                             building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
                 pomodoroManger.createEmptyInstance();
+                first.set(true);
             } else {
                 pomodoroManger.setBuilding(building);
 
@@ -72,6 +76,10 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                 buildingMutableLiveData.postValue(building);
             }
         });
+
+        if (first.get()) {
+            dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        }
 
         timerManager = App.getsAppComponent().getTimerManager();
     }

@@ -21,4 +21,6 @@ public interface ITasksDialogViewModel {
     void addDebugTasks();
 
     void onTextChanged(String s);
+
+    void onDismiss();
 }

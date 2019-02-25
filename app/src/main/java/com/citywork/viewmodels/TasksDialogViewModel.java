@@ -81,4 +81,9 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
         dataBaseHelper.savePomodoro(pomodoro);
         newPomodorosEvent.postValue(pomodoros);
     }
+
+    @Override
+    public void onDismiss() {
+
+    }
 }
