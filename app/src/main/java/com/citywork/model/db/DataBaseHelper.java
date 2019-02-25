@@ -58,20 +58,10 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             if (building.getId() == null) {
-                Number currentIdNum = realm.where(Building.class).max("id");
-                int nextId;
-                if (currentIdNum == null) {
-                    nextId = 1;
-                } else {
-                    nextId = currentIdNum.intValue() + 1;
-                }
-
-                building.setId(nextId);
+                building.setId(System.currentTimeMillis() / 1000);
             }
 
             if (building.getPomodoro().getId() == null) {
-                Number currentIdNum = realm.where(Pomodoro.class).max("id");
-
                 building.getPomodoro().setId(System.currentTimeMillis());
             }
 

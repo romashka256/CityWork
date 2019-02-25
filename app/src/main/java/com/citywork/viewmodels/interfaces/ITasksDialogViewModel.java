@@ -18,8 +18,6 @@ public interface ITasksDialogViewModel {
 
     LiveData<List<Pomodoro>> getPomodoroLoadedEvent();
 
-    void addDebugTasks();
-
     void onTextChanged(String s);
 
     void onDismiss();

@@ -27,10 +27,11 @@ public class Building extends RealmObject {
     public Building() {
     }
 
+
     @PrimaryKey
     @Setter
     @Getter
-    private Integer id;
+    private Long id;
     @Getter
     @Setter
     private Pomodoro pomodoro;
