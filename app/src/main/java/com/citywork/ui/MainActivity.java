@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 
 import com.citywork.R;
@@ -21,7 +22,6 @@ import com.citywork.viewmodels.MainActivityViewModel;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import butterknife.BindView;
@@ -52,15 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(this,R.color.blue));
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue));
         }
 
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host);
-
         intent = new Intent(getApplicationContext(), TimerService.class);
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
@@ -70,8 +67,12 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("Last pomodoro posted");
         });
 
-        bottomNaigationLayout.addItem(timerTabBtn, () -> navController.navigate(R.id.action_cityFragment_to_timerFragment));
-        bottomNaigationLayout.addItem(cityTabBtn, () -> navController.navigate(R.id.action_timerFragment_to_cityFragment));
+        bottomNaigationLayout.addItem(timerTabBtn, v -> {
+            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+        });
+        bottomNaigationLayout.addItem(cityTabBtn, (v) -> {
+            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+        });
         bottomNaigationLayout.activateTab(timerTabBtn);
 
         iMainActivityViewModel.onCreate();
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Timber.i("onResume");
         bindService(intent, serviceConnection, 0);
-        if(mBound){
+        if (mBound) {
             timerService.stopForeground(true);
             timerService.stopSelf();
             timerService.cancelTimer();
@@ -137,4 +138,12 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("onServiceDisconnected");
         }
     };
+
+    public void showBottomNav() {
+        bottomNaigationLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBottomNav() {
+        bottomNaigationLayout.setVisibility(View.GONE);
+    }
 }

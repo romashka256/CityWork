@@ -3,10 +3,11 @@ package com.citywork.ui.customviews;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class BottomNaigationLayout extends ConstraintLayout {
 
@@ -38,7 +39,7 @@ public class BottomNaigationLayout extends ConstraintLayout {
 
         bottomNavigationItemView.setOnClickListener(v -> {
             if (activateTab(bottomNavigationItemView)) {
-                onTabClickLinetener.onClick();
+                onTabClickLinetener.onClick(v);
             }
         });
     }

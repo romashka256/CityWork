@@ -1,6 +1,8 @@
 package com.citywork.ui;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
+import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -43,6 +46,13 @@ public class TimerFragment extends Fragment {
     Button mTodoBtn;
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
+    private MainActivity mainActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        this.mainActivity = (MainActivity) context;
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,9 +142,15 @@ public class TimerFragment extends Fragment {
         });
 
         stopButton.setOnClickListener(v -> {
-            circleTimer.disable();
-            iTimerFragmentViewModel.onStopClicked();
-
+            new AlertDialog.Builder(mainActivity)
+                    .setTitle("Вы уверены, что хотите остановить ?")
+                    .setPositiveButton("Остановить", (dialog, which) -> {
+                        circleTimer.disable();
+                        iTimerFragmentViewModel.onStopClicked();
+                        dialog.cancel();
+                    })
+                    .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
+                    .show();
         });
 
         mBuidlingView.setOnClickListener(v -> {
@@ -168,12 +184,12 @@ public class TimerFragment extends Fragment {
         });
 
         mSettingsBtn.setOnClickListener(v -> {
-
+            Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_settingsFragment);
         });
 
         mTodoBtn.setOnClickListener(v -> {
 
-            TasksDialog.getInstance().show(getActivity().getSupportFragmentManager(), TasksDialog.TAG);
+            TasksDialog.getInstance().show(mainActivity.getSupportFragmentManager(), TasksDialog.TAG);
             // Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_tasksDialog);
         });
     }

@@ -24,9 +24,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
     private Context context;
     private List<Task> tasks;
+    private OnTaskClickListener onTaskClickListener;
 
-    public TaskListAdapter(Context context, List<Pomodoro> pomodoros) {
+    public TaskListAdapter(Context context, List<Pomodoro> pomodoros, OnTaskClickListener onTaskClickListener) {
         this.context = context;
+        this.onTaskClickListener = onTaskClickListener;
         tasks = new ArrayList<>();
         for (Pomodoro pom : pomodoros) {
             tasks.addAll(pom.getTasks());
@@ -43,7 +45,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
     @Override
     public void onBindViewHolder(@NonNull TaskListVH taskListVH, int i) {
-        taskListVH.taskTextV.setText(tasks.get(i).getText());
+        Task task = tasks.get(i);
+
+        taskListVH.taskTextV.setText(task.getText());
+        taskListVH.checkBox.setChecked(task.isDone());
+
+        taskListVH.itemView.setOnClickListener(v -> {
+            taskListVH.checkBox.setChecked(!task.isDone());
+            onTaskClickListener.onClick(tasks.get(i));
+        });
 
     }
 
@@ -62,6 +72,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         public TaskListVH(@NonNull View itemView) {
             super(itemView);
+
+
 
             ButterKnife.bind(this, itemView);
         }

@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.citywork.App;
 import com.citywork.model.db.DBHelper;
-import com.citywork.model.db.DataBaseHelper;
+import com.citywork.model.db.models.Building;
+import com.citywork.utils.timer.TimerState;
 
 import timber.log.Timber;
 
@@ -17,6 +19,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private NotificationUtils notificationUtils;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private DBHelper dataBaseHelper;
+    private Building building;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,11 +30,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         //TODO INJECT
         notificationUtils = new NotificationUtils(context);
         sharedPrefensecUtils = new SharedPrefensecUtils(context);
-        dataBaseHelper = new DataBaseHelper();
+        dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
 
         if (message.equals(INTENT_MESSAGE)) {
             Timber.i("showAlarmNotification");
             notificationUtils.showAlarmNotification();
+            dataBaseHelper.getLastBuilding(building -> {
+                this.building = building;
+            });
+
+            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+            dataBaseHelper.saveBuilding(building);
             //TODO SET POMODORO COMPLETED
         }
 

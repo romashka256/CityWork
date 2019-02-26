@@ -53,6 +53,15 @@ public class DataBaseHelper implements DBHelper {
     }
 
     @Override
+    public void saveTask(Task task) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            realm1.copyToRealmOrUpdate(task);
+        });
+        realm.close();
+    }
+
+    @Override
     public void saveBuilding(Building building) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {

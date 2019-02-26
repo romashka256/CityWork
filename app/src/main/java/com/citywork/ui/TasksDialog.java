@@ -23,6 +23,7 @@ import com.citywork.R;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
+import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -72,7 +73,6 @@ public class TasksDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-
         Dialog dialog = getDialog();
         if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -87,13 +87,14 @@ public class TasksDialog extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
-            taskListAdapter = new TaskListAdapter(context, pomodoros);
+            taskListAdapter = new TaskListAdapter(context, pomodoros, task -> {
+                iTasksDialogViewModel.onTaskClicked(task);
+            });
             recyclerView.setAdapter(taskListAdapter);
             taskListAdapter.notifyDataSetChanged();
         });
 
         closeIV.setOnClickListener(v -> {
-            // iTasksDialogViewModel.addDebugTasks();
             dismiss();
         });
 
@@ -117,6 +118,11 @@ public class TasksDialog extends DialogFragment {
         sendIV.setOnClickListener(v -> {
             iTasksDialogViewModel.onAddClicked();
             editText.setText("");
+        });
+
+        settingIV.setOnClickListener(v -> {
+            dismiss();
+            Navigation.findNavController(getActivity(), R.id.timer_fragment_settings).navigate(R.id.action_timerFragment_to_settingsFragment);
         });
     }
 

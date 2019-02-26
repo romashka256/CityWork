@@ -82,4 +82,10 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     public void onDismiss() {
 
     }
+
+    @Override
+    public void onTaskClicked(Task task) {
+        task.setDone(!task.isDone());
+        dataBaseHelper.saveTask(task);
+    }
 }

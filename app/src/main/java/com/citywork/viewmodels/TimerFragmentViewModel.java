@@ -146,6 +146,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         else
             pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
         pomodoroManger.createEmptyInstance();
+        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
     }
 
     @Override
@@ -165,7 +166,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStop() {
         mTimerManager.pauseTimer();
         compositeDisposable.clear();
-        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        //dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
     }
 
     @Override
@@ -219,6 +220,11 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void buildingReceived(Building building) {
+        if (building.getPomodoro().getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+        } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+            building.getPomodoro().setTimerState(TimerState.COMPLETED);
+        }
         pomodoroManger.setBuilding(building);
         mPeopleCountChange.postValue(building.getPeople_count());
         checkAndStartTimer(building.getPomodoro());
