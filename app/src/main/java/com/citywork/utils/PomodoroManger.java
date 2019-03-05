@@ -72,7 +72,7 @@ public class PomodoroManger {
     }
 
     public TimerState prepareBeforeStart() {
-        if (pomodoro.getTimerState() != TimerState.WORK_COMPLETED) {
+        if (pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() == TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.ONGOING);
             return TimerState.ONGOING;
         } else {

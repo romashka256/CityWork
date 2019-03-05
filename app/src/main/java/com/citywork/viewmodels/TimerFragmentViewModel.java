@@ -166,20 +166,46 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStop() {
         mTimerManager.pauseTimer();
         compositeDisposable.clear();
-        //dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
     }
 
     @Override
     public void onResume() {
         if (pomodoroManger.getPomodoro() != null) {
-            if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING ||
-                    pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING)
-                checkAndStartTimer(pomodoroManger.getPomodoro());
+            if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                if (!(pomodoroManger.getPomodoro().getStoptime() <= 0)) {
+                    checkAndStartTimer(pomodoroManger.getPomodoro());
+                } else {
+                    pomodoroManger.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+                    dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+                    mTimerStateChangedEvent.postValue(TimerState.WORK_COMPLETED);
+                }
+            } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
+                if (!(pomodoroManger.getPomodoro().getStopresttime() <= 0)) {
+                    checkAndStartTimer(pomodoroManger.getPomodoro());
+                } else {
+                    pomodoroManger.getPomodoro().setTimerState(TimerState.COMPLETED);
+                    dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+                    mTimerStateChangedEvent.postValue(TimerState.COMPLETED);
+                }
+            }
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
             mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
         }
+    }
+
+    @Override
+    public void onSuccessDialogShowed() {
+        pomodoroManger.getPomodoro().setTimerState(TimerState.REST);
+        mTimerStateChangedEvent.postValue(TimerState.REST);
+        dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+    }
+
+    @Override
+    public Building getBuilding() {
+        return pomodoroManger.getBuilding();
     }
 
     @Override
@@ -232,10 +258,12 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private void checkAndStartTimer(Pomodoro pomodoro) {
         Timber.i("checkAndStartTimer");
-        if (mTimerManager.getTimer() == null) {
-            startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
-        } else {
-            startTimer(getTimer());
+        if (!(pomodoro.getStoptime() <= 0)) {
+            if (mTimerManager.getTimer() == null) {
+                startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
+            } else {
+                startTimer(getTimer());
+            }
         }
     }
 

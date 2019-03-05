@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class TimerFragment extends Fragment {
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
+    private SuccessDialogFragment successDialogFragment;
 
     @Override
     public void onAttach(Context context) {
@@ -64,7 +66,6 @@ public class TimerFragment extends Fragment {
         iTimerFragmentViewModel.getTimerCompleteEvent().observe(this, building -> {
             Timber.i("TimerCompleted Event Received");
             circleTimer.disable();
-            new SuccessDialogFragment().show(getFragmentManager(), Constants.DIALOG_SUCCESS_TAG);
         });
         iTimerFragmentViewModel.getPeopleCountChangedEvent().observe(this, peopleCount -> {
             mBuidlingView.setPeopleCount(peopleCount);
@@ -78,6 +79,12 @@ public class TimerFragment extends Fragment {
                     timerongoingView();
                     break;
                 case WORK_COMPLETED:
+                    Timber.i("WORK_COMPLETED POSTED");
+                    showSuccessDialog();
+                    restView();
+                    break;
+                case REST:
+                    Timber.i("REST POSTED");
                     restView();
                     break;
                 case NOT_ONGOING:
@@ -94,9 +101,33 @@ public class TimerFragment extends Fragment {
                     break;
                 case COMPLETED:
                     notongoingView();
+                    circleTimer.disable();
                     break;
             }
         });
+    }
+
+    private void showSuccessDialog() {
+        Timber.i("Show Success Diagog");
+        successDialogFragment = SuccessDialogFragment.newInstance(iTimerFragmentViewModel.getBuilding());
+
+        FragmentManager fm = getFragmentManager();
+
+        if (successDialogFragment.getDialog() == null) {
+            successDialogFragment.show(fm, Constants.DIALOG_SUCCESS_TAG);
+
+            fm.executePendingTransactions();
+
+            iTimerFragmentViewModel.onSuccessDialogShowed();
+
+//            successDialogFragment.getDialog().setOnDismissListener(dialog -> {
+//                iTimerFragmentViewModel.onSuccessDialogDismiss();
+//            });
+//
+//            successDialogFragment.getDialog().setOnCancelListener(dialog -> {
+//                iTimerFragmentViewModel.onSuccessDialogDismiss();
+//            });
+        }
     }
 
     private void timerongoingView() {
@@ -107,6 +138,7 @@ public class TimerFragment extends Fragment {
     }
 
     private void restView() {
+        Timber.i("Show Rest View");
         startButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.VISIBLE);
@@ -118,8 +150,11 @@ public class TimerFragment extends Fragment {
         m10minRest.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         startButton.setVisibility(View.VISIBLE);
+        circleTimer.disable();
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
+
+
 
 
     @Nullable
@@ -200,6 +235,10 @@ public class TimerFragment extends Fragment {
         Timber.i("onPause");
 
         iTimerFragmentViewModel.onPause();
+
+        if(successDialogFragment != null && successDialogFragment.getDialog() != null && successDialogFragment.getDialog().isShowing()){
+            successDialogFragment.dismiss();
+        }
     }
 
     @Override
@@ -218,6 +257,10 @@ public class TimerFragment extends Fragment {
     public void onStop() {
         super.onStop();
         Timber.i("onStop");
+
+        if (successDialogFragment != null && successDialogFragment.isResumed()) {
+            successDialogFragment.dismiss();
+        }
 
         iTimerFragmentViewModel.onStop();
     }

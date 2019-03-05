@@ -100,6 +100,8 @@ public class TimerService extends Service {
                         stopForeground(true);
                         if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                             building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+                        }else if(building.getPomodoro().getTimerState() == TimerState.REST_ONGOING){
+                            building.getPomodoro().setTimerState(TimerState.REST_CANCELED);
                         }
                     });
         }

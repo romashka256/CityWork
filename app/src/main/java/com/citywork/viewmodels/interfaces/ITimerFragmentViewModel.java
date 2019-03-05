@@ -15,6 +15,8 @@ public interface ITimerFragmentViewModel {
 
     void on10MinRestClicked();
 
+    void onSuccessDialogShowed();
+
     void onDebugBtnClicked();
 
     void onPause();
@@ -24,6 +26,8 @@ public interface ITimerFragmentViewModel {
     void onStop();
 
     long getTimerValue();
+
+    Building getBuilding();
 
     void onTimerValueChanged(long time);
 
