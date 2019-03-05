@@ -209,7 +209,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onResume() {
         if (pomodoroManger.getPomodoro() != null) {
             if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-                if (!(pomodoroManger.getPomodoro().getStoptime() <= 0)) {
+                if (!(Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStoptime()) <= 0)) {
                     checkAndStartTimer(pomodoroManger.getPomodoro());
                 } else {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
@@ -217,7 +217,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     mTimerStateChangedEvent.postValue(TimerState.WORK_COMPLETED);
                 }
             } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
-                if (!(pomodoroManger.getPomodoro().getStopresttime() <= 0)) {
+                if (!((Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStopresttime()) <= 0))) {
                     checkAndStartTimer(pomodoroManger.getPomodoro());
                 } else {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.COMPLETED);
@@ -226,9 +226,9 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 }
             }
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
-            if(pomodoroManger.getBuilding().getIconName() != null){
+            if (pomodoroManger.getBuilding().getIconName() != null) {
                 mBuidingChanged.postValue(pomodoroManger.getBuilding().getIconName());
-            }else{
+            } else {
                 mBuidingChanged.postValue(buildingNames.get(Calculator.calculateBuidling(timerValue)));
             }
 

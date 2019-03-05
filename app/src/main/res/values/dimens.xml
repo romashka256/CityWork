@@ -9,4 +9,6 @@
 
     <dimen name="success_dialog_congrats_text_size">28sp</dimen>
     <dimen name="success_dialog_congrats_botton_text_size">20sp</dimen>
+
+    <dimen name="city_land_raw">5dp</dimen>
 </resources>
