@@ -84,6 +84,11 @@ public class BuldingProgressView extends View {
         init();
     }
 
+    public void setImage(Bitmap bitmapOrg) {
+        this.bitmapOrg = bitmapOrg;
+        invalidate();
+    }
+
     private void init() {
         bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.ic_icon_building1);
 

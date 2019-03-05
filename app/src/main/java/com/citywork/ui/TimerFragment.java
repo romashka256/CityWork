@@ -1,6 +1,7 @@
 package com.citywork.ui;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.R;
 import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
+import com.citywork.utils.VectorUtils;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
@@ -105,6 +108,10 @@ public class TimerFragment extends Fragment {
                     break;
             }
         });
+
+        iTimerFragmentViewModel.getBuildingChanged().observe(this, iconName -> {
+            mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(iconName, "drawable", mainActivity.getPackageName())));
+        });
     }
 
     private void showSuccessDialog() {
@@ -153,8 +160,6 @@ public class TimerFragment extends Fragment {
         circleTimer.disable();
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
-
-
 
 
     @Nullable
@@ -236,7 +241,7 @@ public class TimerFragment extends Fragment {
 
         iTimerFragmentViewModel.onPause();
 
-        if(successDialogFragment != null && successDialogFragment.getDialog() != null && successDialogFragment.getDialog().isShowing()){
+        if (successDialogFragment != null && successDialogFragment.getDialog() != null && successDialogFragment.getDialog().isShowing()) {
             successDialogFragment.dismiss();
         }
     }

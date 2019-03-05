@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import com.citywork.App;
 import com.citywork.Constants;
+import com.citywork.R;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
@@ -20,6 +21,9 @@ import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.utils.timer.TimerStateListener;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -37,6 +41,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     MutableLiveData<Integer> mPeopleCountChange = new MutableLiveData<>();
     MutableLiveData<TimerState> mTimerStateChangedEvent = new MutableLiveData<>();
     MutableLiveData<Integer> mChangeTimeEventInPercent = new MutableLiveData<>();
+    MutableLiveData<String> mBuidingChanged = new MutableLiveData<>();
     MutableLiveData<Pair<Integer, Integer>> mProgressPeopleCountChangedEvent = new MutableLiveData<>();
 
     private TimerManager mTimerManager;
@@ -54,6 +59,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     private long timerValue = Constants.DEFAULT_MIN_TIMER_VALUE;
 
     private Context appContext;
+    private List<String> buildingNames;
+
 
     public TimerFragmentViewModel() {
         mTimerManager = App.getsAppComponent().getTimerManager();
@@ -66,6 +73,24 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         //TODO INJECT
         notificationUtils = new NotificationUtils(appContext);
 
+        buildingNames = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) {
+            switch (i) {
+                case 0:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    break;
+                case 1:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building2));
+                    break;
+                case 2:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building3));
+                    break;
+                case 3:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    break;
+            }
+        }
 
         mTimerManager.setTimerListener(new TimerStateListener() {
             @Override
@@ -93,18 +118,29 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private void initAndStartTimer() {
         pomodoroManger.setTimeToPomodoro(timerValue);
-        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        pomodoroManger.getBuilding().setIconName(buildingNames.get(Calculator.calculateBuidling(timerValue)));
+        saveBuidlingToDB();
         startTimer(createTimer(timerValue));
+    }
+
+    private void saveBuidlingToDB() {
+        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
     }
 
     @Override
     public void on5MinRestClicked() {
         startTimer(createTimer(300));
+        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (300 * 1000));
+        //TODO SAVE POMODORO INSTEAD BUILDING
+        saveBuidlingToDB();
     }
 
     @Override
     public void on10MinRestClicked() {
         startTimer(createTimer(600));
+        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (600 * 1000));
+        //TODO SAVE POMODORO INSTEAD BUILDING
+        saveBuidlingToDB();
     }
 
     private BehaviorSubject<Long> createTimer(long timerTime) {
@@ -132,7 +168,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
                 }, () -> {
                     //TODO SHOW WIN DIALOG
-                    mTimerStateChangedEvent.postValue(pomodoroManger.setComleted());
+                    mTimerStateChangedEvent.postValue(pomodoroManger.setComleted(buildingNames.get(Calculator.calculateBuidling(timerValue))));
                     notificationUtils.closeAlarmNotification();
                 }));
     }
@@ -190,6 +226,12 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 }
             }
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
+            if(pomodoroManger.getBuilding().getIconName() != null){
+                mBuidingChanged.postValue(pomodoroManger.getBuilding().getIconName());
+            }else{
+                mBuidingChanged.postValue(buildingNames.get(Calculator.calculateBuidling(timerValue)));
+            }
+
             mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
@@ -241,6 +283,13 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             mPeopleCountChange.postValue(peopleCount);
             pomodoroManger.setPeopleCount(peopleCount);
         }
+        String iconName = buildingNames.get(Calculator.calculateBuidling(time));
+        if (pomodoroManger.getBuilding().getIconName() != iconName) {
+            pomodoroManger.getBuilding().setIconName(iconName);
+            mBuidingChanged.postValue(iconName);
+        }
+
+
         timerValue = time;
     }
 
@@ -251,6 +300,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
             building.getPomodoro().setTimerState(TimerState.COMPLETED);
         }
+
         pomodoroManger.setBuilding(building);
         mPeopleCountChange.postValue(building.getPeople_count());
         checkAndStartTimer(building.getPomodoro());
@@ -281,5 +331,10 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public LiveData<Pair<Integer, Integer>> getProgressPeopleCountChangedEvent() {
         return mProgressPeopleCountChangedEvent;
+    }
+
+    @Override
+    public LiveData<String> getBuildingChanged() {
+        return mBuidingChanged;
     }
 }

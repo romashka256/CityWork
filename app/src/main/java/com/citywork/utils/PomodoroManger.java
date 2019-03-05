@@ -1,5 +1,6 @@
 package com.citywork.utils;
 
+import com.citywork.Constants;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.timer.TimerState;
@@ -20,25 +21,41 @@ public class PomodoroManger {
     @Getter
     private int peopleCount;
 
+    private Long timerValue;
+
     public void setBuilding(Building building) {
         this.building = building;
         this.pomodoro = building.getPomodoro();
         this.peopleCount = building.getPeople_count();
     }
 
-    public void createNewInstanceWithTime(long timerValue) {
+    public void createNewInstanceWithTime(long timerValue, String iconname) {
+        this.timerValue = timerValue;
         Timber.i("createNewInstance : %d", timerValue);
 
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 
         pomodoro = new Pomodoro(startTime, stopTime, TimerState.ONGOING);
-        building = new Building(pomodoro, calculatePeopleCount(startTime, stopTime));
+        building = new Building(pomodoro, calculatePeopleCount(startTime, stopTime), iconname);
     }
 
-    public void createEmptyInstance() {
+    public void createEmptyInstance(String iconname) {
         pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
-        building = new Building(pomodoro);
+        if (timerValue != null) {
+            building = new Building(pomodoro, iconname);
+        } else {
+            building = new Building(pomodoro, iconname);
+        }
+    }
+
+  public void createEmptyInstance() {
+        pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
+        if (timerValue != null) {
+            building = new Building(pomodoro);
+        } else {
+            building = new Building(pomodoro);
+        }
     }
 
     public void setTimeToPomodoro(long timerValue) {
@@ -58,7 +75,7 @@ public class PomodoroManger {
         return Calculator.calculatePeopleCount(time);
     }
 
-    public TimerState setComleted() {
+    public TimerState setComleted(String iconName) {
         if (pomodoro.getTimerState() == TimerState.ONGOING) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
             return TimerState.WORK_COMPLETED;
@@ -72,7 +89,7 @@ public class PomodoroManger {
     }
 
     public TimerState prepareBeforeStart() {
-        if (pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() == TimerState.REST_ONGOING) {
+        if (pomodoro.getTimerState() != TimerState.REST && pomodoro.getTimerState() != TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.ONGOING);
             return TimerState.ONGOING;
         } else {

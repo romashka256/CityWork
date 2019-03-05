@@ -11,9 +11,11 @@ public interface ITasksDialogViewModel {
     void onCreate();
 
     void onPositionChanged();
+
     void onAddClicked();
 
     void onChecked();
+
     void onTaskClicked(Task task);
 
     void addTask(String text);
