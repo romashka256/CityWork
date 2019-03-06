@@ -75,13 +75,12 @@ public class PomodoroManger {
         return Calculator.calculatePeopleCount(time);
     }
 
-    public TimerState setComleted(String iconName) {
+    public TimerState setComleted() {
         if (pomodoro.getTimerState() == TimerState.ONGOING) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
             return TimerState.WORK_COMPLETED;
         } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.COMPLETED);
-            createEmptyInstance();
             return TimerState.COMPLETED;
         }
 

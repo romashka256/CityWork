@@ -18,7 +18,7 @@ public class TimerImpl implements Timer {
         stopped = false;
 
         Timber.i("startTimer");
-        return Flowable.interval(1, TimeUnit.SECONDS).take(time)
+        return Flowable.interval(100, TimeUnit.MILLISECONDS).take(time)
                 .takeWhile(unused -> !stopped);
     }
 

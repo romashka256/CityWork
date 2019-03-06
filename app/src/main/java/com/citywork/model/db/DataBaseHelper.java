@@ -1,16 +1,22 @@
 package com.citywork.model.db;
 
+import android.arch.lifecycle.LiveData;
+
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
+import com.citywork.model.interfaces.OnBuildingsLoadedListener;
 import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.model.interfaces.OnTasksLoadedListener;
+import com.citywork.utils.timer.TimerState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import timber.log.Timber;
 
@@ -124,5 +130,15 @@ public class DataBaseHelper implements DBHelper {
                 onTasksLoadedListener.onTasksLoaded(new ArrayList<>());
         });
         realm.close();
+    }
+
+    public void loadAllCompletedBuildings(OnBuildingsLoadedListener onBuildingsLoadedListener) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+           List<Building> realmList = realm1.copyFromRealm(realm1.where(Building.class).equalTo("pomodoro.timerState", TimerState.COMPLETED.toString()).findAll());
+           List<Building> realmList1 = realm1.copyFromRealm(realm1.where(Building.class).findAll());
+
+           onBuildingsLoadedListener.onBuildingsLoaded(realmList);
+        });
     }
 }
