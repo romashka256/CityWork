@@ -8,8 +8,6 @@ import android.util.Pair;
 import com.citywork.App;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
-import com.citywork.model.interfaces.OnBuildingsLoadedListener;
-import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
 
 import java.util.ArrayList;
@@ -40,25 +38,36 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     private List<Pair<Date, List<Building>>> sortBuildings(List<Building> buildings) {
         List<Pair<Date, List<Building>>> sortedPairs = new ArrayList<>();
-//        Date date, prevdate;
+        Date date, prevdate;
         Pair<Date, List<Building>> pair;
-//        Calendar calendar = Calendar.getInstance();
-        Calendar prevCalendar = Calendar.getInstance();
+        Calendar prevCalendar = null;
         List<Building> listForPair = new ArrayList<>();
-        for (Building building : buildings) {
 
-            Date date = new Date(building.getPomodoro().getStoptime());
-            Date prevdate = new Date(building.getPomodoro().getStoptime());
+        for (int i = 0; i < buildings.size(); i++) {
+            Building building = buildings.get(i);
+
+            date = new Date(building.getPomodoro().getStoptime());
+
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
 
-            if (prevCalendar.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR) || building.getPomodoro().getTimerState() == TimerState.COMPLETED) {
+            if (prevCalendar != null &&
+                    prevCalendar.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR)) {
+                pair = new Pair<>(date, listForPair);
+                sortedPairs.add(pair);
                 listForPair = new ArrayList<>();
-                prevCalendar.setTime(prevdate);
+            }
+
+            prevdate = new Date(building.getPomodoro().getStoptime());
+            prevCalendar = Calendar.getInstance();
+            prevCalendar.setTime(prevdate);
+
+            listForPair.add(building);
+
+            if (i == buildings.size() - 1) {
                 pair = new Pair<>(date, listForPair);
                 sortedPairs.add(pair);
             }
-            listForPair.add(building);
         }
         return sortedPairs;
     }
