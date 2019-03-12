@@ -7,7 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.citywork.R;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +30,9 @@ public class CityView extends ViewGroup {
 
     private List<Bitmap> buildingBitmaps;
     private List<String> buildingIconNames;
+
+    private int cityWidth;
+    private int cityHeight;
 
 
     public CityView(Context context) {
@@ -99,7 +106,10 @@ public class CityView extends ViewGroup {
             width = minCityWidth;
         }
 
-        setMeasuredDimension(width, (int) dpToPx(DEFAULT_CITY_HEIGHT));
+        cityWidth = width;
+        cityHeight = (int) dpToPx(DEFAULT_CITY_HEIGHT);
+
+        setMeasuredDimension(width, cityHeight);
     }
 
     @Override
@@ -126,8 +136,12 @@ public class CityView extends ViewGroup {
                     top,
                     left + buildingW,
                     top + buildingH);
-            widthUsed += (buildingW + left);
+            widthUsed += (buildingW + buildingsMargin);
         }
+
+        ImageView divider = new ImageView(context);
+        divider.setImageResource(R.drawable.city_divider);
+        divider.layout((int) (widthUsed + buildingsMargin), 50, (int) ((widthUsed + buildingsMargin) + dpToPx(3)), cityHeight);
     }
 
     public float dpToPx(float dp) {

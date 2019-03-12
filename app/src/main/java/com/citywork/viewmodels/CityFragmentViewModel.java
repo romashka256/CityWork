@@ -48,26 +48,34 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
             date = new Date(building.getPomodoro().getStoptime());
 
+            if (i == buildings.size() - 1) {
+                listForPair.add(building);
+                pair = new Pair<>(date, listForPair);
+                sortedPairs.add(pair);
+                break;
+            }
+
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
 
-            if (prevCalendar != null &&
-                    prevCalendar.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR)) {
+            int dayofweek = calendar.get(Calendar.DAY_OF_MONTH);
+            int dayofweekp;
+            if (prevCalendar != null) {
+                dayofweekp = prevCalendar.get(Calendar.DAY_OF_MONTH);
+            }
+
+            if (prevCalendar != null && prevCalendar.get(Calendar.DAY_OF_MONTH) != calendar.get(Calendar.DAY_OF_MONTH)) {
                 pair = new Pair<>(date, listForPair);
                 sortedPairs.add(pair);
                 listForPair = new ArrayList<>();
             }
 
             prevdate = new Date(building.getPomodoro().getStoptime());
+
             prevCalendar = Calendar.getInstance();
             prevCalendar.setTime(prevdate);
 
             listForPair.add(building);
-
-            if (i == buildings.size() - 1) {
-                pair = new Pair<>(date, listForPair);
-                sortedPairs.add(pair);
-            }
         }
         return sortedPairs;
     }
