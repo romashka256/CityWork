@@ -7,11 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.citywork.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,8 +138,8 @@ public class CityView extends ViewGroup {
         }
 
         ImageView divider = new ImageView(context);
-        divider.setImageResource(R.drawable.city_divider);
-        divider.layout((int) (widthUsed + buildingsMargin), 50, (int) ((widthUsed + buildingsMargin) + dpToPx(3)), cityHeight);
+        divider.setBackgroundResource(R.drawable.city_divider);
+        divider.layout((int) (cityWidth - dpToPx(5)), 0, cityWidth, cityHeight);
     }
 
     public float dpToPx(float dp) {

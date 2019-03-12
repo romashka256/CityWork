@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <rotate android:fromDegrees="90">
-            <shape android:shape="line">
-                <gradient
-                    android:angle="270"
-                    android:endColor="#00000000"
-                    android:startColor="@color/white" />
-                <stroke
-                    android:width="5dp"
-                    android:color="@color/white"
-                    android:dashWidth="30dp"
-                    android:dashGap="20dp" />
-            </shape>
-        </rotate>
-    </item>
-</layer-list>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white"/>
+</shape>

@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.citywork.ui.customviews.CityView
-    android:id="@+id/city_item_city"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
 
-</com.citywork.ui.customviews.CityView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.citywork.ui.customviews.CityView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/city_item_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </com.citywork.ui.customviews.CityView>
+
+    <ImageView
+        android:layout_width="5dp"
+        android:layerType="software"
+        android:layout_height="match_parent"
+        android:src="@drawable/city_divider"/>
+</LinearLayout>
