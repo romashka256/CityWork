@@ -34,9 +34,9 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="setting_icon" />
+                            <entry key="outputName" value="share_icon" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\user\Downloads\setting_icon.svg" />
+                            <entry key="sourceFile" value="C:\Users\user\Downloads\share.svg" />
                           </map>
                         </option>
                       </PersistentState>

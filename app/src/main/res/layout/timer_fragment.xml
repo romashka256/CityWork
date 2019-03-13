@@ -25,6 +25,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text="1 350 человек"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/timer_fragment_settings"
@@ -40,6 +41,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/setting_icon" />
+
+    <ImageView
+        android:id="@+id/timer_fragment_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/timer_fragment_settings"
+        app:layout_constraintEnd_toStartOf="@+id/timer_fragment_settings"
+        app:layout_constraintTop_toTopOf="@+id/timer_fragment_settings"
+        app:srcCompat="@drawable/share_icon" />
 
     <com.citywork.ui.customviews.BuldingProgressView
         android:id="@+id/timer_fragment_building"

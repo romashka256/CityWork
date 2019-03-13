@@ -13,6 +13,8 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
@@ -29,6 +31,12 @@ public class CityFragment extends Fragment {
 
     @BindView(R.id.city_fragment_rv)
     RecyclerView recyclerView;
+    @BindView(R.id.city_fragment_share)
+    ImageView mShare;
+    @BindView(R.id.city_fragment_settings)
+    ImageView mSettings;
+    @BindView(R.id.city_fragment_city_people_count)
+    TextView mPeopleCountTV;
 
     private CityFragmentViewModel cityFragmentViewModel;
     private CityAdapter adapter;
@@ -52,7 +60,7 @@ public class CityFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.city_fragment, container, false);
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
