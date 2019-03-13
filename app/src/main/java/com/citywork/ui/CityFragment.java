@@ -43,8 +43,7 @@ public class CityFragment extends Fragment {
 
     private Context context;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = App.getsAppComponent().getApplicationContext();
