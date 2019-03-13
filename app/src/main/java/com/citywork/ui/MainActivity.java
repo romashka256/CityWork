@@ -46,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-//        w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-//        w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue));
@@ -67,12 +63,16 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("Last pomodoro posted");
         });
 
+        timerTabBtn.setDataToImet("Таймер", R.drawable.ic_timer_icon_focused);
+        cityTabBtn.setDataToImet("Город", R.drawable.ic_city_icon_focused);
+
         bottomNaigationLayout.addItem(timerTabBtn, v -> {
             Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
         });
         bottomNaigationLayout.addItem(cityTabBtn, (v) -> {
             Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
         });
+
         bottomNaigationLayout.activateTab(timerTabBtn);
 
         iMainActivityViewModel.onCreate();
@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
                 timerService.stopSelf();
                 timerService.cancelTimer();
 
-                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
-                ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
+                //       NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
+                //        ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
             }
         }
 

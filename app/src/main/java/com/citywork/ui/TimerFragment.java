@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.Constants;
@@ -47,7 +49,9 @@ public class TimerFragment extends Fragment {
     @BindView(R.id.timer_fragment_building)
     BuldingProgressView mBuidlingView;
     @BindView(R.id.timer_fragment_todobtn)
-    Button mTodoBtn;
+    LinearLayout mTodoBtn;
+    @BindView(R.id.timer_fragment_todotv)
+    TextView mTodoTV;
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
@@ -141,6 +145,7 @@ public class TimerFragment extends Fragment {
         stopButton.setVisibility(View.VISIBLE);
         startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
+        mTodoTV.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.GONE);
     }
 
@@ -150,6 +155,8 @@ public class TimerFragment extends Fragment {
         stopButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.VISIBLE);
+        mTodoTV.setVisibility(View.GONE);
+        circleTimer.enable();
     }
 
     private void notongoingView() {
@@ -157,6 +164,7 @@ public class TimerFragment extends Fragment {
         m10minRest.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         startButton.setVisibility(View.VISIBLE);
+        mTodoTV.setVisibility(View.VISIBLE);
         circleTimer.disable();
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }

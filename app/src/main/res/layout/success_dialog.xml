@@ -2,7 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:background="@drawable/success_dialog_bg"
+    android:layout_height="wrap_content"
+    android:paddingTop="26dp"
+    android:paddingBottom="26dp"
+    android:paddingLeft="28dp"
+    android:paddingRight="28dp">
 
     <ImageView
         android:id="@+id/success_dialog_close_iv"
@@ -13,7 +18,7 @@
         android:text="close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_dialog" />
+        app:srcCompat="@drawable/ic_close_black_24dp" />
 
     <com.citywork.ui.customviews.BuldingProgressView
         android:id="@+id/success_dialog_buidling_view"
@@ -31,9 +36,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:text="Посмореть город"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/continue_btn_bg"
+        android:drawableRight="@drawable/ic_chevron_right_black_24dp"
+        android:paddingLeft="50dp"
+        android:paddingTop="16dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="16dp"
+        android:text="Продолжить"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -44,6 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Поздравляем"
+        android:textColor="@color/white"
         android:textSize="@dimen/success_dialog_congrats_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:textColor="@color/white"
         android:text="вы построили здание"
         android:textSize="@dimen/success_dialog_congrats_botton_text_size"
         app:layout_constraintEnd_toEndOf="parent"

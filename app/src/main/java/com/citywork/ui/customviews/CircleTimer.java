@@ -31,10 +31,12 @@ public class CircleTimer extends View {
     private float mNumberSize;
     private float mLineLength;
     private float mLongerLineLength;
+    private float mLongerLineWidth;
     private float mLineWidth;
     private float mCircleButtonWidth;
     private float mGapBetweenTimerNumberAndText;
     private float mGapBetweenCircleAndLine;
+    private float lineLength;
 
     //Paint
     private Paint mCirclePaint;
@@ -46,18 +48,19 @@ public class CircleTimer extends View {
     private Paint mLinePaint;
 
     // Default dimension in dp/pt
-    private static final float DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE = 5;
-    private static final float DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE = 10;
-    private static final float DEFAULT_NUMBER_SIZE = 130;
-    private static final float DEFAULT_LINE_LENGTH = 20;
-    private static final float DEFAULT_LONGER_LINE_LENGTH = 40;
-    private static final float DEFAULT_LINE_WIDTH = 0.5f;
-    private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 30;
-    private static final float DEFAULT_CIRCLE_WIDTH = 6;
-    private static final float DEFAULT_GAM_BETWEEN_LINE_AND_CIRCLE = 3;
-    private static final float DEFAULT_TIMER_NUMBER_SIZE = 25;
-    private static final float DEFAULT_TIMER_TEXT_SIZE = 35;
-    private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 30;
+    private static final float DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE = 0;
+    private static final float DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE = 5;
+    private static final float DEFAULT_NUMBER_SIZE = 50;
+    private static final float DEFAULT_LINE_LENGTH = 8;
+    private static final float DEFAULT_LONGER_LINE_LENGTH = 15;
+    private static final float DEFAULT_LINE_WIDTH = 1f;
+    private static final float DEFAULT_LONGER_LINE_WIDTH = 3f;
+    private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 12;
+    private static final float DEFAULT_CIRCLE_WIDTH = 3;
+    private static final float DEFAULT_GAM_BETWEEN_LINE_AND_CIRCLE = 1;
+    private static final float DEFAULT_TIMER_NUMBER_SIZE = 12;
+    private static final float DEFAULT_TIMER_TEXT_SIZE = 12;
+    private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 15;
 
     //Default olors
     private final int DEFAULT_CIRCLE_COLOR = 0x1A000000;
@@ -124,17 +127,18 @@ public class CircleTimer extends View {
         mCircleButtonLinesColor = DEFAULT_CIRCLE_BUTTON_LINES_COLOR;
         mCircleButtonColor = DEFAULT_CIRCLE_BUTTON_COLOR;
 
-        mGapBetweenNumberAndLine = DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE;
-        mNumberSize = DEFAULT_NUMBER_SIZE;
-        mTimerNumbersSize = DEFAULT_TIMER_NUMBER_SIZE;
-        mLineLength = DEFAULT_LINE_LENGTH;
-        mLongerLineLength = DEFAULT_LONGER_LINE_LENGTH;
-        mLineWidth = DEFAULT_LINE_WIDTH;
-        mCircleButtonRadius = DEFAULT_CIRCLE_BUTTON_RADIUS;
-        mGapBetweenTimerNumberAndText = DEFAULT_CIRCLE_WIDTH;
-        mCircleLineWidth = DEFAULT_CIRCLE_WIDTH;
-        mGapBetweenCircleAndLine = DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE;
-        mTimerTextSize = DEFAULT_TIMER_TEXT_SIZE;
+        mGapBetweenNumberAndLine = dpToPx(DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE);
+        mNumberSize = dpToPx(DEFAULT_NUMBER_SIZE);
+        mTimerNumbersSize = dpToPx(DEFAULT_TIMER_NUMBER_SIZE);
+        mLineLength =dpToPx( DEFAULT_LINE_LENGTH);
+        mLongerLineLength = dpToPx(DEFAULT_LONGER_LINE_LENGTH);
+        mLineWidth =dpToPx( DEFAULT_LINE_WIDTH);
+        mLongerLineWidth =dpToPx( DEFAULT_LONGER_LINE_WIDTH);
+        mCircleButtonRadius =dpToPx( DEFAULT_CIRCLE_BUTTON_RADIUS);
+        mGapBetweenTimerNumberAndText = dpToPx(DEFAULT_CIRCLE_WIDTH);
+        mCircleLineWidth = dpToPx(DEFAULT_CIRCLE_WIDTH);
+        mGapBetweenCircleAndLine = dpToPx(DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE);
+        mTimerTextSize = dpToPx(DEFAULT_TIMER_TEXT_SIZE);
 
         mCurrentTime = DEFAULT_MIN_TIME;
         minTime = DEFAULT_MIN_TIME;
@@ -211,19 +215,21 @@ public class CircleTimer extends View {
                 canvas.save();
                 canvas.rotate(360 / 20 * i, mCx, mCy);
 
-                float lineLength = 0;
+
                 Paint progressPaint = mCirclePaint;
 
                 if (i % 5 == 0) {
                     lineLength = mLongerLineLength;
+                    progressPaint.setStrokeWidth(mLongerLineWidth);
                 } else {
                     lineLength = mLineLength;
+                    progressPaint.setStrokeWidth(mLineWidth);
                 }
 
                 canvas.drawLine(mCx,
-                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth / 2 + mGapBetweenCircleAndLine,
+                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + mGapBetweenCircleAndLine,
                         mCx,
-                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth / 2 + lineLength + mGapBetweenCircleAndLine,
+                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + lineLength + mGapBetweenCircleAndLine,
                         progressPaint);
                 canvas.restore();
             }
@@ -238,7 +244,7 @@ public class CircleTimer extends View {
                     - mGapBetweenNumberAndLine, mCy + getFontHeight(mTimeNumbersPaint) / 2, mTimeNumbersPaint);
             canvas.drawText("30", mCx, getMeasuredHeight() / 2 + mRadius - mCircleLineWidth / 2 - mGapBetweenCircleAndLine -
                     mLongerLineLength - mGapBetweenNumberAndLine, mTimeNumbersPaint);
-            canvas.drawText("45", getMeasuredHeight() / 2 - mRadius + mCircleLineWidth / 2 + mGapBetweenCircleAndLine +
+            canvas.drawText("45", mCx - mRadius + mCircleLineWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength + mGapBetweenNumberAndLine + textLength / 2, mCy + getFontHeight(mTimeNumbersPaint) / 2,
                     mTimeNumbersPaint);
             canvas.save();
@@ -287,7 +293,7 @@ public class CircleTimer extends View {
                         mCurrentRadian = (float) (2 * Math.PI);
                     } else if (mCurrentRadian < 0) {
                         mCurrentRadian = 0;
-                        }
+                    }
                     if (mCurrentRadian >= minRadian) {
                         mCurrentTime = (int) (60 / (2 * Math.PI) * mCurrentRadian * 60);
                     } else {
@@ -358,6 +364,11 @@ public class CircleTimer extends View {
         invalidate();
     }
 
+    public void enable() {
+        this.isEnabled = true;
+        invalidate();
+    }
+
     public void setCircleTimeListener(CircleTimerListener circleTimeListener) {
         this.circleTimerListener = circleTimeListener;
     }
@@ -371,7 +382,7 @@ public class CircleTimer extends View {
         this.minTime = minTime;
     }
 
-    public void setTime(long time){
+    public void setTime(long time) {
         this.mCurrentTime = time;
         mCurrentRadian = calculateRadianByTime(time);
         invalidate();
@@ -407,6 +418,10 @@ public class CircleTimer extends View {
          * @param time
          */
         void onTimerSetValueChange(int time);
+    }
+
+    public float dpToPx(float dp) {
+        return dp * getResources().getDisplayMetrics().density;
     }
 
 

@@ -32,11 +32,10 @@ public class Calculator {
     }
 
     public static int calculatePercentOfTime(long time, long fulltime){
-        Timber.i("Calculatin time. Current time : %d \n Full time : %d", time,fulltime);
         return (int) (100 - ((100 * time) / fulltime));
     }
 
     public static int calculateBuidling(long time){
-        return (int) (time / (15 * 60));
+        return (int) (time / (15 * 61));
     }
 }

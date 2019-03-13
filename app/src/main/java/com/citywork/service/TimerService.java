@@ -97,6 +97,7 @@ public class TimerService extends Service {
                             pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
                         }
                     }, () -> {
+                        notificationUtils.showAlarmNotification();
                         stopForeground(true);
                         if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                             building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);

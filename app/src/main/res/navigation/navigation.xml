@@ -30,7 +30,7 @@
             android:id="@+id/action_timerFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:popUpTo="@+id/timerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/cityFragment"
@@ -50,7 +50,7 @@
             android:id="@+id/action_cityFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:popUpTo="@+id/cityFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/tasksDialog"

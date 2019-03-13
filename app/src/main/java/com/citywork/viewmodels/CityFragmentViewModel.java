@@ -22,6 +22,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     private MutableLiveData<List<Pair<Date, List<Building>>>> citiesCreatedEvent = new MutableLiveData<>();
 
+    private List<Building> buildingList;
+
     public CityFragmentViewModel() {
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
 
@@ -38,11 +40,13 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     private List<Pair<Date, List<Building>>> sortBuildings(List<Building> buildings) {
         List<Pair<Date, List<Building>>> sortedPairs = new ArrayList<>();
-        Date date, prevdate;
+        Date date, prevdate, current;
         Pair<Date, List<Building>> pair;
         Calendar prevCalendar = null;
         List<Building> listForPair = new ArrayList<>();
-
+        Calendar currentCalendar = Calendar.getInstance();
+        current = new Date(System.currentTimeMillis());
+        currentCalendar.setTime(current);
         for (int i = 0; i < buildings.size(); i++) {
             Building building = buildings.get(i);
 
@@ -57,12 +61,6 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-
-            int dayofweek = calendar.get(Calendar.DAY_OF_MONTH);
-            int dayofweekp;
-            if (prevCalendar != null) {
-                dayofweekp = prevCalendar.get(Calendar.DAY_OF_MONTH);
-            }
 
             if (prevCalendar != null && prevCalendar.get(Calendar.DAY_OF_MONTH) != calendar.get(Calendar.DAY_OF_MONTH)) {
                 pair = new Pair<>(date, listForPair);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,8 +14,11 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.citywork.R;
 import com.citywork.utils.VectorUtils;
+
+import timber.log.Timber;
 
 
 public class BottomNavigationItemView extends ViewGroup {
@@ -30,7 +34,7 @@ public class BottomNavigationItemView extends ViewGroup {
     private final int DEFAULT_IMAGE_BOTTOM_PADDING = 32;
     private final int DEFAULT_IMAGE_LEFT_PADDING = 64;
     private final int DEFAULT_IMAGE_RIGHT_PADDING = 64;
-    private final int DEFAULT_PADDING_BETWEEN_IMAGEANDTEXT = 10;
+    private final int DEFAULT_PADDING_BETWEEN_IMAGEANDTEXT = 16;
     private final int DEFAULT_PADDING_TEXT_RIGHT = 16;
 
     private ValueAnimator backgroundAlphaAnim;
@@ -39,12 +43,19 @@ public class BottomNavigationItemView extends ViewGroup {
 
     private NavItemState navItemState;
 
+    private int iconId;
+    private String text;
+
     private float currentwidth;
     private float widthWithText;
+    private Context context;
 
     private ObjectAnimator objectAnimator;
 
     private Bitmap image;
+
+    private int viewWidth;
+    private int viewHeight;
 
     public NavItemState getNavItemState() {
         return navItemState;
@@ -52,14 +63,21 @@ public class BottomNavigationItemView extends ViewGroup {
 
     public BottomNavigationItemView(Context context) {
         this(context, null);
+        init(context);
     }
 
     public BottomNavigationItemView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+        init(context);
     }
 
     public BottomNavigationItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context);
+    }
+
+    private void init(Context context) {
+        this.context = context;
 
         backgroundRectPaint = new Paint();
         backgroundRectPaint.setColor(getResources().getColor(R.color.colorPrimary));
@@ -70,17 +88,15 @@ public class BottomNavigationItemView extends ViewGroup {
         textView = new TextView(context);
         textView.setTextColor(getResources().getColor(R.color.white));
         textView.setTextSize(15);
-        textView.setText("Таймер");
         textView.setAlpha(0);
         textView.setVisibility(GONE);
 
         this.setBackground(getResources().getDrawable(R.drawable.tabbg));
         this.getBackground().setAlpha(0);
 
-        image = VectorUtils.getBitmapFromVectorDrawable(context, R.drawable.ic_timer_icon_focused);
 
         imageView = new ImageView(context);
-        imageView.setImageBitmap(image);
+
         imageView.setTag(IMAGEVIEW_TAG);
         imageView.setAlpha(0.5f);
 
@@ -97,9 +113,14 @@ public class BottomNavigationItemView extends ViewGroup {
         activeAnim();
     }
 
-//    private void initAnimations(int alphaBackgroundStart, int alphaBackgroundEnd,
-////                                int backgroundAnimDur, int containerSizeStart,
-////                                int containerSizeEnd, int containerSizeAminDur) {
+    public void setDataToImet(String text, int resId) {
+        this.text = text;
+        this.iconId = resId;
+
+        image = VectorUtils.getBitmapFromVectorDrawable(context, resId);
+        imageView.setImageBitmap(image);
+        textView.setText(text);
+    }
 
     private void activeAnim() {
         currentwidth = 0;
@@ -116,12 +137,12 @@ public class BottomNavigationItemView extends ViewGroup {
         containerSizeAmin = ValueAnimator.ofFloat(0, widthWithText);
         containerSizeAmin.setDuration(100);
 
-        Log.i("TAG", "widthWithText : " + widthWithText);
-        Log.i("TAG", "startPoint : " + startPoint);
-        Log.i("TAG", "fullwidth : " + fullwidth);
+        Timber.i("widthWithText : " + widthWithText);
+        Timber.i("startPoint : " + startPoint);
+        Timber.i("fullwidth : " + fullwidth);
 
         containerSizeAmin.addUpdateListener(animation -> {
-            Log.i("TAG", "Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
+            Timber.i("Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
             if (textView.getVisibility() != VISIBLE) {
                 if (Math.abs((Float) animation.getAnimatedValue()) > (widthWithText / 1.5)) {
                     showTextAnim();
@@ -135,6 +156,7 @@ public class BottomNavigationItemView extends ViewGroup {
         animatorSet.playTogether(containerSizeAmin, backgroundAlphaAnim);
         animatorSet.start();
     }
+
 
     private void disableAnim() {
         currentwidth = 0;
@@ -151,12 +173,12 @@ public class BottomNavigationItemView extends ViewGroup {
         containerSizeAmin = ValueAnimator.ofFloat(widthWithText, 0);
         containerSizeAmin.setDuration(100);
 
-        Log.i("TAG", "widthWithText : " + widthWithText);
-        Log.i("TAG", "startPoint : " + startPoint);
-        Log.i("TAG", "fullwidth : " + fullwidth);
+        Timber.i("widthWithText : " + widthWithText);
+        Timber.i("startPoint : " + startPoint);
+        Timber.i("fullwidth : " + fullwidth);
 
         containerSizeAmin.addUpdateListener(animation -> {
-            Log.i("TAG", "Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
+            Timber.i("Math.abs((Float) animation.getAnimatedValue() : " + Math.abs((Float) animation.getAnimatedValue()));
             currentwidth = Math.abs((Float) animation.getAnimatedValue());
             requestLayout();
         });
@@ -212,7 +234,10 @@ public class BottomNavigationItemView extends ViewGroup {
 
         widthWithText = textView.getMeasuredWidth();
 
-        setMeasuredDimension((int) (width + currentwidth + DEFAULT_IMAGE_LEFT_PADDING + DEFAULT_IMAGE_RIGHT_PADDING), height + DEFAULT_IMAGE_TOP_PADDING + DEFAULT_IMAGE_BOTTOM_PADDING);
+        this.viewWidth = (int) (width + currentwidth + DEFAULT_IMAGE_LEFT_PADDING + DEFAULT_IMAGE_RIGHT_PADDING);
+        this.viewHeight = height + DEFAULT_IMAGE_TOP_PADDING + DEFAULT_IMAGE_BOTTOM_PADDING;
+
+        setMeasuredDimension(viewWidth, viewHeight);
     }
 
     @Override
@@ -227,9 +252,9 @@ public class BottomNavigationItemView extends ViewGroup {
                 bottom + DEFAULT_IMAGE_BOTTOM_PADDING);
 
         textView.layout(DEFAULT_IMAGE_LEFT_PADDING + imageView.getMeasuredWidth() + DEFAULT_PADDING_BETWEEN_IMAGEANDTEXT,
-                DEFAULT_IMAGE_TOP_PADDING,
+                (int) ((viewHeight / 2) - (textView.getMeasuredHeight() / 2)),
                 DEFAULT_IMAGE_LEFT_PADDING + imageView.getMeasuredWidth() + DEFAULT_PADDING_BETWEEN_IMAGEANDTEXT + textView.getMeasuredWidth(),
-                DEFAULT_IMAGE_TOP_PADDING + textView.getMeasuredHeight());
+                (int) ((viewHeight / 2) + (textView.getMeasuredHeight() / 2)));
 
     }
 
@@ -244,5 +269,13 @@ public class BottomNavigationItemView extends ViewGroup {
 
     public enum NavItemState {
         ACTIVE, INACTIVE
+    }
+
+    private float getFontHeight(Paint paint) {
+        // FontMetrics sF = paint.getFontMetrics();
+        // return sF.descent - sF.ascent;
+        Rect rect = new Rect();
+        paint.getTextBounds("1", 0, 1, rect);
+        return rect.height();
     }
 }

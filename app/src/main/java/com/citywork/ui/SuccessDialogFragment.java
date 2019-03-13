@@ -3,6 +3,7 @@ package com.citywork.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -84,7 +85,9 @@ public class SuccessDialogFragment extends DialogFragment {
         Display display = window.getWindowManager().getDefaultDisplay();
         display.getSize(size);
 
-        window.setLayout((int) (size.x * 0.85), (int) (size.y * 0.6));
+        window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+       // window.setLayout((int) (size.x * 0.80),(int) (size.y * 0.5));
         window.setGravity(Gravity.CENTER);
 
         super.onResume();

@@ -50,7 +50,6 @@ public class TimerManagerImpl implements TimerManager {
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {
                             Timber.i("ticktime %d", ticktime);
-                            Timber.i("time %d", time);
                             remainingTime = time - ticktime;
 
                             behaviorSubject.onNext(remainingTime);

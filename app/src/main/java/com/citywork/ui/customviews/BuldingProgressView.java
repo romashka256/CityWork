@@ -26,11 +26,11 @@ public class BuldingProgressView extends View {
     private Paint boxPaint;
     private Paint textPaint;
     private int radius;
-    private float DEFAULT_PADDING_LEFT = 15;
+    private float DEFAULT_PADDING_LEFT = 10;
     private float DEFAULT_ARR_RADIUS = 8;
-    private float DEFAULT_PADDING_RIGHT = 15;
-    private float DEFAULT_PADDING_TOP = 10;
-    private float DEFAULT_PADDING_BOTTOM = 10;
+    private float DEFAULT_PADDING_RIGHT = 10;
+    private float DEFAULT_PADDING_TOP = 15;
+    private float DEFAULT_PADDING_BOTTOM = 15;
 
     private float paddingLeft;
     private float paddingTop;
@@ -62,6 +62,8 @@ public class BuldingProgressView extends View {
 
     private float buildingX, buildingY;
     private float buildingWidth, buildingHeight;
+
+    private int viewW, viewH;
 
     public BuldingProgressView(Context context) {
         super(context);
@@ -99,7 +101,7 @@ public class BuldingProgressView extends View {
         progressPaint = new Paint();
         bgpaint = new Paint();
 
-        bottomLineHeight = 6;
+        bottomLineHeight = (int) dpToPx(2);
         currentProgress = 0;
 
         buildingWidth = bitmapOrg.getWidth();
@@ -131,16 +133,14 @@ public class BuldingProgressView extends View {
         float sp = spToPx(15);
         textPaint.setTextSize(sp);
 
-        boxPaint.setColor(getResources().getColor(R.color.white));
-        boxPaint.setStrokeWidth(3);
-        boxPaint.setStyle(Paint.Style.STROKE);
+        boxPaint.setColor(getResources().getColor(R.color.transoarent10_black));
+        boxPaint.setStyle(Paint.Style.FILL);
         //TODO INITIATE
         text = "text";
         textWidth = textPaint.measureText(text);
         textHeight = getFontHeight(textPaint);
 
         radius_arr = dpToPx(DEFAULT_ARR_RADIUS);
-
 
         textpaddingRight = dpToPx(DEFAULT_PADDING_RIGHT);
         textpaddingBottom = dpToPx(DEFAULT_PADDING_BOTTOM);
@@ -154,6 +154,10 @@ public class BuldingProgressView extends View {
     public void setProgress(int progress) {
         currentProgress = (int) (progress * progressStep);
         invalidate();
+    }
+
+    public void showBuildedTower() {
+        setProgress(100);
     }
 
     public void setPeopleProgress(int peopleplus, int allpeople) {
@@ -178,9 +182,11 @@ public class BuldingProgressView extends View {
         textpaddingLeft = paddingLeft + dpToPx(DEFAULT_PADDING_LEFT);
         textpaddingTop = paddingTop + dpToPx(DEFAULT_PADDING_TOP);
 
-        canvas.drawBitmap(bitmapOrg, buildingX, 0, bgpaint);
+        int top = (viewH - bitmapOrg.getHeight());
 
-        canvas.drawBitmap(cropBitmap1(bitmapOrg), (getWidth() / 2f) - bitmapOrg.getWidth() / 2f, 0, progressPaint);
+        canvas.drawBitmap(bitmapOrg, buildingX, top - bottomLineHeight, bgpaint);
+
+        canvas.drawBitmap(cropBitmap1(bitmapOrg), (getWidth() / 2f) - bitmapOrg.getWidth() / 2f, top - bottomLineHeight, progressPaint);
 
         canvas.drawLine(-getWidth(), buildingHeight, getWidth(), buildingHeight, bottomLine);
 
@@ -195,9 +201,9 @@ public class BuldingProgressView extends View {
         path.lineTo(paddingLeft, paddingTop);
         path.close();
 
-        canvas.drawText(text, textpaddingLeft, textpaddingTop + textHeight, textPaint);
-
         canvas.drawPath(path, boxPaint);
+
+        canvas.drawText(text, textpaddingLeft, textpaddingTop + textHeight, textPaint);
     }
 
     @Override
@@ -209,6 +215,9 @@ public class BuldingProgressView extends View {
         height += bottomLineHeight;
 
         progressStep = calculateStep(height);
+
+        viewH = height;
+        viewW = width;
 
         setMeasuredDimension(width, height);
     }

@@ -12,4 +12,6 @@
     <color name="transparent_white">#48FFFFFF</color>
     <color name="transoarent10_white">#1AFFFFFF</color>
     <color name="transoarent20_black">#32000000</color>
+    <color name="transoarent10_black">#1A000000</color>
+    <color name="success_green">#78DA6E</color>
 </resources>
