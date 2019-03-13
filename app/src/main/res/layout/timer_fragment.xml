@@ -178,4 +178,18 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/timer_fragment_resttv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="Отдыхайте..."
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/circle_timer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timer_fragment_city_people_count" />
+
 </android.support.constraint.ConstraintLayout>

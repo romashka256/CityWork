@@ -12,28 +12,30 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
         android:text="У вас в городе"
-        android:textSize="15sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/city_fragment_city_people_count"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/city_fragment_city_people_count"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/city_fragment_city_people_count" />
 
     <TextView
         android:id="@+id/city_fragment_city_people_count"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
         android:text="1 350 человек"
         android:textSize="15sp"
+        android:textColor="@color/white"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/city_fragment_share"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/city_fragment_settings" />
+        app:layout_constraintTop_toTopOf="@+id/city_fragment_share" />
 
     <ImageView
         android:id="@+id/city_fragment_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/setting_icon" />

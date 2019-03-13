@@ -22,6 +22,7 @@ import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Building;
 import com.citywork.ui.customviews.BuldingProgressView;
+import com.citywork.utils.VectorUtils;
 
 import org.parceler.Parcels;
 
@@ -72,8 +73,9 @@ public class SuccessDialogFragment extends DialogFragment {
         vCloseIV.setOnClickListener(v -> dismiss());
 
         mBuidlingView.setPeopleProgress(building.getPeople_count(), building.getPeople_count());
-        mBuidlingView.setProgress(100);
+        mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(building.getIconName(), "drawable", context.getPackageName())));
 
+        mBuidlingView.setProgress(100);
         return view;
     }
 
@@ -87,7 +89,7 @@ public class SuccessDialogFragment extends DialogFragment {
 
         window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-       // window.setLayout((int) (size.x * 0.80),(int) (size.y * 0.5));
+        // window.setLayout((int) (size.x * 0.80),(int) (size.y * 0.5));
         window.setGravity(Gravity.CENTER);
 
         super.onResume();
