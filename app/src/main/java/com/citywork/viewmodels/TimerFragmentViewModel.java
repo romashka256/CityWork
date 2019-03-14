@@ -301,15 +301,17 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void buildingReceived(Building building) {
-        if (building.getPomodoro().getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-        } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-            building.getPomodoro().setTimerState(TimerState.COMPLETED);
-        }
+        if (pomodoroManger.getBuilding() == null) {
+            if (building.getPomodoro().getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+            } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                building.getPomodoro().setTimerState(TimerState.COMPLETED);
+            }
 
-        pomodoroManger.setBuilding(building);
-        mPeopleCountChange.postValue(building.getPeople_count());
-        checkAndStartTimer(building.getPomodoro());
+            pomodoroManger.setBuilding(building);
+            mPeopleCountChange.postValue(building.getPeople_count());
+            checkAndStartTimer(building.getPomodoro());
+        }
     }
 
     private void checkAndStartTimer(Pomodoro pomodoro) {

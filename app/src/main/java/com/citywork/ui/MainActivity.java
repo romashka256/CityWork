@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
             Timber.i("Last pomodoro posted");
+
         });
 
         timerTabBtn.setDataToImet("Таймер", R.drawable.ic_timer_icon_focused);
@@ -127,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 timerService.stopSelf();
                 timerService.cancelTimer();
 
-                //       NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
-                //        ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
+//                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
+//                ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
             }
         }
 

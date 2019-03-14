@@ -41,6 +41,7 @@ public class CircleTimer extends View {
     //Paint
     private Paint mCirclePaint;
     private Paint mProgressCirclePaint;
+    private Paint mProgressCirclePaintMoving;
     private Paint mTimeNumberPaint;
     private Paint mTimeNumbersPaint;
     private Paint mTimeTextPaint;
@@ -56,7 +57,7 @@ public class CircleTimer extends View {
     private static final float DEFAULT_LINE_WIDTH = 1f;
     private static final float DEFAULT_LONGER_LINE_WIDTH = 3f;
     private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 12;
-    private static final float DEFAULT_CIRCLE_WIDTH = 3;
+    private static final float DEFAULT_CIRCLE_WIDTH = 3f;
     private static final float DEFAULT_GAM_BETWEEN_LINE_AND_CIRCLE = 1;
     private static final float DEFAULT_TIMER_NUMBER_SIZE = 12;
     private static final float DEFAULT_TIMER_TEXT_SIZE = 12;
@@ -130,11 +131,11 @@ public class CircleTimer extends View {
         mGapBetweenNumberAndLine = dpToPx(DEFAULT_GAP_BETWEEN_NUMBER_AND_LINE);
         mNumberSize = dpToPx(DEFAULT_NUMBER_SIZE);
         mTimerNumbersSize = dpToPx(DEFAULT_TIMER_NUMBER_SIZE);
-        mLineLength =dpToPx( DEFAULT_LINE_LENGTH);
+        mLineLength = dpToPx(DEFAULT_LINE_LENGTH);
         mLongerLineLength = dpToPx(DEFAULT_LONGER_LINE_LENGTH);
-        mLineWidth =dpToPx( DEFAULT_LINE_WIDTH);
-        mLongerLineWidth =dpToPx( DEFAULT_LONGER_LINE_WIDTH);
-        mCircleButtonRadius =dpToPx( DEFAULT_CIRCLE_BUTTON_RADIUS);
+        mLineWidth = dpToPx(DEFAULT_LINE_WIDTH);
+        mLongerLineWidth = dpToPx(DEFAULT_LONGER_LINE_WIDTH);
+        mCircleButtonRadius = dpToPx(DEFAULT_CIRCLE_BUTTON_RADIUS);
         mGapBetweenTimerNumberAndText = dpToPx(DEFAULT_CIRCLE_WIDTH);
         mCircleLineWidth = dpToPx(DEFAULT_CIRCLE_WIDTH);
         mGapBetweenCircleAndLine = dpToPx(DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE);
@@ -151,6 +152,7 @@ public class CircleTimer extends View {
         mCircleButtonPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTimeNumberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTimeTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mProgressCirclePaintMoving = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mTimeTextPaint.setColor(mTimerTextColor);
         mTimeTextPaint.setTextSize(mTimerTextSize);
@@ -176,6 +178,11 @@ public class CircleTimer extends View {
         mProgressCirclePaint.setStyle(Paint.Style.STROKE);
         mProgressCirclePaint.setStrokeWidth(mCircleLineWidth);
 
+
+        mProgressCirclePaintMoving.setColor(mCircleColor);
+        mProgressCirclePaintMoving.setStyle(Paint.Style.STROKE);
+        mProgressCirclePaintMoving.setStrokeWidth(mCircleLineWidth);
+
         mProgressArc = new RectF();
 
         setMinTime(minTime);
@@ -190,12 +197,13 @@ public class CircleTimer extends View {
         int width = MeasureSpec.getSize(widthMeasureSpec);
 
         this.mCx = width / 2;
-        this.mCy = height / 2;
+        this.mCy = width / 2;
         mRadius = width / 2 - mCircleLineWidth / 2 - (mCircleButtonRadius - mCircleLineWidth / 2);
 
         mProgressArc.set(mCx - mRadius, mCy - mRadius, mCx + mRadius, mCy + mRadius);
 
-        setMeasuredDimension(width, height);
+
+        setMeasuredDimension(width, width);
     }
 
     @Override
@@ -215,22 +223,19 @@ public class CircleTimer extends View {
                 canvas.save();
                 canvas.rotate(360 / 20 * i, mCx, mCy);
 
-
-                Paint progressPaint = mCirclePaint;
-
                 if (i % 5 == 0) {
                     lineLength = mLongerLineLength;
-                    progressPaint.setStrokeWidth(mLongerLineWidth);
+                    mProgressCirclePaintMoving.setStrokeWidth(mLongerLineWidth);
                 } else {
                     lineLength = mLineLength;
-                    progressPaint.setStrokeWidth(mLineWidth);
+                    mProgressCirclePaintMoving.setStrokeWidth(mLineWidth);
                 }
 
                 canvas.drawLine(mCx,
                         getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + mGapBetweenCircleAndLine,
                         mCx,
                         getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + lineLength + mGapBetweenCircleAndLine,
-                        progressPaint);
+                        mProgressCirclePaintMoving);
                 canvas.restore();
             }
 

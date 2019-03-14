@@ -261,7 +261,7 @@ public class TimerFragment extends Fragment {
 
         iTimerFragmentViewModel.onResume();
 
-        ViewModelProviders.of(getActivity()).get(SharedViewModel.class).getBuildingMutableLiveData().observe(getActivity(), building -> {
+        ViewModelProviders.of(mainActivity).get(SharedViewModel.class).getBuildingMutableLiveData().observe(mainActivity, building -> {
             iTimerFragmentViewModel.buildingReceived(building);
         });
     }
