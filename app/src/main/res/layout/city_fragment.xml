@@ -25,6 +25,7 @@
         android:layout_marginStart="8dp"
         android:text="1 350 человек"
         android:textSize="15sp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/city_fragment_share"
         app:layout_constraintStart_toEndOf="@+id/textView"

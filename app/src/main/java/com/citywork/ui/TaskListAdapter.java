@@ -50,11 +50,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         taskListVH.taskTextV.setText(task.getText());
         taskListVH.checkBox.setChecked(task.isDone());
 
-        taskListVH.itemView.setOnClickListener(v -> {
-            taskListVH.checkBox.setChecked(!task.isDone());
-            onTaskClickListener.onClick(tasks.get(i));
-        });
+        taskListVH.itemView.setOnClickListener(v -> onclickAction(taskListVH, task, i));
+        taskListVH.checkBox.setOnClickListener(v -> onclickAction(taskListVH, task, i));
 
+    }
+
+    private void onclickAction(TaskListVH taskListVH, Task task, int i) {
+        taskListVH.checkBox.setChecked(!task.isDone());
+        onTaskClickListener.onClick(tasks.get(i));
     }
 
     @Override
@@ -72,7 +75,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         public TaskListVH(@NonNull View itemView) {
             super(itemView);
-
 
 
             ButterKnife.bind(this, itemView);

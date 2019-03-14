@@ -1,15 +1,14 @@
 package com.citywork.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,7 @@ import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.model.db.models.Building;
 import com.citywork.viewmodels.CityFragmentViewModel;
-
-import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +27,7 @@ public class CityFragment extends Fragment {
     @BindView(R.id.city_fragment_rv)
     RecyclerView recyclerView;
     @BindView(R.id.city_fragment_share)
-    ImageView mShare;
+    ImageView mShareIV;
     @BindView(R.id.city_fragment_settings)
     ImageView mSettings;
     @BindView(R.id.city_fragment_city_people_count)
@@ -73,6 +68,15 @@ public class CityFragment extends Fragment {
         cityFragmentViewModel.getCitiesLoaded().observe(this, pairs -> {
             adapter = new CityAdapter(pairs, context);
             recyclerView.setAdapter(adapter);
+        });
+
+        mShareIV.setOnClickListener(v -> {
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            String shareBody = "Пашел нахуй";
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
         });
     }
 }

@@ -1,9 +1,9 @@
 package com.citywork.ui;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +22,7 @@ import com.citywork.Constants;
 import com.citywork.R;
 import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
+import com.citywork.utils.Calculator;
 import com.citywork.utils.VectorUtils;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.TimerFragmentViewModel;
@@ -52,6 +53,10 @@ public class TimerFragment extends Fragment {
     LinearLayout mTodoBtn;
     @BindView(R.id.timer_fragment_todotv)
     TextView mTodoTV;
+    @BindView(R.id.timer_fragment_resttv)
+    TextView mRestTV;
+    @BindView(R.id.timer_fragment_share)
+    ImageView mShareIV;
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
@@ -99,6 +104,7 @@ public class TimerFragment extends Fragment {
                     break;
                 case REST_ONGOING:
                     timerongoingView();
+                    mRestTV.setVisibility(View.VISIBLE);
                     break;
                 case CANCELED:
                     notongoingView();
@@ -142,6 +148,7 @@ public class TimerFragment extends Fragment {
     }
 
     private void timerongoingView() {
+        mRestTV.setVisibility(View.GONE);
         stopButton.setVisibility(View.VISIBLE);
         startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
@@ -151,6 +158,7 @@ public class TimerFragment extends Fragment {
 
     private void restView() {
         Timber.i("Show Rest View");
+        mRestTV.setVisibility(View.GONE);
         startButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.VISIBLE);
@@ -160,6 +168,7 @@ public class TimerFragment extends Fragment {
     }
 
     private void notongoingView() {
+        mRestTV.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
         m10minRest.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
@@ -240,6 +249,17 @@ public class TimerFragment extends Fragment {
             TasksDialog.getInstance().show(mainActivity.getSupportFragmentManager(), TasksDialog.TAG);
             // Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_tasksDialog);
         });
+
+        mShareIV.setOnClickListener(v -> {
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            String shareBody = "Пашел нахуй";
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        });
+
+        mBuidlingView.setPeopleCount(Calculator.calculatePeopleCount(Constants.DEFAULT_MIN_TIMER_VALUE));
     }
 
     @Override
