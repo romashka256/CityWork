@@ -2,6 +2,7 @@ package com.citywork.utils;
 
 import com.citywork.Constants;
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.timer.TimerState;
 
@@ -13,13 +14,15 @@ public class PomodoroManger {
 
     @Getter
     @Setter
-    //TODO INITIATE
     private Pomodoro pomodoro;
     @Getter
     private Building building;
     @Setter
     @Getter
     private int peopleCount;
+    @Getter
+    @Setter
+    private City city;
 
     private Long timerValue;
 
@@ -27,29 +30,13 @@ public class PomodoroManger {
         this.building = building;
         this.pomodoro = building.getPomodoro();
         this.peopleCount = building.getPeople_count();
-    }
 
-    public void createNewInstanceWithTime(long timerValue, String iconname) {
-        this.timerValue = timerValue;
-        Timber.i("createNewInstance : %d", timerValue);
-
-        long startTime = System.currentTimeMillis();
-        long stopTime = startTime + timerValue * 1000;
-
-        pomodoro = new Pomodoro(startTime, stopTime, TimerState.ONGOING);
-        building = new Building(pomodoro, calculatePeopleCount(startTime, stopTime), iconname);
-    }
-
-    public void createEmptyInstance(String iconname) {
-        pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
-        if (timerValue != null) {
-            building = new Building(pomodoro, iconname);
-        } else {
-            building = new Building(pomodoro, iconname);
+        if (city != null && city.getBuildings() != null && city.getBuildings().contains(building)) {
+            this.building = city.getBuildings().get(city.getBuildings().indexOf(building));
         }
     }
 
-  public void createEmptyInstance() {
+    public void createEmptyInstance() {
         pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
         if (timerValue != null) {
             building = new Building(pomodoro);
@@ -65,6 +52,9 @@ public class PomodoroManger {
         pomodoro.setStarttime(startTime);
         pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
+        if (city == null)
+            city = new City();
+        city.getBuildings().add(building);
     }
 
     public int calculatePeopleCount(long starttime, long stopTime) {

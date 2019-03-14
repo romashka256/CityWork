@@ -9,7 +9,9 @@ import android.os.Build;
 import com.citywork.App;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
+import com.citywork.model.interfaces.OnCityLoadedListener;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
@@ -32,6 +34,9 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     MutableLiveData<Pomodoro> pomodoroMutableLiveData = new MutableLiveData<>();
 
     MutableLiveData<Building> buildingMutableLiveData = new MutableLiveData<>();
+
+    @Getter
+    MutableLiveData<City> cityMutableLiveData = new MutableLiveData<>();
 
     @Override
     public LiveData<Building> getBuildingLiveData() {
@@ -75,6 +80,10 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
                 buildingMutableLiveData.postValue(building);
             }
+        });
+
+        dataBaseHelper.loadLastCity(city -> {
+            cityMutableLiveData.postValue(city);
         });
 
         if (first.get()) {

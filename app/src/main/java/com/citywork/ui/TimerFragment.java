@@ -284,6 +284,10 @@ public class TimerFragment extends Fragment {
         ViewModelProviders.of(mainActivity).get(SharedViewModel.class).getBuildingMutableLiveData().observe(mainActivity, building -> {
             iTimerFragmentViewModel.buildingReceived(building);
         });
+
+        ViewModelProviders.of(mainActivity).get(SharedViewModel.class).getCityMutableLiveData().observe(mainActivity, city -> {
+            iTimerFragmentViewModel.cityReceived(city);
+        });
     }
 
     @Override

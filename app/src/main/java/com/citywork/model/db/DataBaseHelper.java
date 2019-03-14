@@ -3,9 +3,11 @@ package com.citywork.model.db;
 import android.arch.lifecycle.LiveData;
 
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
 import com.citywork.model.interfaces.OnBuildingsLoadedListener;
+import com.citywork.model.interfaces.OnCityLoadedListener;
 import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.model.interfaces.OnTasksLoadedListener;
@@ -132,14 +134,45 @@ public class DataBaseHelper implements DBHelper {
         realm.close();
     }
 
+    @Override
     public void loadAllCompletedBuildings(OnBuildingsLoadedListener onBuildingsLoadedListener) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
-           List<Building> realmList = realm1.copyFromRealm(realm1.where(Building.class)
-                   .equalTo("pomodoro.timerState", TimerState.COMPLETED.toString())
-                   .findAll());
+            List<Building> realmList = realm1.copyFromRealm(realm1.where(Building.class)
+                    .equalTo("pomodoro.timerState", TimerState.COMPLETED.toString())
+                    .findAll());
 
-           onBuildingsLoadedListener.onBuildingsLoaded(realmList);
+            onBuildingsLoadedListener.onBuildingsLoaded(realmList);
+        });
+        realm.close();
+    }
+
+    @Override
+    public void loadLastCity(OnCityLoadedListener onCityLoadedListener) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            if (!realm1.where(City.class).findAll().isEmpty()) {
+                City city = realm1.where(City.class).findAll().last();
+                if (city != null) {
+                    city = realm1.copyFromRealm(city);
+                    onCityLoadedListener.onLoadedListener(city);
+                } else {
+                    onCityLoadedListener.onLoadedListener(null);
+                }
+            }
+        });
+        realm.close();
+    }
+
+    @Override
+    public void saveCity(City city) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            if (city.getId() == null) {
+                city.setId(System.currentTimeMillis());
+            }
+
+            realm1.copyToRealmOrUpdate(city);
         });
     }
 }

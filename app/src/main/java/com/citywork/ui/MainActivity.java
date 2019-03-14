@@ -60,8 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
-            Timber.i("Last pomodoro posted");
+            Timber.i("Last building posted");
+        });
 
+        iMainActivityViewModel.getCityMutableLiveData().observe(this, city ->{
+            ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().postValue(city);
+            Timber.i("Last city posted");
         });
 
         timerTabBtn.setDataToImet("Таймер", R.drawable.ic_timer_icon_focused);

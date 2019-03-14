@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.util.Pair;
 
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.utils.timer.TimerState;
 
 public interface ITimerFragmentViewModel {
@@ -32,6 +33,7 @@ public interface ITimerFragmentViewModel {
     void onTimerValueChanged(long time);
 
     void buildingReceived(Building building);
+    void cityReceived(City building);
 
     void onServiceConnected(Building building);
 
@@ -41,9 +43,12 @@ public interface ITimerFragmentViewModel {
 
     LiveData<Integer> getPeopleCountChangedEvent();
 
+    LiveData<Integer> getCityPeopleCountChangeEvent();
+
     LiveData<TimerState> getTimerStateChanged();
 
     LiveData<Integer> getChangeTimeEventInPercent();
+
     LiveData<String> getBuildingChanged();
 
     LiveData<Pair<Integer, Integer>> getProgressPeopleCountChangedEvent();

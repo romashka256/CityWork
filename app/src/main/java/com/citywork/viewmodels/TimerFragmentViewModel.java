@@ -11,6 +11,7 @@ import com.citywork.Constants;
 import com.citywork.R;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
@@ -43,6 +44,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     MutableLiveData<Integer> mChangeTimeEventInPercent = new MutableLiveData<>();
     MutableLiveData<String> mBuidingChanged = new MutableLiveData<>();
     MutableLiveData<Pair<Integer, Integer>> mProgressPeopleCountChangedEvent = new MutableLiveData<>();
+    MutableLiveData<Integer> mCityPeopleCountChangeEvent = new MutableLiveData<>();
 
     private TimerManager mTimerManager;
     private AlarmManagerImpl mAlarmManager;
@@ -170,10 +172,10 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     //TODO SHOW WIN DIALOG
 
                     if (pomodoroManger.setComleted() == TimerState.COMPLETED) {
-                        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+                        saveBuidlingToDB();
                         pomodoroManger.createEmptyInstance();
                     }
-                    dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+                    saveBuidlingToDB();
                     mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
                     notificationUtils.closeAlarmNotification();
                 }));
@@ -188,7 +190,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         else
             pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
         pomodoroManger.createEmptyInstance();
-        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        saveBuidlingToDB();
     }
 
     @Override
@@ -208,7 +210,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStop() {
         mTimerManager.pauseTimer();
         compositeDisposable.clear();
-        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        saveBuidlingToDB();
     }
 
     @Override
@@ -314,6 +316,11 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         }
     }
 
+    @Override
+    public void cityReceived(City city) {
+
+    }
+
     private void checkAndStartTimer(Pomodoro pomodoro) {
         Timber.i("checkAndStartTimer");
         if (!(pomodoro.getStoptime() <= 0)) {
@@ -344,5 +351,10 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     @Override
     public LiveData<String> getBuildingChanged() {
         return mBuidingChanged;
+    }
+
+    @Override
+    public LiveData<Integer> getCityPeopleCountChangeEvent() {
+        return mCityPeopleCountChangeEvent;
     }
 }
