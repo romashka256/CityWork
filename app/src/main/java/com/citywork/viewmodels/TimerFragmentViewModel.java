@@ -122,11 +122,16 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         pomodoroManger.setTimeToPomodoro(timerValue);
         pomodoroManger.getBuilding().setIconName(buildingNames.get(Calculator.calculateBuidling(timerValue)));
         saveBuidlingToDB();
+        saveCityToDB();
         startTimer(createTimer(timerValue));
     }
 
     private void saveBuidlingToDB() {
         dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+    }
+
+    private void saveCityToDB() {
+        dataBaseHelper.saveCity(pomodoroManger.getCity());
     }
 
     @Override

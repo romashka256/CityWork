@@ -63,27 +63,28 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onCreate() {
         AtomicBoolean first = new AtomicBoolean(false);
-        dataBaseHelper.getLastBuilding(building -> {
-            if (building == null ||
-                    (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-                            building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-                            building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-                pomodoroManger.createEmptyInstance();
-                first.set(true);
-            } else {
-                pomodoroManger.setBuilding(building);
-
-                if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                    Timber.i("building.getPomodoro().getStoptime()) <= 0");
-                    return;
-                }
-
-                buildingMutableLiveData.postValue(building);
-            }
-        });
 
         dataBaseHelper.loadLastCity(city -> {
-            cityMutableLiveData.postValue(city);
+            if (city != null) {
+                Building building = city.getBuildings().get(city.getBuildings().size());
+                if (building == null ||
+                        (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+                                building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+                                building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
+                    pomodoroManger.createEmptyInstance();
+                    first.set(true);
+                } else {
+                    pomodoroManger.setBuilding(building);
+
+                    if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                        Timber.i("building.getPomodoro().getStoptime()) <= 0");
+                        return;
+                    }
+
+                    buildingMutableLiveData.postValue(building);
+                }
+            }
+            pomodoroManger.setCity(city);
         });
 
         if (first.get()) {

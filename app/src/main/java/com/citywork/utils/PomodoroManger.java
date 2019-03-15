@@ -30,10 +30,6 @@ public class PomodoroManger {
         this.building = building;
         this.pomodoro = building.getPomodoro();
         this.peopleCount = building.getPeople_count();
-
-        if (city != null && city.getBuildings() != null && city.getBuildings().contains(building)) {
-            this.building = city.getBuildings().get(city.getBuildings().indexOf(building));
-        }
     }
 
     public void createEmptyInstance() {
@@ -52,6 +48,7 @@ public class PomodoroManger {
         pomodoro.setStarttime(startTime);
         pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
+
         if (city == null)
             city = new City();
         city.getBuildings().add(building);

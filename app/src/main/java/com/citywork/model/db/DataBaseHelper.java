@@ -159,6 +159,8 @@ public class DataBaseHelper implements DBHelper {
                 } else {
                     onCityLoadedListener.onLoadedListener(null);
                 }
+            } else {
+                onCityLoadedListener.onLoadedListener(null);
             }
         });
         realm.close();
