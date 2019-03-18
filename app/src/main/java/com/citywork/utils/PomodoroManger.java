@@ -1,6 +1,5 @@
 package com.citywork.utils;
 
-import com.citywork.Constants;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
@@ -8,7 +7,6 @@ import com.citywork.utils.timer.TimerState;
 
 import lombok.Getter;
 import lombok.Setter;
-import timber.log.Timber;
 
 public class PomodoroManger {
 
@@ -21,8 +19,13 @@ public class PomodoroManger {
     @Getter
     private int peopleCount;
     @Getter
-    @Setter
     private City city;
+
+    public void setCity(City city) {
+        this.city = city;
+        if (city == null) ;
+            createEmptyInstance();
+    }
 
     private Long timerValue;
 

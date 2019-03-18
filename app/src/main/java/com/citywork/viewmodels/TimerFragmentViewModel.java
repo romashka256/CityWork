@@ -245,6 +245,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 mBuidingChanged.postValue(buildingNames.get(Calculator.calculateBuidling(timerValue)));
             }
 
+            if(pomodoroManger.getPomodoro().getId() != null)
             mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();

@@ -11,7 +11,6 @@ import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.model.interfaces.OnCityLoadedListener;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
@@ -66,7 +65,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
         dataBaseHelper.loadLastCity(city -> {
             if (city != null) {
-                Building building = city.getBuildings().get(city.getBuildings().size());
+                Building building = city.getBuildings().get(city.getBuildings().size() - 1  );
                 if (building == null ||
                         (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
                                 building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
