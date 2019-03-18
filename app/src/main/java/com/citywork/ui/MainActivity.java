@@ -59,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
-            ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().postValue(building);
+            ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().setValue(building);
             Timber.i("Last building posted");
         });
 
         iMainActivityViewModel.getCityMutableLiveData().observe(this, city ->{
-            ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().postValue(city);
+            ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().setValue(city);
             Timber.i("Last city posted");
         });
 

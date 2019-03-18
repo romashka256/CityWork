@@ -65,13 +65,13 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
         dataBaseHelper.loadLastCity(city -> {
             if (city != null) {
-                Building building = city.getBuildings().get(city.getBuildings().size() - 1  );
+                Building building = city.getBuildings().get(city.getBuildings().size() - 1);
                 if (building == null ||
                         (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
                                 building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
                                 building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
                     pomodoroManger.createEmptyInstance();
-                    first.set(true);
+                    //     first.set(true);
                 } else {
                     pomodoroManger.setBuilding(building);
 
@@ -86,9 +86,9 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
             pomodoroManger.setCity(city);
         });
 
-        if (first.get()) {
-            dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
-        }
+//        if (first.get()) {
+//            dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+//        }
 
         timerManager = App.getsAppComponent().getTimerManager();
     }

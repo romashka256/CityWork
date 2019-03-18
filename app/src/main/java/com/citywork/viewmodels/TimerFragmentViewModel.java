@@ -194,6 +194,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
         else
             pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
+
+        saveBuidlingToDB();
         pomodoroManger.createEmptyInstance();
         saveBuidlingToDB();
     }
@@ -245,8 +247,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 mBuidingChanged.postValue(buildingNames.get(Calculator.calculateBuidling(timerValue)));
             }
 
-            if(pomodoroManger.getPomodoro().getId() != null)
-            mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
+            if (pomodoroManger.getPomodoro().getId() != null)
+                mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
         }
@@ -309,7 +311,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void buildingReceived(Building building) {
-        if (pomodoroManger.getBuilding() == null) {
+        if (pomodoroManger.getBuilding() != null) {
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
                 building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
             } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
