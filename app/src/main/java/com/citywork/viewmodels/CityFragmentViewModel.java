@@ -8,6 +8,9 @@ import android.util.Pair;
 import com.citywork.App;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
+import com.citywork.model.interfaces.OnCitiesLoadedListener;
+import com.citywork.utils.CityUtils;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
 
 import java.util.ArrayList;
@@ -18,24 +21,32 @@ import java.util.List;
 public class CityFragmentViewModel extends ViewModel implements ICityFragmentViewModel {
 
     private DataBaseHelper dataBaseHelper;
-    private List<Building> buildings;
+    private List<City> cities;
 
-    private MutableLiveData<List<Pair<Date, List<Building>>>> citiesCreatedEvent = new MutableLiveData<>();
+    private MutableLiveData<List<City>> citiesCreatedEvent = new MutableLiveData<>();
 
     private List<Building> buildingList;
+    private CityUtils cityUtils;
 
     public CityFragmentViewModel() {
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
 
+        //TODO INJECT
+        cityUtils = new CityUtils();
     }
 
     @Override
     public void onCreate() {
-        dataBaseHelper.loadAllCompletedBuildings(buildings -> {
-            this.buildings = buildings;
-
-            citiesCreatedEvent.postValue(sortBuildings(buildings));
+        dataBaseHelper.loadCities(cityList -> {
+            this.cities = cityList;
+            citiesCreatedEvent.postValue(cityUtils.getCityList(cityList));
         });
+
+//        dataBaseHelper.loadAllCompletedBuildings(buildings -> {
+//            this.c = buildings;
+//
+//            citiesCreatedEvent.postValue(sortBuildings(buildings));
+//        });
     }
 
     private List<Pair<Date, List<Building>>> sortBuildings(List<Building> buildings) {
@@ -79,7 +90,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     }
 
     @Override
-    public LiveData<List<Pair<Date, List<Building>>>> getCitiesLoaded() {
+    public LiveData<List<City>> getCitiesLoaded() {
         return citiesCreatedEvent;
     }
 }

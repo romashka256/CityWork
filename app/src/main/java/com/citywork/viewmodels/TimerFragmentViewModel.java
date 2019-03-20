@@ -138,6 +138,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void on5MinRestClicked() {
         startTimer(createTimer(300));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (300 * 1000));
+        pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
     }
@@ -146,6 +147,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void on10MinRestClicked() {
         startTimer(createTimer(600));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (600 * 1000));
+        pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
     }
@@ -225,7 +227,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         if (pomodoroManger.getPomodoro() != null) {
             if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 if (!(Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStoptime()) <= 0)) {
-                    checkAndStartTimer(pomodoroManger.getPomodoro());
+                    checkAndStartTimer(pomodoroManger.getPomodoro().getStoptime());
                 } else {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
                     dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
@@ -233,7 +235,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 }
             } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
                 if (!((Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStopresttime()) <= 0))) {
-                    checkAndStartTimer(pomodoroManger.getPomodoro());
+                    checkAndStartTimer(pomodoroManger.getPomodoro().getStopresttime());
                 } else {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.COMPLETED);
                     dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
@@ -288,7 +290,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             //TODO CHANGE THIS
             mCompleteEvent.postValue(building);
         } else {
-            checkAndStartTimer(building.getPomodoro());
+            checkAndStartTimer(building.getPomodoro().getStoptime());
         }
     }
 
@@ -320,7 +322,11 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
             pomodoroManger.setBuilding(building);
             mPeopleCountChange.postValue(building.getPeople_count());
-            checkAndStartTimer(building.getPomodoro());
+            if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                checkAndStartTimer(building.getPomodoro().getStoptime());
+            } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
+                checkAndStartTimer(building.getPomodoro().getStopresttime());
+            }
         }
     }
 
@@ -329,11 +335,11 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     }
 
-    private void checkAndStartTimer(Pomodoro pomodoro) {
+    private void checkAndStartTimer(long stoptime) {
         Timber.i("checkAndStartTimer");
-        if (!(pomodoro.getStoptime() <= 0)) {
+        if (!(stoptime <= 0)) {
             if (mTimerManager.getTimer() == null) {
-                startTimer(createTimer(Calculator.getRemainingTime(pomodoro.getStoptime())));
+                startTimer(createTimer(Calculator.getRemainingTime(stoptime)));
             } else {
                 startTimer(getTimer());
             }

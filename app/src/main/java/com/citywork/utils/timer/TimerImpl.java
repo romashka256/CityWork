@@ -26,4 +26,5 @@ public class TimerImpl implements Timer {
     public void stopTimer() {
         stopped = true;
     }
+
 }

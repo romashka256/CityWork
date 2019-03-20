@@ -7,6 +7,7 @@ import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
 import com.citywork.model.interfaces.OnBuildingsLoadedListener;
+import com.citywork.model.interfaces.OnCitiesLoadedListener;
 import com.citywork.model.interfaces.OnCityLoadedListener;
 import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
@@ -143,6 +144,14 @@ public class DataBaseHelper implements DBHelper {
                     .findAll());
 
             onBuildingsLoadedListener.onBuildingsLoaded(realmList);
+        });
+        realm.close();
+    }
+
+    public void loadCities(OnCitiesLoadedListener onCitiesLoadedListener) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            onCitiesLoadedListener.loadCiities(realm1.copyFromRealm(realm1.where(City.class).findAll()));
         });
         realm.close();
     }

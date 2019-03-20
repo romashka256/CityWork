@@ -25,6 +25,11 @@ public class City extends RealmObject {
         date = new Date(System.currentTimeMillis());
     }
 
+    public City(Date date) {
+        this.date = date;
+        buildings = new RealmList<>();
+    }
+
     @PrimaryKey
     @Getter
     @Setter

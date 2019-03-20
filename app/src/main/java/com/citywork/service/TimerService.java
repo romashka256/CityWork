@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.citywork.App;
+import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
@@ -36,6 +37,7 @@ public class TimerService extends Service {
     private NotificationUtils notificationUtils;
     private AlarmManagerImpl alarmManager;
     private PomodoroManger pomodoroManger;
+    private DBHelper dbHelper;
 
     private Building building;
 
@@ -64,6 +66,7 @@ public class TimerService extends Service {
         notificationUtils = new NotificationUtils(getApplicationContext());
         alarmManager = new AlarmManagerImpl(App.getsAppComponent().getApplicationContext());
 
+        dbHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
         mTimerManager = App.getsAppComponent().getTimerManager();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
@@ -98,12 +101,13 @@ public class TimerService extends Service {
                         }
                     }, () -> {
                         notificationUtils.showAlarmNotification();
-                        stopForeground(true);
                         if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                             building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-                        }else if(building.getPomodoro().getTimerState() == TimerState.REST_ONGOING){
+                        } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
                             building.getPomodoro().setTimerState(TimerState.REST_CANCELED);
                         }
+                        dbHelper.saveBuilding(pomodoroManger.getBuilding());
+                        stopForeground(true);
                     });
         }
 

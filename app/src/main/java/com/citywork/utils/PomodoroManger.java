@@ -5,6 +5,9 @@ import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.timer.TimerState;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +27,7 @@ public class PomodoroManger {
     public void setCity(City city) {
         this.city = city;
         if (city == null) ;
-            createEmptyInstance();
+        createEmptyInstance();
     }
 
     private Long timerValue;
@@ -54,6 +57,16 @@ public class PomodoroManger {
 
         if (city == null)
             city = new City();
+
+        Calendar curcalendar = Calendar.getInstance();
+        Calendar newcalendar = Calendar.getInstance();
+        curcalendar.setTime(city.getDate());
+        newcalendar.setTime(new Date(startTime));
+
+        if (curcalendar.get(Calendar.DAY_OF_YEAR) == newcalendar.get(Calendar.DAY_OF_YEAR)) {
+            city = new City();
+        }
+
         city.getBuildings().add(building);
     }
 

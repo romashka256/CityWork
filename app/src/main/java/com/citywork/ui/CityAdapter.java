@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.citywork.R;
 import com.citywork.model.db.models.Building;
+import com.citywork.model.db.models.City;
 import com.citywork.ui.customviews.CityView;
 
 import java.util.ArrayList;
@@ -21,12 +22,12 @@ import butterknife.ButterKnife;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
 
-    private List<Pair<Date, List<Building>>> buildings;
+    private List<City> cities;
     private Context context;
     private List<String> buildingNames;
 
-    public CityAdapter(List<Pair<Date, List<Building>>> buildings, Context context) {
-        this.buildings = buildings;
+    public CityAdapter(List<City> cities, Context context) {
+        this.cities = cities;
         this.context = context;
         buildingNames = new ArrayList<>();
 
@@ -34,18 +35,18 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
 
     @NonNull
     @Override
-    public CityVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public CityVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)  {
         View view = LayoutInflater.from(context).inflate(R.layout.city_item, null);
         return new CityVH(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CityVH cityVH, int i) {
-        Pair<Date, List<Building>> city = buildings.get(i);
+        City city = cities.get(i);
 
         buildingNames.clear();
 
-        for (Building building : city.second) {
+        for (Building building : city.getBuildings()) {
             buildingNames.add(building.getIconName());
         }
 
@@ -54,7 +55,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
 
     @Override
     public int getItemCount() {
-        return buildings.size();
+        return cities.size();
     }
 
     public class CityVH extends RecyclerView.ViewHolder {
