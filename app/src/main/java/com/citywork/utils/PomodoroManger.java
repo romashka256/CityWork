@@ -26,8 +26,8 @@ public class PomodoroManger {
 
     public void setCity(City city) {
         this.city = city;
-        if (city == null) ;
-        createEmptyInstance();
+        if (city == null)
+            createEmptyInstance();
     }
 
     private Long timerValue;
@@ -47,6 +47,20 @@ public class PomodoroManger {
         }
     }
 
+    public int getPeopleCount() {
+        int peoplecount = 0;
+
+        if (city != null)
+            if (city.getBuildings() != null) {
+                for (Building building : city.getBuildings()) {
+                    if (pomodoro.getTimerState() != TimerState.CANCELED && pomodoro.getTimerState() != TimerState.ONGOING)
+                        peoplecount += building.getPeople_count();
+                }
+            }
+
+        return peopleCount;
+    }
+
     public void setTimeToPomodoro(long timerValue) {
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
@@ -63,7 +77,7 @@ public class PomodoroManger {
         curcalendar.setTime(city.getDate());
         newcalendar.setTime(new Date(startTime));
 
-        if (curcalendar.get(Calendar.DAY_OF_YEAR) == newcalendar.get(Calendar.DAY_OF_YEAR)) {
+        if (curcalendar.get(Calendar.DAY_OF_YEAR) != newcalendar.get(Calendar.DAY_OF_YEAR) && curcalendar.get(Calendar.YEAR) != newcalendar.get(Calendar.YEAR)) {
             city = new City();
         }
 
@@ -79,15 +93,16 @@ public class PomodoroManger {
     }
 
     public TimerState setComleted() {
+        TimerState toreturn = null;
         if (pomodoro.getTimerState() == TimerState.ONGOING) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
-            return TimerState.WORK_COMPLETED;
+            toreturn = TimerState.WORK_COMPLETED;
         } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.COMPLETED);
-            return TimerState.COMPLETED;
+            toreturn = TimerState.COMPLETED;
         }
 
-        return TimerState.WORK_COMPLETED;
+        return toreturn;
     }
 
     public TimerState prepareBeforeStart() {

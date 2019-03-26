@@ -1,7 +1,5 @@
 package com.citywork.model.db;
 
-import android.arch.lifecycle.LiveData;
-
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
@@ -16,10 +14,9 @@ import com.citywork.utils.timer.TimerState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Random;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import timber.log.Timber;
 
@@ -75,11 +72,11 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             if (building.getId() == null) {
-                building.setId(System.currentTimeMillis() / 1000);
+                building.setId(new Random().nextLong());
             }
 
             if (building.getPomodoro().getId() == null) {
-                building.getPomodoro().setId(System.currentTimeMillis());
+                building.getPomodoro().setId(new Random().nextLong());
             }
 
             realm1.copyToRealmOrUpdate(building);
@@ -180,7 +177,7 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             if (city.getId() == null) {
-                city.setId(System.currentTimeMillis());
+                city.setId(new Random().nextLong());
             }
 
             realm1.copyToRealmOrUpdate(city);

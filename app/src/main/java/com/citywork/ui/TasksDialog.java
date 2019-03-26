@@ -122,7 +122,7 @@ public class TasksDialog extends DialogFragment {
 
         settingIV.setOnClickListener(v -> {
             dismiss();
-            Navigation.findNavController(getActivity(), R.id.timer_fragment_settings).navigate(R.id.action_timerFragment_to_settingsFragment);
+            Navigation.findNavController(getActivity(), R.id.toolbar_settings_iv).navigate(R.id.action_timerFragment_to_settingsFragment);
         });
     }
 

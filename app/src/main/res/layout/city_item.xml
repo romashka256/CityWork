@@ -13,8 +13,8 @@
     </com.citywork.ui.customviews.CityView>
 
     <ImageView
-        android:layout_width="5dp"
-        android:layerType="software"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/city_divider"/>
+        android:layerType="software"
+        android:background="@drawable/ic_dash_line"/>
 </LinearLayout>

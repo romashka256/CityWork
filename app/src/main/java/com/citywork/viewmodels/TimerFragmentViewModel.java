@@ -12,7 +12,6 @@ import com.citywork.R;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
-import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
@@ -111,6 +110,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 mTimerStateChangedEvent.postValue(TimerState.ONGOING);
             }
         });
+
+        mCityPeopleCountChangeEvent.postValue(pomodoroManger.getPeopleCount());
     }
 
     @Override
@@ -177,6 +178,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
                 }, () -> {
                     //TODO SHOW WIN DIALOG
+
+                    mCityPeopleCountChangeEvent.postValue(pomodoroManger.getPeopleCount());
 
                     if (pomodoroManger.setComleted() == TimerState.COMPLETED) {
                         saveBuidlingToDB();

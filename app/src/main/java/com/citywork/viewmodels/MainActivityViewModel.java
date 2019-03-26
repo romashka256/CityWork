@@ -86,10 +86,6 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
             pomodoroManger.setCity(city);
         });
 
-//        if (first.get()) {
-//            dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
-//        }
-
         timerManager = App.getsAppComponent().getTimerManager();
     }
 

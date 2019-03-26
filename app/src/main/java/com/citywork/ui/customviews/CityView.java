@@ -61,8 +61,15 @@ public class CityView extends ViewGroup {
         minCityHeight = (int) dpToPx(DEFAULT_CITY_HEIGHT);
     }
 
+    public void clear() {
+        this.buildingBitmaps = new ArrayList<>();
+        invalidate();
+    }
+
     public void setBuildings(List<String> buildings) {
         this.buildingIconNames = buildings;
+        buildingBitmaps.clear();
+        this.removeAllViews();
 
         for (String buildingName : buildingIconNames) {
 

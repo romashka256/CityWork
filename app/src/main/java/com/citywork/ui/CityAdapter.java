@@ -3,7 +3,6 @@ package com.citywork.ui;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,9 @@ import com.citywork.R;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.ui.customviews.CityView;
+import com.citywork.utils.timer.TimerState;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,7 +34,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
 
     @NonNull
     @Override
-    public CityVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)  {
+    public CityVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.city_item, null);
         return new CityVH(view);
     }
@@ -45,9 +44,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
         City city = cities.get(i);
 
         buildingNames.clear();
+        cityVH.cityView.clear();
 
         for (Building building : city.getBuildings()) {
-            buildingNames.add(building.getIconName());
+            if (building.getPomodoro().getTimerState() != TimerState.CANCELED && building.getPomodoro().getTimerState() != TimerState.ONGOING)
+                buildingNames.add(building.getIconName());
         }
 
         cityVH.cityView.setBuildings(buildingNames);

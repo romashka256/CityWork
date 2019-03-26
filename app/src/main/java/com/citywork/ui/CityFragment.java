@@ -26,11 +26,11 @@ public class CityFragment extends Fragment {
 
     @BindView(R.id.city_fragment_rv)
     RecyclerView recyclerView;
-    @BindView(R.id.city_fragment_share)
+    @BindView(R.id.toolbar_share_iv)
     ImageView mShareIV;
-    @BindView(R.id.city_fragment_settings)
+    @BindView(R.id.toolbar_settings_iv)
     ImageView mSettings;
-    @BindView(R.id.city_fragment_city_people_count)
+    @BindView(R.id.toolbar_city_people_count)
     TextView mPeopleCountTV;
 
     private CityFragmentViewModel cityFragmentViewModel;
@@ -42,6 +42,7 @@ public class CityFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         context = App.getsAppComponent().getApplicationContext();
+
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
 
         cityFragmentViewModel.onCreate();
@@ -63,7 +64,7 @@ public class CityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
 
         cityFragmentViewModel.getCitiesLoaded().observe(this, cities -> {
             adapter = new CityAdapter(cities, context);

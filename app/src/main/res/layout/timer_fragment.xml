@@ -7,50 +7,9 @@
     android:background="@drawable/bg"
     tools:layout_editor_absoluteY="81dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:text="У вас в городе"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/timer_fragment_city_people_count"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timer_fragment_city_people_count" />
-
-    <TextView
-        android:id="@+id/timer_fragment_city_people_count"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:text="1 350 человек"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/timer_fragment_settings"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/timer_fragment_settings" />
-
-    <ImageView
-        android:id="@+id/timer_fragment_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/setting_icon" />
-
-    <ImageView
-        android:id="@+id/timer_fragment_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/timer_fragment_settings"
-        app:layout_constraintEnd_toStartOf="@+id/timer_fragment_settings"
-        app:layout_constraintTop_toTopOf="@+id/timer_fragment_settings"
-        app:srcCompat="@drawable/share_icon" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <com.citywork.ui.customviews.BuldingProgressView
         android:id="@+id/timer_fragment_building"
@@ -59,7 +18,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer_fragment_city_people_count" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
     <com.citywork.ui.customviews.CircleTimer
@@ -80,7 +39,6 @@
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -181,7 +139,7 @@
     <TextView
         android:id="@+id/timer_fragment_resttv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
         android:text="Отдыхайте..."
@@ -190,6 +148,6 @@
         app:layout_constraintBottom_toTopOf="@+id/circle_timer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer_fragment_city_people_count" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>

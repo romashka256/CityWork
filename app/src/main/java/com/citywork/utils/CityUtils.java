@@ -17,15 +17,21 @@ public class CityUtils {
 
         List<City> cityToReturn = new ArrayList<>();
 
+        boolean found = false;
+
         for (int i = 0; i < 15; i++) {
+            found = false;
             for (City city : cityList) {
                 cityDate.setTime(city.getDate());
                 if (currentDate.get(Calendar.DAY_OF_YEAR) == cityDate.get(Calendar.DAY_OF_YEAR) && currentDate.get(Calendar.YEAR) == cityDate.get(Calendar.YEAR)) {
                     cityToReturn.add(city);
-                } else {
-                    cityToReturn.add(new City());
+                    found = true;
+                    break;
                 }
             }
+
+            if (!found)
+                cityToReturn.add(new City());
 
             currentDate.add(Calendar.DATE, -1);
         }

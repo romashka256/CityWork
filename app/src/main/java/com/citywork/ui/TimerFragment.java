@@ -45,7 +45,7 @@ public class TimerFragment extends Fragment {
     Button m10minRest;
     @BindView(R.id.circle_timer)
     CircleTimer circleTimer;
-    @BindView(R.id.timer_fragment_settings)
+    @BindView(R.id.toolbar_settings_iv)
     ImageView mSettingsBtn;
     @BindView(R.id.timer_fragment_building)
     BuldingProgressView mBuidlingView;
@@ -55,8 +55,10 @@ public class TimerFragment extends Fragment {
     TextView mTodoTV;
     @BindView(R.id.timer_fragment_resttv)
     TextView mRestTV;
-    @BindView(R.id.timer_fragment_share)
+    @BindView(R.id.toolbar_share_iv)
     ImageView mShareIV;
+    @BindView(R.id.toolbar_city_people_count)
+    TextView mCityPeopleCountTV;
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
@@ -79,12 +81,19 @@ public class TimerFragment extends Fragment {
             Timber.i("TimerCompleted Event Received");
             circleTimer.disable();
         });
+
         iTimerFragmentViewModel.getPeopleCountChangedEvent().observe(this, peopleCount -> {
             mBuidlingView.setPeopleCount(peopleCount);
         });
+
         iTimerFragmentViewModel.getProgressPeopleCountChangedEvent().observe(this, pair -> {
             mBuidlingView.setPeopleProgress(pair.second, pair.first);
         });
+
+        iTimerFragmentViewModel.getCityPeopleCountChangeEvent().observe(this, count -> {
+            mCityPeopleCountTV.setText(count + " человек");
+        });
+
         iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
             switch (timerState) {
                 case ONGOING:
@@ -105,6 +114,7 @@ public class TimerFragment extends Fragment {
                 case REST_ONGOING:
                     timerongoingView();
                     mRestTV.setVisibility(View.VISIBLE);
+                    mBuidlingView.setVisibility(View.GONE);
                     break;
                 case CANCELED:
                     notongoingView();
@@ -154,6 +164,7 @@ public class TimerFragment extends Fragment {
         m5minRest.setVisibility(View.GONE);
         mTodoTV.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.GONE);
+        mBuidlingView.setVisibility(View.VISIBLE);
     }
 
     private void restView() {
@@ -164,6 +175,7 @@ public class TimerFragment extends Fragment {
         m5minRest.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.GONE);
+        mBuidlingView.setVisibility(View.VISIBLE);
         circleTimer.enable();
     }
 
@@ -175,6 +187,7 @@ public class TimerFragment extends Fragment {
         startButton.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.VISIBLE);
         circleTimer.disable();
+        mBuidlingView.setVisibility(View.VISIBLE);
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
 
@@ -211,7 +224,7 @@ public class TimerFragment extends Fragment {
         });
 
         mBuidlingView.setOnClickListener(v -> {
-            iTimerFragmentViewModel.onDebugBtnClicked();
+            //    iTimerFragmentViewModel.onDebugBtnClicked();
         });
 
         circleTimer.setCircleTimeListener(new CircleTimer.CircleTimerListener() {
@@ -260,6 +273,8 @@ public class TimerFragment extends Fragment {
         });
 
         mBuidlingView.setPeopleCount(Calculator.calculatePeopleCount(Constants.DEFAULT_MIN_TIMER_VALUE));
+
+        mCityPeopleCountTV.setPadding(0, mBuidlingView.getMeasuredHeight() / 2, 0, mBuidlingView.getMeasuredHeight() / 2);
     }
 
     @Override
