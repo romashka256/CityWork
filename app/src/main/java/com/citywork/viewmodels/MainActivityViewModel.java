@@ -11,6 +11,7 @@ import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
+import com.citywork.model.interfaces.OnCitiesLoadedListener;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
@@ -20,6 +21,7 @@ import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Getter;
@@ -61,9 +63,8 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onCreate() {
-        AtomicBoolean first = new AtomicBoolean(false);
-
-        dataBaseHelper.loadLastCity(city -> {
+        dataBaseHelper.loadCities(cityList -> {
+            City city = cityList.get(cityList.size());
             if (city != null) {
                 Building building = city.getBuildings().get(city.getBuildings().size() - 1);
                 if (building == null ||
@@ -71,7 +72,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                                 building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
                                 building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
                     pomodoroManger.createEmptyInstance();
-                    //     first.set(true);
+
                 } else {
                     pomodoroManger.setBuilding(building);
 
@@ -84,6 +85,10 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                 }
             }
             pomodoroManger.setCity(city);
+        });
+
+        dataBaseHelper.loadLastCity(city -> {
+
         });
 
         timerManager = App.getsAppComponent().getTimerManager();

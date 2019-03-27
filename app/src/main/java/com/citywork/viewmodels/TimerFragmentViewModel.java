@@ -195,10 +195,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStopClicked() {
         mTimerManager.stopTimer();
         mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
-        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING)
-            pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
-        else
-            pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
+        pomodoroManger.setCanceled();
 
         saveBuidlingToDB();
         pomodoroManger.createEmptyInstance();

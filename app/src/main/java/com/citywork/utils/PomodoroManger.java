@@ -105,6 +105,13 @@ public class PomodoroManger {
         return toreturn;
     }
 
+    public void setCanceled() {
+        if (pomodoro.getTimerState() == TimerState.ONGOING)
+            pomodoro.setTimerState(TimerState.CANCELED);
+        else
+            pomodoro.setTimerState(TimerState.REST_CANCELED);
+    }
+
     public TimerState prepareBeforeStart() {
         if (pomodoro.getTimerState() != TimerState.REST && pomodoro.getTimerState() != TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.ONGOING);

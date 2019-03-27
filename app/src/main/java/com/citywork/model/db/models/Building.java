@@ -35,7 +35,6 @@ public class Building extends RealmObject {
     public Building() {
     }
 
-
     @PrimaryKey
     @Setter
     @Getter

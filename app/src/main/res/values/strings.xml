@@ -3,5 +3,13 @@
     <string name="alarm_notification_channel_name">alarm_notification_channel_name</string>
     <string name="timer_notification_channel_name">timer_notification_channel_name</string>
     <string name="tasks_dialog_title">Задачи</string>
+    <string name="statistics_title">Статистика</string>
+    <string name="text_statistics_pomo">pomo</string>
+    <string name="text_statistics_completed">выполнено</string>
+
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
 
 </resources>
