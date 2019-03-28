@@ -111,7 +111,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             }
         });
 
-        mCityPeopleCountChangeEvent.postValue(pomodoroManger.getPeopleCount());
+        mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
     }
 
     @Override
@@ -132,7 +132,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     }
 
     private void saveCityToDB() {
-        dataBaseHelper.saveCity(pomodoroManger.getCity());
+        dataBaseHelper.saveCity(pomodoroManger.getLastcity());
     }
 
     @Override
@@ -179,12 +179,14 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 }, () -> {
                     //TODO SHOW WIN DIALOG
 
-                    mCityPeopleCountChangeEvent.postValue(pomodoroManger.getPeopleCount());
+                    mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
 
                     if (pomodoroManger.setComleted() == TimerState.COMPLETED) {
                         saveBuidlingToDB();
                         pomodoroManger.createEmptyInstance();
                     }
+
+                    mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
                     saveBuidlingToDB();
                     mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
                     notificationUtils.closeAlarmNotification();
@@ -195,6 +197,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStopClicked() {
         mTimerManager.stopTimer();
         mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
+
         pomodoroManger.setCanceled();
 
         saveBuidlingToDB();
@@ -242,7 +245,9 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     mTimerStateChangedEvent.postValue(TimerState.COMPLETED);
                 }
             }
+
             mTimerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
+
             if (pomodoroManger.getBuilding().getIconName() != null) {
                 mBuidingChanged.postValue(pomodoroManger.getBuilding().getIconName());
             } else {
@@ -251,6 +256,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
             if (pomodoroManger.getPomodoro().getId() != null)
                 mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
+
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
         }
@@ -322,6 +328,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
             pomodoroManger.setBuilding(building);
             mPeopleCountChange.postValue(building.getPeople_count());
+
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 checkAndStartTimer(building.getPomodoro().getStoptime());
             } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {

@@ -7,6 +7,7 @@ import com.citywork.utils.timer.TimerState;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,10 +23,13 @@ public class PomodoroManger {
     @Getter
     private int peopleCount;
     @Getter
-    private City city;
+    private City lastcity;
+    @Getter
+    @Setter
+    private int cityPeopleCount;
 
     public void setCity(City city) {
-        this.city = city;
+        this.lastcity = city;
         if (city == null)
             createEmptyInstance();
     }
@@ -40,25 +44,7 @@ public class PomodoroManger {
 
     public void createEmptyInstance() {
         pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
-        if (timerValue != null) {
-            building = new Building(pomodoro);
-        } else {
-            building = new Building(pomodoro);
-        }
-    }
-
-    public int getPeopleCount() {
-        int peoplecount = 0;
-
-        if (city != null)
-            if (city.getBuildings() != null) {
-                for (Building building : city.getBuildings()) {
-                    if (pomodoro.getTimerState() != TimerState.CANCELED && pomodoro.getTimerState() != TimerState.ONGOING)
-                        peoplecount += building.getPeople_count();
-                }
-            }
-
-        return peopleCount;
+        building = new Building(pomodoro);
     }
 
     public void setTimeToPomodoro(long timerValue) {
@@ -69,19 +55,20 @@ public class PomodoroManger {
         pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
 
-        if (city == null)
-            city = new City();
+        if (lastcity == null) {
+            lastcity = new City();
+        }
 
         Calendar curcalendar = Calendar.getInstance();
         Calendar newcalendar = Calendar.getInstance();
-        curcalendar.setTime(city.getDate());
+        curcalendar.setTime(lastcity.getDate());
         newcalendar.setTime(new Date(startTime));
 
         if (curcalendar.get(Calendar.DAY_OF_YEAR) != newcalendar.get(Calendar.DAY_OF_YEAR) && curcalendar.get(Calendar.YEAR) != newcalendar.get(Calendar.YEAR)) {
-            city = new City();
+            lastcity = new City();
         }
 
-        city.getBuildings().add(building);
+        lastcity.getBuildings().add(building);
     }
 
     public int calculatePeopleCount(long starttime, long stopTime) {
@@ -98,9 +85,12 @@ public class PomodoroManger {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
             toreturn = TimerState.WORK_COMPLETED;
         } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING) {
+
             pomodoro.setTimerState(TimerState.COMPLETED);
             toreturn = TimerState.COMPLETED;
         }
+
+        cityPeopleCount += building.getPeople_count();
 
         return toreturn;
     }

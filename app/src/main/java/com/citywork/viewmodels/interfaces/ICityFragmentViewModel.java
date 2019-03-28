@@ -13,4 +13,5 @@ public interface ICityFragmentViewModel {
     void onCreate();
 
     LiveData<List<City>>  getCitiesLoaded();
+    LiveData<Integer> getmCityPeopleCountChangeEvent();
 }

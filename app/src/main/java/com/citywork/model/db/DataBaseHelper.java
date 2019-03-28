@@ -149,17 +149,6 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             onCitiesLoadedListener.loadCiities(realm1.copyFromRealm(realm1.where(City.class)
-                    .beginGroup()
-                    .equalTo("building.pomodoro.timerstate", TimerState.COMPLETED.toString())
-                    .or()
-                    .equalTo("building.pomodoro.timerstate", TimerState.REST_CANCELED.toString())
-                    .or()
-                    .equalTo("building.pomodoro.timerstate", TimerState.REST_ONGOING.toString())
-                    .or()
-                    .equalTo("building.pomodoro.timerstate", TimerState.WORK_COMPLETED.toString())
-                    .or()
-                    .equalTo("building.pomodoro.timerstate", TimerState.REST.toString())
-                    .endGroup()
                     .findAll()));
         });
         realm.close();

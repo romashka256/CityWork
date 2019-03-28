@@ -64,31 +64,33 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onCreate() {
         dataBaseHelper.loadCities(cityList -> {
-            City city = cityList.get(cityList.size());
-            if (city != null) {
-                Building building = city.getBuildings().get(city.getBuildings().size() - 1);
-                if (building == null ||
-                        (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-                                building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-                                building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-                    pomodoroManger.createEmptyInstance();
+            if (cityList != null && !cityList.isEmpty()) {
+                City city = cityList.get(cityList.size() - 1);
+                if (city != null) {
+                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
 
-                } else {
-                    pomodoroManger.setBuilding(building);
+                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
+                    pomodoroManger.setCity(city);
+                    if (building == null ||
+                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
+                        pomodoroManger.createEmptyInstance();
 
-                    if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                        Timber.i("building.getPomodoro().getStoptime()) <= 0");
-                        return;
+                    } else {
+                        pomodoroManger.setBuilding(building);
+
+                        if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                            Timber.i("building.getPomodoro().getStoptime()) <= 0");
+                            return;
+                        }
+
+                        buildingMutableLiveData.postValue(building);
                     }
-
-                    buildingMutableLiveData.postValue(building);
                 }
+            } else {
+                pomodoroManger.createEmptyInstance();
             }
-            pomodoroManger.setCity(city);
-        });
-
-        dataBaseHelper.loadLastCity(city -> {
-
         });
 
         timerManager = App.getsAppComponent().getTimerManager();

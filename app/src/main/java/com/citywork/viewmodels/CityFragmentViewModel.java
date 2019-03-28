@@ -11,6 +11,7 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.interfaces.OnCitiesLoadedListener;
 import com.citywork.utils.CityUtils;
+import com.citywork.utils.PomodoroManger;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
 
 import java.util.ArrayList;
@@ -18,21 +19,32 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Getter;
+
 public class CityFragmentViewModel extends ViewModel implements ICityFragmentViewModel {
 
     private DataBaseHelper dataBaseHelper;
     private List<City> cities;
 
     private MutableLiveData<List<City>> citiesCreatedEvent = new MutableLiveData<>();
+    @Getter
+    private MutableLiveData<Integer> mCityPeopleCountChangeEvent = new MutableLiveData<>();
 
     private List<Building> buildingList;
     private CityUtils cityUtils;
+    private PomodoroManger pomodoroManger;
 
     public CityFragmentViewModel() {
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
+        pomodoroManger = App.getsAppComponent().getPomdoromManager();
 
         //TODO INJECT
         cityUtils = new CityUtils();
+    }
+
+    @Override
+    public LiveData<Integer> getmCityPeopleCountChangeEvent() {
+        return mCityPeopleCountChangeEvent;
     }
 
     @Override
@@ -41,6 +53,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
             this.cities = cityList;
             citiesCreatedEvent.postValue(cityUtils.getCityList(cityList));
         });
+
+        mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
 
 //        dataBaseHelper.loadAllCompletedBuildings(buildings -> {
 //            this.c = buildings;

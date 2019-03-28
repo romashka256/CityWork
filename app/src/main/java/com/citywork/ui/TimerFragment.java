@@ -176,6 +176,7 @@ public class TimerFragment extends Fragment {
         m10minRest.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.GONE);
         mBuidlingView.setVisibility(View.VISIBLE);
+        circleTimer.setTime(0);
         circleTimer.enable();
     }
 

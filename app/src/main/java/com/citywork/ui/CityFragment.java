@@ -77,6 +77,10 @@ public class CityFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         });
 
+        cityFragmentViewModel.getmCityPeopleCountChangeEvent().observe(this, count -> {
+            mPeopleCountTV.setText(count + " человек");
+        });
+
         mShareIV.setOnClickListener(v -> {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
@@ -95,7 +99,7 @@ public class CityFragment extends Fragment {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(true);
         xAxis.enableGridDashedLine(14, 10, 10);
-        xAxis.setLabelCount(4,false);
+        xAxis.setLabelCount(4, false);
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setLabelCount(0, false);
