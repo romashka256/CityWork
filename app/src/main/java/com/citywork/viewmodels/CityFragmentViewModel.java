@@ -20,10 +20,13 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class CityFragmentViewModel extends ViewModel implements ICityFragmentViewModel {
 
     private DataBaseHelper dataBaseHelper;
+    @Setter
+    @Getter
     private List<City> cities;
 
     private MutableLiveData<List<City>> citiesCreatedEvent = new MutableLiveData<>();

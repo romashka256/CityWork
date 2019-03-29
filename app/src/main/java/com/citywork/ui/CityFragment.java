@@ -17,14 +17,20 @@ import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
+import com.citywork.utils.ChartUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CityFragment extends Fragment {
 
@@ -43,11 +49,14 @@ public class CityFragment extends Fragment {
     private CityAdapter adapter;
 
     private Context context;
+    private ChartUtils chartUtils;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = App.getsAppComponent().getApplicationContext();
+        //TODO INJECT
+        chartUtils = new ChartUtils();
 
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
 
@@ -75,6 +84,7 @@ public class CityFragment extends Fragment {
         cityFragmentViewModel.getCitiesLoaded().observe(this, cities -> {
             adapter = new CityAdapter(cities, context);
             recyclerView.setAdapter(adapter);
+            cityFragmentViewModel.setCities(cities);
         });
 
         cityFragmentViewModel.getmCityPeopleCountChangeEvent().observe(this, count -> {
@@ -94,15 +104,47 @@ public class CityFragment extends Fragment {
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(false);
         barChart.setDrawGridBackground(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setScaleEnabled(false);
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(true);
-        xAxis.enableGridDashedLine(14, 10, 10);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGridLineWidth(20);
         xAxis.setLabelCount(4, false);
+        xAxis.setAxisLineWidth(0);
+
+
+        xAxis.setDrawAxisLine(false);
 
         YAxis leftAxis = barChart.getAxisLeft();
-        leftAxis.setLabelCount(0, false);
+        leftAxis.setEnabled(true);
+        leftAxis.enableGridDashedLine(25, 25, 10);
+        leftAxis.setSpaceBottom(0);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setTextColor(getResources().getColor(R.color.transparent));
+        leftAxis.setSpaceTop(0);
 
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        barChart.getLegend().setEnabled(false);
+
+        //     barChart.setData(new BarData(chartUtils.getDataForToday(cityFragmentViewModel.getCities().get(cityFragmentViewModel.getCities().size() - 1))));
+        BarData barData = new BarData(chartUtils.getDataForToday(getResources().getColor(R.color.barcolor), getResources().getColor(R.color.blue)));
+        barData.setBarWidth(2f);
+        barChart.setData(barData);
+
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Timber.i("chart selected : " + e.getX());
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
     }
 }

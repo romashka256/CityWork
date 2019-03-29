@@ -16,4 +16,5 @@
     <color name="transoarent10_black">#1A000000</color>
     <color name="transoarent50_black">#C4C4C4</color>
     <color name="success_green">#78DA6E</color>
+    <color name="barcolor">#DCDCDC</color>
 </resources>
