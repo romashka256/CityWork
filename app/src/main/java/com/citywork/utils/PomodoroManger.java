@@ -61,10 +61,11 @@ public class PomodoroManger {
 
         Calendar curcalendar = Calendar.getInstance();
         Calendar newcalendar = Calendar.getInstance();
+
         curcalendar.setTime(lastcity.getDate());
         newcalendar.setTime(new Date(startTime));
 
-        if (curcalendar.get(Calendar.DAY_OF_YEAR) != newcalendar.get(Calendar.DAY_OF_YEAR) && curcalendar.get(Calendar.YEAR) != newcalendar.get(Calendar.YEAR)) {
+        if (curcalendar.get(Calendar.DAY_OF_MONTH) != newcalendar.get(Calendar.DAY_OF_MONTH) && curcalendar.get(Calendar.YEAR) == newcalendar.get(Calendar.YEAR)) {
             lastcity = new City();
         }
 

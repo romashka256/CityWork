@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,14 +18,13 @@ import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.utils.ChartUtils;
+import com.citywork.utils.chart.ChartUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -44,6 +44,8 @@ public class CityFragment extends Fragment {
     TextView mPeopleCountTV;
     @BindView(R.id.city_fragment_statistics_block_chart)
     BarChart barChart;
+    @BindView(R.id.city_fragment_statistics_block_tablayout)
+    TabLayout tabLayout;
 
     private CityFragmentViewModel cityFragmentViewModel;
     private CityAdapter adapter;
@@ -55,8 +57,6 @@ public class CityFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         context = App.getsAppComponent().getApplicationContext();
-        //TODO INJECT
-        chartUtils = new ChartUtils();
 
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
 
@@ -78,6 +78,37 @@ public class CityFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+//        tabItemDay = new TabItem(this);
+//        tabItemDay.setText(getResources().getString(R.string.day));
+//        tabItemWeek = new TabLayout.Tab();
+//        tabItemWeek.setText(getResources().getString(R.string.week));
+//        tabItemMonth = new TabLayout.Tab();
+//        tabItemMonth.setText(getResources().getString(R.string.month));
+//        tabItemYear = new TabLayout.Tab();
+//        tabItemYear.setText(getResources().getString(R.string.year));
+//
+//        tabLayout.addTab(tabItemDay);
+//        tabLayout.addTab(tabItemWeek);
+//        tabLayout.addTab(tabItemMonth);
+//        tabLayout.addTab(tabItemYear);
+
+        TabLayout.Tab tab = tabLayout.newTab();
+        tab.setText(getResources().getString(R.string.day));
+
+        TabLayout.Tab tabw = tabLayout.newTab();
+        tabw.setText(getResources().getString(R.string.week));
+
+        TabLayout.Tab tabm = tabLayout.newTab();
+        tabm.setText(getResources().getString(R.string.month));
+
+        TabLayout.Tab taby = tabLayout.newTab();
+        taby.setText(getResources().getString(R.string.year));
+
+        tabLayout.addTab(tab);
+        tabLayout.addTab(tabw);
+        tabLayout.addTab(tabm);
+        tabLayout.addTab(taby);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
 
@@ -114,7 +145,6 @@ public class CityFragment extends Fragment {
         xAxis.setLabelCount(4, false);
         xAxis.setAxisLineWidth(0);
 
-
         xAxis.setDrawAxisLine(false);
 
         YAxis leftAxis = barChart.getAxisLeft();
@@ -130,15 +160,12 @@ public class CityFragment extends Fragment {
 
         barChart.getLegend().setEnabled(false);
 
-        //     barChart.setData(new BarData(chartUtils.getDataForToday(cityFragmentViewModel.getCities().get(cityFragmentViewModel.getCities().size() - 1))));
-        BarData barData = new BarData(chartUtils.getDataForToday(getResources().getColor(R.color.barcolor), getResources().getColor(R.color.blue)));
-        barData.setBarWidth(2f);
-        barChart.setData(barData);
-
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 Timber.i("chart selected : " + e.getX());
+
+                cityFragmentViewModel.onChartSelected((int) e.getX());
             }
 
             @Override
@@ -146,5 +173,48 @@ public class CityFragment extends Fragment {
 
             }
         });
+
+        cityFragmentViewModel.getBarModeStateChangedEvent().observe(this, list -> {
+            BarData barData = new BarData(list);
+            barChart.setData(barData);
+            barChart.invalidate();
+        });
+
+        cityFragmentViewModel.getChartBarSelectedEvent().observe(this, list -> {
+
+        });
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        cityFragmentViewModel.onDaySelected();
+                        break;
+                    case 1:
+                        cityFragmentViewModel.onWeekSelected();
+                        break;
+                    case 2:
+                        cityFragmentViewModel.onMonthSelected();
+                        break;
+                    case 3:
+                        cityFragmentViewModel.onYearSelected();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        cityFragmentViewModel.onDaySelected();
     }
 }
