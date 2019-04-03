@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class ChartUtils {
 
     private BarDataSet set1;
     private ArrayList<IBarDataSet> dataSets;
-    private Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Pomodoro>>> toReturn;
+    private Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> toReturn;
 
 
     public ChartUtils(int color, int selectedColor) {
@@ -47,12 +48,12 @@ public class ChartUtils {
 
     private final int dayDivider = 4;
 
-    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Pomodoro>>> getDataForToday(City city) {
+    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> getDataForToday(City city) {
         if (city != null) {
             ArrayList<BarEntry> values = new ArrayList<>();
-            HashMap<Integer, List<Pomodoro>> pomodoroHashMap = new HashMap<>();
+            HashMap<Integer, List<Building>> pomodoroHashMap = new HashMap<>();
 
-            List<List<Pomodoro>> pomodoroList = new ArrayList<>();
+            List<List<Building>> pomodoroList = new ArrayList<>();
 
             Date date;// given date
             Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
@@ -82,7 +83,7 @@ public class ChartUtils {
                         continue;
                     } else {
                         values.get(index).setY(values.get(index).getY() + Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime()));
-                        pomodoroList.get(index).add(pomodoro);
+                        pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(i, pomodoroList.get(index));
                         index = 0;
                         break;
@@ -90,36 +91,61 @@ public class ChartUtils {
                 }
             }
 
-            set1 = new BarDataSet(values, "");
-            set1.setDrawIcons(false);
+            set1.setValues(values);
 
             dataSets = new ArrayList<>();
             dataSets.add(set1);
 
             toReturn = new Pair<>(dataSets, pomodoroHashMap);
-
-            return toReturn;
         } else {
-            return null;
+            toReturn = new Pair<>(new ArrayList<>(), new HashMap<>());
         }
+        return toReturn;
     }
 
-    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Pomodoro>>> getDataForWeek(List<City> cities) {
+    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> getDataForWeek(List<City> cities) {
+        List<City> cityList = cities.subList(0, 7);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(System.currentTimeMillis()));
 
-        List<City> week = new ArrayList<>();
+        ArrayList<BarEntry> values = new ArrayList<>();
+        HashMap<Integer, List<Building>> citiesHashmap = new HashMap<>();
 
-        for (int i = 0; i < 7; i++) {
+        List<List<Building>> week = new ArrayList<>();
 
+        Calendar cityCalendar = Calendar.getInstance();
+
+        for (int o = 1; o <= 7; o++) {
+            values.add(new BarEntry(o * 4, 0));
+            week.add(new ArrayList<>());
         }
 
         for (int i = 7; i >= 0; i--) {
-            calendar.add(Calendar.DAY_OF_MONTH, i);
-            for (City city : cities) {
-
+            calendar.setTime(new Date(System.currentTimeMillis()));
+            calendar.add(Calendar.DAY_OF_MONTH, -i);
+            for (City city : cityList) {
+                cityCalendar.setTime(city.getDate());
+                if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
+                    for (Building building : city.getBuildings()) {
+                        values.get(i).setY((values.get(i).getY() + new Random().nextInt(1000)));
+                    }
+                    for (Building building : city.getBuildings()) {
+                        week.get(i).add(building);
+                        citiesHashmap.put(i, week.get(i));
+                    }
+                }
             }
         }
+
+        // Collections.reverse(values);
+
+        set1.setValues(values);
+
+        dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        toReturn = new Pair<>(dataSets, citiesHashmap);
 
         return toReturn;
     }

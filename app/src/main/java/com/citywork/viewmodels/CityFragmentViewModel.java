@@ -18,6 +18,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -73,8 +74,9 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Override
     public void onCreate() {
         dataBaseHelper.loadCities(cityList -> {
-            citiesCreatedEvent.postValue(cityUtils.getCityList(cityList));
             this.cities = cityList;
+            citiesCreatedEvent.postValue(cityUtils.getCityList(cityList));
+            Collections.reverse(cityList);
         });
 
         mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
@@ -91,10 +93,10 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(System.currentTimeMillis()));
         Calendar cityDate = Calendar.getInstance();
-        cityDate.setTime(cities.get(cities.size() - 1).getDate());
+        cityDate.setTime(cities.get(0).getDate());
         // TODO CHANGE
         if (cityDate.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH) && calendar.get(Calendar.MONTH) == cityDate.get(Calendar.MONTH)) {
-            return cities.get(cities.size() - 1);
+            return cities.get(0);
         } else {
             return null;
         }
@@ -109,12 +111,17 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Override
     public void onDaySelected() {
         this.barModeState = BarModeState.DAY;
-        barModeStateChangedEvent.postValue(chartUtils.getDataForToday(getTodayCity()).first);
+        ArrayList<IBarDataSet> list = chartUtils.getDataForToday(getTodayCity()).first;
+        if (list != null)
+            barModeStateChangedEvent.postValue(list);
     }
 
     @Override
     public void onWeekSelected() {
         this.barModeState = BarModeState.WEEK;
+        ArrayList<IBarDataSet> list = chartUtils.getDataForWeek(cities).first;
+        if (list != null)
+            barModeStateChangedEvent.postValue(list);
     }
 
     @Override

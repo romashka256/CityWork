@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.citywork.App;
@@ -46,6 +48,18 @@ public class CityFragment extends Fragment {
     BarChart barChart;
     @BindView(R.id.city_fragment_statistics_block_tablayout)
     TabLayout tabLayout;
+    @BindView(R.id.city_fragment_statistics_block_textstat_lay_pomo)
+    RelativeLayout pomoStat;
+    @BindView(R.id.city_fragment_statistics_block_textstat_lay_min)
+    RelativeLayout minStat;
+    @BindView(R.id.city_fragment_statistics_block_textstat_lay_population)
+    RelativeLayout pplStat;
+    @BindView(R.id.city_fragment_statistics_block_textstat_lay)
+    LinearLayout textStatBlock;
+
+    TextView pomoCountTV;
+    TextView minCountTV;
+    TextView pplCountTV;
 
     private CityFragmentViewModel cityFragmentViewModel;
     private CityAdapter adapter;
@@ -79,19 +93,9 @@ public class CityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        tabItemDay = new TabItem(this);
-//        tabItemDay.setText(getResources().getString(R.string.day));
-//        tabItemWeek = new TabLayout.Tab();
-//        tabItemWeek.setText(getResources().getString(R.string.week));
-//        tabItemMonth = new TabLayout.Tab();
-//        tabItemMonth.setText(getResources().getString(R.string.month));
-//        tabItemYear = new TabLayout.Tab();
-//        tabItemYear.setText(getResources().getString(R.string.year));
-//
-//        tabLayout.addTab(tabItemDay);
-//        tabLayout.addTab(tabItemWeek);
-//        tabLayout.addTab(tabItemMonth);
-//        tabLayout.addTab(tabItemYear);
+        pomoCountTV = pomoStat.findViewById(R.id.text_stat_item_number);
+        minCountTV = minStat.findViewById(R.id.text_stat_item_number);
+        pplCountTV = pplStat.findViewById(R.id.text_stat_item_number);
 
         TabLayout.Tab tab = tabLayout.newTab();
         tab.setText(getResources().getString(R.string.day));
@@ -144,6 +148,9 @@ public class CityFragment extends Fragment {
         xAxis.setGridLineWidth(20);
         xAxis.setLabelCount(4, false);
         xAxis.setAxisLineWidth(0);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setGranularity(50f);
+        xAxis.setGranularityEnabled(true);
 
         xAxis.setDrawAxisLine(false);
 
@@ -166,18 +173,28 @@ public class CityFragment extends Fragment {
                 Timber.i("chart selected : " + e.getX());
 
                 cityFragmentViewModel.onChartSelected((int) e.getX());
+                showTextBlock();
             }
 
             @Override
             public void onNothingSelected() {
-
+                hideTextBlock();
             }
         });
 
         cityFragmentViewModel.getBarModeStateChangedEvent().observe(this, list -> {
-            BarData barData = new BarData(list);
-            barChart.setData(barData);
-            barChart.invalidate();
+            if (list != null) {
+                BarData barData = new BarData(list);
+                barData.setBarWidth(2f);
+
+                barChart.setData(barData);
+
+                xAxis.setGranularity(50f);
+                xAxis.setGranularityEnabled(true);
+
+                barChart.invalidate();
+
+            }
         });
 
         cityFragmentViewModel.getChartBarSelectedEvent().observe(this, list -> {
@@ -216,5 +233,13 @@ public class CityFragment extends Fragment {
 
 
         cityFragmentViewModel.onDaySelected();
+    }
+
+    private void hideTextBlock() {
+        textStatBlock.setVisibility(View.GONE);
+    }
+
+    private void showTextBlock() {
+        textStatBlock.setVisibility(View.VISIBLE);
     }
 }

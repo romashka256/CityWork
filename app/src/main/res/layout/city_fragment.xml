@@ -110,37 +110,12 @@
                 app:tabTextAppearance="@style/tabstyle"
                 app:tabTextColor="@color/transoarent20_black">
 
-                <!--<android.support.design.widget.TabLayout.Tab-->
-                    <!--android:id="@+id/city_fragment_statistics_block_tablayout_day"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/day" />-->
-
-                <!--<android.support.design.widget.TabLayout.Tab-->
-                    <!--android:id="@+id/city_fragment_statistics_block_tablayout_week"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/week" />-->
-
-                <!--<android.support.design.widget.TabLayout.Tab-->
-                    <!--android:id="@+id/city_fragment_statistics_block_tablayout_month"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/month" />-->
-
-                <!--<android.support.design.widget.TabLayout.Tab-->
-                    <!--android:id="@+id/city_fragment_statistics_block_tablayout_year"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/year" />-->
-
-
             </android.support.design.widget.TabLayout>
 
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/city_fragment_statistics_block_chart"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -168,6 +143,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
+                android:visibility="gone"
                 android:layout_marginBottom="22dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -146,14 +146,6 @@ public class TimerFragment extends Fragment {
             fm.executePendingTransactions();
 
             iTimerFragmentViewModel.onSuccessDialogShowed();
-
-//            successDialogFragment.getDialog().setOnDismissListener(dialog -> {
-//                iTimerFragmentViewModel.onSuccessDialogDismiss();
-//            });
-//
-//            successDialogFragment.getDialog().setOnCancelListener(dialog -> {
-//                iTimerFragmentViewModel.onSuccessDialogDismiss();
-//            });
         }
     }
 
