@@ -85,6 +85,7 @@ public class CityView extends ViewGroup {
                 drawable.draw(canvas);
                 buildingBitmaps.add(bitmap);
             } catch (OutOfMemoryError e) {
+
                 Timber.e(e);
             }
         }

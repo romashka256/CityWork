@@ -27,30 +27,21 @@ public class ChartUtils {
     private int selectedColor;
 
     private BarDataSet set1;
-    private ArrayList<IBarDataSet> dataSets;
-    private Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> toReturn;
+    private ArrayList<ChartBar> chartBars;
+    private Pair<ArrayList<ChartBar>, HashMap<Integer, List<Building>>> toReturn;
 
 
     public ChartUtils(int color, int selectedColor) {
         this.color = color;
         this.selectedColor = selectedColor;
 
-        set1 = new BarDataSet(new ArrayList<>(), "");
-        set1.setDrawIcons(false);
-
-
-        set1.setDrawValues(false);
-        set1.setStackLabels(null);
-        set1.setHighLightColor(selectedColor);
-        set1.setColor(color);
-        set1.setLabel("");
     }
 
     private final int dayDivider = 4;
 
-    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> getDataForToday(City city) {
+    public Pair<ArrayList<ChartBar>, HashMap<Integer, List<Building>>> getDataForToday(City city) {
         if (city != null) {
-            ArrayList<BarEntry> values = new ArrayList<>();
+            ArrayList<ChartBar> values = new ArrayList<>();
             HashMap<Integer, List<Building>> pomodoroHashMap = new HashMap<>();
 
             List<List<Building>> pomodoroList = new ArrayList<>();
@@ -63,7 +54,7 @@ public class ChartUtils {
             int index = 0;
 
             for (int o = dayDivider; o <= 24; o += dayDivider) {
-                values.add(new BarEntry(o, 0));
+                values.add(new ChartBar(0));
                 pomodoroList.add(new ArrayList<>());
             }
 
@@ -82,7 +73,7 @@ public class ChartUtils {
                     if (curhour >= dayDivider) {
                         continue;
                     } else {
-                        values.get(index).setY(values.get(index).getY() + Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime()));
+                        values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime()));
                         pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(i, pomodoroList.get(index));
                         index = 0;
@@ -90,26 +81,20 @@ public class ChartUtils {
                     }
                 }
             }
-
-            set1.setValues(values);
-
-            dataSets = new ArrayList<>();
-            dataSets.add(set1);
-
-            toReturn = new Pair<>(dataSets, pomodoroHashMap);
+            toReturn = new Pair<>(values, pomodoroHashMap);
         } else {
             toReturn = new Pair<>(new ArrayList<>(), new HashMap<>());
         }
         return toReturn;
     }
 
-    public Pair<ArrayList<IBarDataSet>, HashMap<Integer, List<Building>>> getDataForWeek(List<City> cities) {
+    public Pair<ArrayList<ChartBar>, HashMap<Integer, List<Building>>> getDataForWeek(List<City> cities) {
         List<City> cityList = cities.subList(0, 7);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(System.currentTimeMillis()));
 
-        ArrayList<BarEntry> values = new ArrayList<>();
+        ArrayList<ChartBar> values = new ArrayList<>();
         HashMap<Integer, List<Building>> citiesHashmap = new HashMap<>();
 
         List<List<Building>> week = new ArrayList<>();
@@ -117,7 +102,7 @@ public class ChartUtils {
         Calendar cityCalendar = Calendar.getInstance();
 
         for (int o = 1; o <= 7; o++) {
-            values.add(new BarEntry(o * 4, 0));
+            values.add(new ChartBar( 0));
             week.add(new ArrayList<>());
         }
 
@@ -128,7 +113,7 @@ public class ChartUtils {
                 cityCalendar.setTime(city.getDate());
                 if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
                     for (Building building : city.getBuildings()) {
-                        values.get(i).setY((values.get(i).getY() + new Random().nextInt(1000)));
+                        values.get(i).setYValue((values.get(i).getYValue() + new Random().nextInt(1000)));
                     }
                     for (Building building : city.getBuildings()) {
                         week.get(i).add(building);
@@ -138,14 +123,7 @@ public class ChartUtils {
             }
         }
 
-        // Collections.reverse(values);
-
-        set1.setValues(values);
-
-        dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        toReturn = new Pair<>(dataSets, citiesHashmap);
+        toReturn = new Pair<>(values, citiesHashmap);
 
         return toReturn;
     }

@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
+import com.citywork.ui.customviews.LineChart;
+import com.citywork.ui.customviews.OnBarSelected;
 import com.citywork.utils.chart.ChartUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
 import com.github.mikephil.charting.charts.BarChart;
@@ -29,6 +31,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +49,7 @@ public class CityFragment extends Fragment {
     @BindView(R.id.toolbar_city_people_count)
     TextView mPeopleCountTV;
     @BindView(R.id.city_fragment_statistics_block_chart)
-    BarChart barChart;
+    LineChart barChart;
     @BindView(R.id.city_fragment_statistics_block_tablayout)
     TabLayout tabLayout;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay_pomo)
@@ -135,65 +139,13 @@ public class CityFragment extends Fragment {
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
         });
 
-        barChart.getDescription().setEnabled(false);
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawValueAboveBar(false);
-        barChart.setDrawGridBackground(false);
-        barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setScaleEnabled(false);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setGridLineWidth(20);
-        xAxis.setLabelCount(4, false);
-        xAxis.setAxisLineWidth(0);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setGranularity(50f);
-        xAxis.setGranularityEnabled(true);
-
-        xAxis.setDrawAxisLine(false);
-
-        YAxis leftAxis = barChart.getAxisLeft();
-        leftAxis.setEnabled(true);
-        leftAxis.enableGridDashedLine(25, 25, 10);
-        leftAxis.setSpaceBottom(0);
-        leftAxis.setDrawAxisLine(false);
-        leftAxis.setTextColor(getResources().getColor(R.color.transparent));
-        leftAxis.setSpaceTop(0);
-
-        YAxis rightAxis = barChart.getAxisRight();
-        rightAxis.setEnabled(false);
-
-        barChart.getLegend().setEnabled(false);
-
-        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                Timber.i("chart selected : " + e.getX());
-
-                cityFragmentViewModel.onChartSelected((int) e.getX());
-                showTextBlock();
-            }
-
-            @Override
-            public void onNothingSelected() {
-                hideTextBlock();
-            }
+        barChart.setOnBarClickListener(barIndex -> {
+            showTextBlock();
         });
 
         cityFragmentViewModel.getBarModeStateChangedEvent().observe(this, list -> {
             if (list != null) {
-                BarData barData = new BarData(list);
-                barData.setBarWidth(2f);
-
-                barChart.setData(barData);
-
-                xAxis.setGranularity(50f);
-                xAxis.setGranularityEnabled(true);
-
-                barChart.invalidate();
-
+                barChart.setValues(list, cityFragmentViewModel.getCurLabels());
             }
         });
 
@@ -230,7 +182,6 @@ public class CityFragment extends Fragment {
 
             }
         });
-
 
         cityFragmentViewModel.onDaySelected();
     }

@@ -236,6 +236,7 @@ public class CircleTimer extends View {
                         mCx,
                         getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + lineLength + mGapBetweenCircleAndLine,
                         mProgressCirclePaintMoving);
+
                 canvas.restore();
             }
 

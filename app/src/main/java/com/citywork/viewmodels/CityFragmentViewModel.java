@@ -10,9 +10,12 @@ import com.citywork.R;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
+import com.citywork.ui.customviews.LineChart;
+import com.citywork.utils.chart.ChartBar;
 import com.citywork.utils.chart.ChartUtils;
 import com.citywork.utils.CityUtils;
 import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.chart.CustomChartUtils;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
@@ -21,6 +24,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,27 +45,34 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     private MutableLiveData<ArrayList<IBarDataSet>> chartBarSelectedEvent = new MutableLiveData<>();
 
     @Getter
-    private MutableLiveData<ArrayList<IBarDataSet>> barModeStateChangedEvent = new MutableLiveData<>();
+    private MutableLiveData<List<ChartBar>> barModeStateChangedEvent = new MutableLiveData<>();
 
     private List<Building> buildingList;
     private CityUtils cityUtils;
     private PomodoroManger pomodoroManger;
+    private CustomChartUtils customChartUtils;
     private Context context;
 
-    private BarModeState barModeState;
+    @Getter
+    @Setter
+    private List<String> curLabels;
+
+    @Getter
+    private LineChart.BarModeState barModeState;
 
     public void setCities(List<City> cities) {
         this.cities = cities;
     }
 
     public CityFragmentViewModel() {
-        this.barModeState = BarModeState.DAY;
+        this.barModeState = LineChart.BarModeState.DAY;
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
 
         context = App.getsAppComponent().getApplicationContext();
 
         //TODO INJECT
+        customChartUtils = new CustomChartUtils();
         cityUtils = new CityUtils();
         chartUtils = new ChartUtils(context.getResources().getColor(R.color.barcolor), context.getResources().getColor(R.color.blue));
     }
@@ -90,15 +101,19 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public City getTodayCity() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(System.currentTimeMillis()));
-        Calendar cityDate = Calendar.getInstance();
-        cityDate.setTime(cities.get(0).getDate());
-        // TODO CHANGE
-        if (cityDate.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH) && calendar.get(Calendar.MONTH) == cityDate.get(Calendar.MONTH)) {
-            return cities.get(0);
+        if (cities != null && !cities.isEmpty() && cities.get(0) != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date(System.currentTimeMillis()));
+            Calendar cityDate = Calendar.getInstance();
+            cityDate.setTime(cities.get(0).getDate());
+
+            if (cityDate.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH) && calendar.get(Calendar.MONTH) == cityDate.get(Calendar.MONTH)) {
+                return cities.get(0);
+            } else {
+                return new City();
+            }
         } else {
-            return null;
+            return new City();
         }
     }
 
@@ -110,31 +125,40 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onDaySelected() {
-        this.barModeState = BarModeState.DAY;
-        ArrayList<IBarDataSet> list = chartUtils.getDataForToday(getTodayCity()).first;
-        if (list != null)
-            barModeStateChangedEvent.postValue(list);
+        curLabels = customChartUtils.getDaily();
+        this.barModeState = LineChart.BarModeState.DAY;
+        List<ChartBar> list = chartUtils.getDataForToday(getTodayCity()).first;
+        List<Integer> integers = getValuesForChart(list);
+
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
     }
 
     @Override
     public void onWeekSelected() {
-        this.barModeState = BarModeState.WEEK;
-        ArrayList<IBarDataSet> list = chartUtils.getDataForWeek(cities).first;
-        if (list != null)
-            barModeStateChangedEvent.postValue(list);
+        this.barModeState = LineChart.BarModeState.WEEK;
+        curLabels = customChartUtils.getWeekly();
+        List<ChartBar> list = chartUtils.getDataForWeek(cities).first;
+        List<Integer> integers = getValuesForChart(list);
+
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
     }
 
     @Override
     public void onMonthSelected() {
-        this.barModeState = BarModeState.MONTH;
+        this.barModeState = LineChart.BarModeState.MONTH;
     }
 
     @Override
     public void onYearSelected() {
-        this.barModeState = BarModeState.YEAR;
+        this.barModeState = LineChart.BarModeState.YEAR;
     }
 
-    enum BarModeState {
-        DAY, WEEK, MONTH, YEAR
+    private List<Integer> getValuesForChart(List<ChartBar> list) {
+        List<Integer> integers = new ArrayList<>();
+        integers.clear();
+        for (ChartBar chartBar : list) {
+            integers.add(new Random().nextInt(100));
+        }
+        return integers;
     }
 }

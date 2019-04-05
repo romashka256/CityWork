@@ -31,8 +31,8 @@ public class Calculator {
         return (int) (all * (percent / 100));
     }
 
-    public static long getTime(long startTime, long stopTime) {
-        return (stopTime - startTime) / 1000;
+    public static int getTime(long startTime, long stopTime) {
+        return (int) (stopTime - startTime) / 1000;
     }
 
     public static int calculatePercentOfTime(long time, long fulltime) {
