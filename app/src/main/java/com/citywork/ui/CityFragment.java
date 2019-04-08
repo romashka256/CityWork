@@ -22,7 +22,6 @@ import com.citywork.App;
 import com.citywork.R;
 import com.citywork.ui.customviews.LineChart;
 import com.citywork.ui.customviews.OnBarSelected;
-import com.citywork.utils.chart.ChartUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -69,7 +68,6 @@ public class CityFragment extends Fragment {
     private CityAdapter adapter;
 
     private Context context;
-    private ChartUtils chartUtils;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +139,7 @@ public class CityFragment extends Fragment {
 
         barChart.setOnBarClickListener(barIndex -> {
             showTextBlock();
+            cityFragmentViewModel.onChartSelected(barIndex);
         });
 
         cityFragmentViewModel.getBarModeStateChangedEvent().observe(this, list -> {
@@ -150,7 +149,11 @@ public class CityFragment extends Fragment {
         });
 
         cityFragmentViewModel.getChartBarSelectedEvent().observe(this, list -> {
+            List<Integer> integers = cityFragmentViewModel.calculateStat(list);
 
+            minCountTV.setText(integers.get(0) + "");
+            mPeopleCountTV.setText(integers.get(2) + "");
+            pomoCountTV.setText(integers.get(1) + "");
         });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

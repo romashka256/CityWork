@@ -20,6 +20,8 @@ public class CustomChartUtils {
     private List<String> daily = new ArrayList<>(Arrays.asList("04:00", "08:00", "12:00", "16:00", "20:00", "24:00"));
     @Getter
     private List<String> weekly = new ArrayList<>(Arrays.asList("пн", "вт", "ср", "чт", "пт", "сб", "вс"));
+    @Getter
+    private List<String> monthly = new ArrayList<>(Arrays.asList("1 неделя", "2 неделя", "3 неделя", "4 неделя"));
 
     public List<ChartBar> createBars(List<Integer> values) {
         int max = Collections.max(values);
@@ -27,7 +29,7 @@ public class CustomChartUtils {
         List<ChartBar> chartBars = new ArrayList<>();
 
         for (Integer value : values) {
-            chartBars.add(new ChartBar((100 * value) / max));
+            chartBars.add(new ChartBar((100 * value) / max, 0));
         }
 
         return chartBars;

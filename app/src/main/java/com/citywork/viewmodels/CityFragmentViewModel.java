@@ -11,11 +11,13 @@ import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.ui.customviews.LineChart;
+import com.citywork.utils.Calculator;
+import com.citywork.utils.chart.BarModeState;
 import com.citywork.utils.chart.ChartBar;
-import com.citywork.utils.chart.ChartUtils;
 import com.citywork.utils.CityUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.chart.CustomChartUtils;
+import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -39,11 +42,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Getter
     private MutableLiveData<Integer> mCityPeopleCountChangeEvent = new MutableLiveData<>();
 
-    private ChartUtils chartUtils;
-
     @Getter
-    private MutableLiveData<ArrayList<IBarDataSet>> chartBarSelectedEvent = new MutableLiveData<>();
-
+    private MutableLiveData<List<Building>> chartBarSelectedEvent = new MutableLiveData<>();
     @Getter
     private MutableLiveData<List<ChartBar>> barModeStateChangedEvent = new MutableLiveData<>();
 
@@ -52,29 +52,29 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     private PomodoroManger pomodoroManger;
     private CustomChartUtils customChartUtils;
     private Context context;
+    private StatusticUtils statusticUtils;
 
     @Getter
     @Setter
     private List<String> curLabels;
 
     @Getter
-    private LineChart.BarModeState barModeState;
+    private BarModeState barModeState;
 
     public void setCities(List<City> cities) {
         this.cities = cities;
     }
 
     public CityFragmentViewModel() {
-        this.barModeState = LineChart.BarModeState.DAY;
+        this.barModeState = BarModeState.DAY;
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
-
+        statusticUtils = App.getsAppComponent().getStatisticsUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         //TODO INJECT
         customChartUtils = new CustomChartUtils();
         cityUtils = new CityUtils();
-        chartUtils = new ChartUtils(context.getResources().getColor(R.color.barcolor), context.getResources().getColor(R.color.blue));
     }
 
     @Override
@@ -84,11 +84,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onCreate() {
-        dataBaseHelper.loadCities(cityList -> {
-            this.cities = cityList;
-            citiesCreatedEvent.postValue(cityUtils.getCityList(cityList));
-            Collections.reverse(cityList);
-        });
+        citiesCreatedEvent.postValue(statusticUtils.getCities());
+        Collections.reverse(statusticUtils.getCities());
 
         mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
 
@@ -120,14 +117,14 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onChartSelected(int value) {
-        //      chartBarSelectedEvent.setValue(chartUtils.getDataForToday(getTodayCity()).first);
+        chartBarSelectedEvent.setValue(statusticUtils.getStatisticData().get(barModeState).second.get(value));
     }
 
     @Override
     public void onDaySelected() {
         curLabels = customChartUtils.getDaily();
-        this.barModeState = LineChart.BarModeState.DAY;
-        List<ChartBar> list = chartUtils.getDataForToday(getTodayCity()).first;
+        this.barModeState = BarModeState.DAY;
+        List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
         List<Integer> integers = getValuesForChart(list);
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
@@ -135,9 +132,9 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onWeekSelected() {
-        this.barModeState = LineChart.BarModeState.WEEK;
+        this.barModeState = BarModeState.WEEK;
         curLabels = customChartUtils.getWeekly();
-        List<ChartBar> list = chartUtils.getDataForWeek(cities).first;
+        List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
         List<Integer> integers = getValuesForChart(list);
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
@@ -145,12 +142,38 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onMonthSelected() {
-        this.barModeState = LineChart.BarModeState.MONTH;
+        this.barModeState = BarModeState.MONTH;
+
+        curLabels = customChartUtils.getWeekly();
+        List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
+        List<Integer> integers = getValuesForChart(list);
+
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
+    }
+
+    public List<Integer> calculateStat(List<Building> buildings) {
+        List<Integer> integers = new ArrayList<>();
+
+        int minutes = 0;
+        int pomo = 0;
+        int people = 0;
+
+        for (Building building : buildings) {
+            minutes += Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime());
+            pomo++;
+            people += building.getPeople_count();
+        }
+
+        integers.add(minutes);
+        integers.add(pomo);
+        integers.add(people);
+
+        return integers;
     }
 
     @Override
     public void onYearSelected() {
-        this.barModeState = LineChart.BarModeState.YEAR;
+        this.barModeState = BarModeState.YEAR;
     }
 
     private List<Integer> getValuesForChart(List<ChartBar> list) {
