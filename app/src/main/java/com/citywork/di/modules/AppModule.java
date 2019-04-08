@@ -1,9 +1,12 @@
 package com.citywork.di.modules;
 
 import android.content.Context;
+
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
+import com.citywork.utils.chart.StatusticUtils;
+
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,7 +48,13 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public PomodoroManger provideModoroManager(){
+    public PomodoroManger provideModoroManager() {
         return new PomodoroManger();
+    }
+
+    @Singleton
+    @Provides
+    public StatusticUtils provideStatisticUtiles() {
+        return new StatusticUtils();
     }
 }

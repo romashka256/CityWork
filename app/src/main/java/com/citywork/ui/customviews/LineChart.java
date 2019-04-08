@@ -17,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.citywork.R;
+import com.citywork.utils.chart.BarModeState;
 import com.citywork.utils.chart.ChartBar;
 import com.citywork.utils.chart.CustomChartUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
@@ -244,7 +245,7 @@ public class LineChart extends View {
         for (int i = 0; i < bars.size(); i++) {
             rectF = bars.get(i);
             if (rectF.contains(event.getX(), event.getY())) {
-                onBarSelected.onBarSelected(i);
+                onBarSelected.onBarSelected(chartBars.get(i).getXValue());
                 selected = true;
                 selectedIndex = i;
             }
@@ -278,7 +279,5 @@ public class LineChart extends View {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     }
 
-    public enum BarModeState {
-        DAY, WEEK, MONTH, YEAR
-    }
+
 }

@@ -11,7 +11,6 @@ import java.util.List;
 public class CityUtils {
 
     public List<City> getCityList(@NotNull List<City> cityList) {
-
         Calendar currentDate = Calendar.getInstance();
         Calendar cityDate = Calendar.getInstance();
 
@@ -19,7 +18,7 @@ public class CityUtils {
 
         boolean found = false;
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 365; i++) {
             found = false;
             for (City city : cityList) {
                 cityDate.setTime(city.getDate());

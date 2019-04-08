@@ -14,9 +14,11 @@ import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.interfaces.OnCitiesLoadedListener;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
+import com.citywork.utils.CityUtils;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
+import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
@@ -49,51 +51,56 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     private Context context;
     private DBHelper dataBaseHelper;
     private PomodoroManger pomodoroManger;
+    private StatusticUtils statusticUtils;
     private NotificationUtils notificationUtils;
+    private CityUtils cityUtils;
 
     public MainActivityViewModel() {
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         context = App.getsAppComponent().getApplicationContext();
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        statusticUtils = App.getsAppComponent().getStatisticsUtils();
 
         //TODO INJECT
         notificationUtils = new NotificationUtils(context);
+        cityUtils = new CityUtils();
     }
 
     @Override
     public void onCreate() {
         dataBaseHelper.loadCities(cityList -> {
-            if (cityList != null && !cityList.isEmpty()) {
-                City city = cityList.get(cityList.size() - 1);
-                if (city != null) {
-                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
+            if (cityList != null) {
+                if (!cityList.isEmpty()) {
+                    statusticUtils.prepareData(cityUtils.getCityList(cityList));
+                    City city = cityList.get(cityList.size() - 1);
+                    if (city != null) {
+                        Building building = city.getBuildings().get(city.getBuildings().size() - 1);
 
-                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
-                    pomodoroManger.setCity(city);
-                    if (building == null ||
-                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-                        pomodoroManger.createEmptyInstance();
+                        pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
+                        pomodoroManger.setCity(city);
+                        if (building == null ||
+                                (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+                                        building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+                                        building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
+                            pomodoroManger.createEmptyInstance();
+                        } else {
+                            pomodoroManger.setBuilding(building);
 
-                    } else {
-                        pomodoroManger.setBuilding(building);
-
-                        if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                            Timber.i("building.getPomodoro().getStoptime()) <= 0");
-                            return;
+                            if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
+                                Timber.i("building.getPomodoro().getStoptime()) <= 0");
+                                return;
+                            }
+                            buildingMutableLiveData.postValue(building);
                         }
-
-                        buildingMutableLiveData.postValue(building);
                     }
+                } else {
+                    pomodoroManger.createEmptyInstance();
                 }
-            } else {
-                pomodoroManger.createEmptyInstance();
             }
-        });
 
-        timerManager = App.getsAppComponent().getTimerManager();
+            timerManager = App.getsAppComponent().getTimerManager();
+        });
     }
 
     @Override
