@@ -95,6 +95,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                         }
                     }
                 } else {
+                    statusticUtils.prepareData(cityUtils.getCityList(cityList));
                     pomodoroManger.createEmptyInstance();
                 }
             }
