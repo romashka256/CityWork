@@ -88,7 +88,6 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         Collections.reverse(statusticUtils.getCities());
 
         mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
-
     }
 
     @Override

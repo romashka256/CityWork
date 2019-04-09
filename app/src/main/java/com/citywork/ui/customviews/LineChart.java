@@ -168,7 +168,6 @@ public class LineChart extends View {
             bars.add(rectF);
         }
 
-
         invalidate();
     }
 
