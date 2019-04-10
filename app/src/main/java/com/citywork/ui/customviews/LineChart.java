@@ -247,6 +247,8 @@ public class LineChart extends View {
                 onBarSelected.onBarSelected(chartBars.get(i).getXValue());
                 selected = true;
                 selectedIndex = i;
+
+                invalidate();
             }
         }
 

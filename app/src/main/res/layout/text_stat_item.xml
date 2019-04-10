@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/city_fragment_statistics_block_textstat_lay_pomo_block"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -8,23 +10,28 @@
         android:id="@+id/text_stat_item_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_centerHorizontal="true"
-        android:textSize="23sp"
+        android:layout_marginTop="3dp"
+        android:hint="0"
         android:text="10"
-        android:hint="0" />
+        android:textColor="@color/black"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_stat_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_stat_item_number"
-        android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
         android:textColor="@color/transoarent20_black"
-        android:hint="name"
-        android:text="pomo"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_stat_item_number" />
 
     <TextView
         android:id="@+id/text_stat_item_verb"
@@ -32,7 +39,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_stat_item_name"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/transoarent10_black"
         android:layout_marginTop="3dp"
-        android:text="выполнено" />
-</RelativeLayout>
+        android:text="выполнено"
+        android:textColor="@color/transoarent10_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_stat_item_name" />
+</android.support.constraint.ConstraintLayout>

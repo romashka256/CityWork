@@ -23,16 +23,25 @@ public class CustomChartUtils {
     @Getter
     private List<String> monthly = new ArrayList<>(Arrays.asList("1 неделя", "2 неделя", "3 неделя", "4 неделя"));
 
-    public List<ChartBar> createBars(List<Integer> values) {
-        int max = Collections.max(values);
+    public List<ChartBar> createBars(List<ChartBar> values) {
+        if (values != null && !values.isEmpty()) {
+            List<Integer> integers = new ArrayList<>();
+            List<ChartBar> chartBars = new ArrayList<>();
+            for (ChartBar chartBar : values) {
+                chartBars.add(new ChartBar(chartBar.getYValue(), chartBar.getXValue()));
+                integers.add(chartBar.getYValue());
+            }
 
-        List<ChartBar> chartBars = new ArrayList<>();
+            int max = Collections.max(integers);
 
-        for (Integer value : values) {
-            chartBars.add(new ChartBar((100 * value) / max, 0));
+            if (max != 0)
+                for (int i = 0; i < values.size(); i++) {
+                    chartBars.get(i).setYValue((100 * chartBars.get(i).getYValue()) / max);
+                }
+            return chartBars;
+        } else {
+            return values;
         }
-
-        return chartBars;
     }
 
     public Pair<Integer, Integer> calculateBarAndSpace(int width, int count) {

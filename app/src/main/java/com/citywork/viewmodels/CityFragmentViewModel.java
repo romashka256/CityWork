@@ -124,9 +124,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         curLabels = customChartUtils.getDaily();
         this.barModeState = BarModeState.DAY;
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
-        List<Integer> integers = getValuesForChart(list);
 
-        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
     }
 
     @Override
@@ -134,9 +133,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         this.barModeState = BarModeState.WEEK;
         curLabels = customChartUtils.getWeekly();
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
-        List<Integer> integers = getValuesForChart(list);
 
-        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
     }
 
     @Override
@@ -145,9 +143,8 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
         curLabels = customChartUtils.getWeekly();
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
-        List<Integer> integers = getValuesForChart(list);
 
-        barModeStateChangedEvent.postValue(customChartUtils.createBars(integers));
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
     }
 
     public List<Integer> calculateStat(List<Building> buildings) {
@@ -175,12 +172,12 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         this.barModeState = BarModeState.YEAR;
     }
 
-    private List<Integer> getValuesForChart(List<ChartBar> list) {
-        List<Integer> integers = new ArrayList<>();
-        integers.clear();
-        for (ChartBar chartBar : list) {
-            integers.add(new Random().nextInt(100));
-        }
-        return integers;
-    }
+//    private List<Integer> getValuesForChart(List<ChartBar> list) {
+//        List<Integer> integers = new ArrayList<>();
+//        integers.clear();
+//        for (ChartBar chartBar : list) {
+//            integers.add(chartBar.getYValue());
+//        }
+//        return integers;
+//    }
 }
