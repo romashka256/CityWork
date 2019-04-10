@@ -74,8 +74,8 @@
 
             <com.zcw.togglebutton.ToggleButton
                 android:id="@+id/settings_long_winnotif_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp" />
 
@@ -173,8 +173,8 @@
 
             <com.zcw.togglebutton.ToggleButton
                 android:id="@+id/settings_long_notifbar_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="right|end"
                 android:text="Switch" />
@@ -204,8 +204,8 @@
 
             <com.zcw.togglebutton.ToggleButton
                 android:id="@+id/settings_long_startendsound_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp" />
 
@@ -233,8 +233,8 @@
 
             <com.zcw.togglebutton.ToggleButton
                 android:id="@+id/settings_long_deleteafter24_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp" />
 
