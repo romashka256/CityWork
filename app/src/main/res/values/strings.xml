@@ -4,12 +4,27 @@
     <string name="timer_notification_channel_name">timer_notification_channel_name</string>
     <string name="tasks_dialog_title">Задачи</string>
     <string name="statistics_title">Статистика</string>
-    <string name="text_statistics_pomo">pomo</string>
-    <string name="text_statistics_completed">выполнено</string>
+    <string name="settings">Настройки</string>
+    <string name="set_break">Перерыв</string>
+    <string name="notification">Уведомление</string>
+    <string name="short_break">Короткий перерыв</string>
+    <string name="long_break">Длинный перерыв</string>
+    <string name="in_notification_bar">В панель уведомлений</string>
+    <string name="start_end_timer_sound">Звук запуска/окончания таймера</string>
+    <string name="end_notifcation">Уведомление об окончании</string>
+    <string name="todo">TODO</string>
+    <string name="delete_afet24hours">Удалять задачу после 24 часов</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>
     <string name="month">Месяц</string>
     <string name="year">Год</string>
 
+    <string name="pomo">pomo</string>
+    <string name="minute_short">мин</string>
+    <string name="people_short">чел</string>
+
+    <string name="pomo_verb">выполнено</string>
+    <string name="minute_verb">продуктивности</string>
+    <string name="people_verb">к населению</string>
 </resources>

@@ -5,17 +5,17 @@ import lombok.Setter;
 
 public class ChartBar {
 
-    public ChartBar(Integer yValue, Integer xValue) {
+    public ChartBar(int yValue, int xValue) {
         this.yValue = yValue;
         this.xValue = xValue;
     }
 
     @Getter
     @Setter
-    private Integer yValue;
+    private int yValue;
 
     @Getter
     @Setter
-    private Integer xValue;
+    private int xValue;
 
 }

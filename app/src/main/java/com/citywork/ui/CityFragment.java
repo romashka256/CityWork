@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,17 +53,25 @@ public class CityFragment extends Fragment {
     @BindView(R.id.city_fragment_statistics_block_tablayout)
     TabLayout tabLayout;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay_pomo)
-    RelativeLayout pomoStat;
+    ConstraintLayout pomoStat;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay_min)
-    RelativeLayout minStat;
+    ConstraintLayout minStat;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay_population)
-    RelativeLayout pplStat;
+    ConstraintLayout pplStat;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay)
     LinearLayout textStatBlock;
 
     TextView pomoCountTV;
     TextView minCountTV;
     TextView pplCountTV;
+
+    TextView pomoNameTV;
+    TextView minNameTV;
+    TextView pplNameTV;
+
+    TextView pomoVerbTV;
+    TextView minVerbTV;
+    TextView pplVerbTV;
 
     private CityFragmentViewModel cityFragmentViewModel;
     private CityAdapter adapter;
@@ -88,6 +97,8 @@ public class CityFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+
+
         return view;
     }
 
@@ -98,6 +109,22 @@ public class CityFragment extends Fragment {
         pomoCountTV = pomoStat.findViewById(R.id.text_stat_item_number);
         minCountTV = minStat.findViewById(R.id.text_stat_item_number);
         pplCountTV = pplStat.findViewById(R.id.text_stat_item_number);
+
+        pomoNameTV = pomoStat.findViewById(R.id.text_stat_item_name);
+        minNameTV = minStat.findViewById(R.id.text_stat_item_name);
+        pplNameTV = pplStat.findViewById(R.id.text_stat_item_name);
+
+        pomoVerbTV = pomoStat.findViewById(R.id.text_stat_item_verb);
+        minVerbTV = minStat.findViewById(R.id.text_stat_item_verb);
+        pplVerbTV = pplStat.findViewById(R.id.text_stat_item_verb);
+
+        pomoNameTV.setText(getResources().getString(R.string.pomo));
+        minNameTV.setText(getResources().getString(R.string.minute_short));
+        pplNameTV.setText(getResources().getString(R.string.people_short));
+
+        pomoVerbTV.setText(getResources().getString(R.string.pomo_verb));
+        minVerbTV.setText(getResources().getString(R.string.minute_verb));
+        pplVerbTV.setText(getResources().getString(R.string.people_verb));
 
         TabLayout.Tab tab = tabLayout.newTab();
         tab.setText(getResources().getString(R.string.day));
@@ -152,7 +179,7 @@ public class CityFragment extends Fragment {
             List<Integer> integers = cityFragmentViewModel.calculateStat(list);
 
             minCountTV.setText(integers.get(0) + "");
-            mPeopleCountTV.setText(integers.get(2) + "");
+            pplCountTV.setText(integers.get(2) + "");
             pomoCountTV.setText(integers.get(1) + "");
         });
 

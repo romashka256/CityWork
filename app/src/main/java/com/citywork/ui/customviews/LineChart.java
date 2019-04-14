@@ -204,6 +204,8 @@ public class LineChart extends View {
             if (selected) {
                 if (selectedIndex == i) {
                     canvas.drawRect(rectF, selectedBarPaint);
+                } else {
+                    canvas.drawRect(rectF, barPaint);
                 }
             } else {
                 canvas.drawRect(rectF, barPaint);
@@ -247,6 +249,8 @@ public class LineChart extends View {
                 onBarSelected.onBarSelected(chartBars.get(i).getXValue());
                 selected = true;
                 selectedIndex = i;
+
+                invalidate();
             }
         }
 

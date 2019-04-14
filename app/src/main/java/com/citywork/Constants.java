@@ -12,6 +12,14 @@ public class Constants {
     public final static String DIALOG_SUCCESS_TAG = "dialog_success";
     public final static int DEFAULT_MIN_TIMER_VALUE = 600;
 
+    public final static int DEFAULT_SHORT_BREAK_VALUE = 300;
+    public final static int DEFAULT_LONG_BREAK_VALUE = 600;
+
+    public final static boolean DEFAULT_IN_NOTIF_BAR = true;
+    public final static boolean DEFAULT_START_END_SOUND = false;
+    public final static boolean DEFAULT_WIN_NOTIF = false;
+    public final static boolean DEFAULT_24HDELETE = true;
+
     public final static int DEFAULT_PEOPLE_PER_30SEC = 3;
 
     public final static long DEFAULT_TIME_AFTER_NOT_SHOW = 86400000;
