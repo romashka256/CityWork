@@ -89,6 +89,7 @@ public class TasksDialog extends DialogFragment {
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
             taskListAdapter = new TaskListAdapter(context, pomodoros, task -> {
                 iTasksDialogViewModel.onTaskClicked(task);
+
             });
             recyclerView.setAdapter(taskListAdapter);
             taskListAdapter.notifyDataSetChanged();
@@ -117,6 +118,7 @@ public class TasksDialog extends DialogFragment {
 
         sendIV.setOnClickListener(v -> {
             iTasksDialogViewModel.onAddClicked();
+            taskListAdapter.notifyDataSetChanged();
             editText.setText("");
         });
 

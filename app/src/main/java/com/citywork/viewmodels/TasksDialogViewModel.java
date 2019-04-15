@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.citywork.App;
 import com.citywork.Constants;
+import com.citywork.SingleLiveEvent;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
@@ -18,7 +19,7 @@ import java.util.List;
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {
 
     private DBHelper dataBaseHelper;
-    private MutableLiveData<List<Pomodoro>> newPomodorosEvent = new MutableLiveData<>();
+    private SingleLiveEvent<List<Pomodoro>> newPomodorosEvent = new SingleLiveEvent<>();
     private List<Pomodoro> pomodoros;
     private TaskValidator taskValidator;
     private String currentTask;
@@ -53,7 +54,7 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     }
 
     @Override
-    public LiveData<List<Pomodoro>> getPomodoroLoadedEvent() {
+    public SingleLiveEvent<List<Pomodoro>> getPomodoroLoadedEvent() {
         return newPomodorosEvent;
     }
 
@@ -73,8 +74,8 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
             Task task = new Task(currentTask);
             pomodoroManger.getPomodoro().getTasks().add(task);
             dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
-            pomodoros.get(pomodoros.size() - 1).getTasks().add(task);
-            newPomodorosEvent.postValue(pomodoros);
+            //pomodoros.get(pomodoros.size() - 1).getTasks().add(task);
+            //newPomodorosEvent.postValue(pomodoros);
         }
     }
 
@@ -85,7 +86,6 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
     @Override
     public void onTaskClicked(Task task) {
-        task.setDone(!task.isDone());
         dataBaseHelper.saveTask(task);
     }
 }
