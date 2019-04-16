@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.ui.listeners;
 
 import com.citywork.model.db.models.Task;
 

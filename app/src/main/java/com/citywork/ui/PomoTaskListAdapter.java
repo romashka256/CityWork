@@ -6,12 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.citywork.R;
-import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
+import com.citywork.ui.listeners.OnTaskClickListener;
 
 import java.util.List;
 

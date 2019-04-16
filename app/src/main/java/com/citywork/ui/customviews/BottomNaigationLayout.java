@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 
+import com.citywork.ui.listeners.OnTabClickLinetener;
+
 import java.util.ArrayList;
 import java.util.List;
 

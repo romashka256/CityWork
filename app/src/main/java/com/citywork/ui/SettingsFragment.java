@@ -2,6 +2,7 @@ package com.citywork.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,6 +56,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private MainActivity mainActivity;
     private SettingsViewModel settingsViewModel;
 
+
+    public static final String TAG = "BreakChooseDialog";
+    private int BREAK_REQUEST_CODE = 123;
+
     @Override
     public void onAttach(Context context) {
         mainActivity = (MainActivity) context;
@@ -104,6 +109,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             settingsViewModel.onInNotifToggleChanged(on);
         });
 
+        longBreakBlock.setOnClickListener(v -> {
+            settingsViewModel.onLongBreakClicked();
+            showBreakDialog();
+        });
+
+        shortBreakBlock.setOnClickListener(v -> {
+            settingsViewModel.onShortBreakClicked();
+            showBreakDialog();
+        });
+
         winnotifBlock.setOnClickListener(this);
         deleteAfter24Block.setOnClickListener(this);
         startendsoundBlock.setOnClickListener(this);
@@ -113,6 +128,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         longBreakTV.setText(settingsViewModel.getLongBreakValue() + " мин");
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == BREAK_REQUEST_CODE) {
+             settingsViewModel.onDialogFinished(data);
+        }
+    }
+
+    public void showBreakDialog(){
+        BreakChooseDialog dialog = new BreakChooseDialog();
+        dialog.setTargetFragment(this, BREAK_REQUEST_CODE);
+
+        dialog.show(mainActivity.getSupportFragmentManager(), TAG);
     }
 
     @Override

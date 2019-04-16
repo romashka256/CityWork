@@ -14,6 +14,7 @@
     <string name="end_notifcation">Уведомление об окончании</string>
     <string name="todo">TODO</string>
     <string name="delete_afet24hours">Удалять задачу после 24 часов</string>
+    <string name="task_dialog_edittext_hint">Что делаем ?</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>
@@ -22,6 +23,7 @@
 
     <string name="pomo">pomo</string>
     <string name="minute_short">мин</string>
+    <string name="minute">минут</string>
     <string name="people_short">чел</string>
 
     <string name="pomo_verb">выполнено</string>
