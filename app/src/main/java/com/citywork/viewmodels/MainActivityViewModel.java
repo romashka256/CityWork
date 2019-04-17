@@ -11,7 +11,6 @@ import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.model.interfaces.OnCitiesLoadedListener;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.CityUtils;
@@ -22,9 +21,6 @@ import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Getter;
 import timber.log.Timber;

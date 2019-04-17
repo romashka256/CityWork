@@ -7,8 +7,6 @@ import com.citywork.utils.timer.TimerState;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 public class Calculator {
 
 
@@ -40,7 +38,7 @@ public class Calculator {
     }
 
     public static int calculateBuidling(long time) {
-        return (int) (time / (15 * 61));
+        return (int) (time / (15 * 60));
     }
 
     public static int calculatePeopleCount(List<City> cityList) {

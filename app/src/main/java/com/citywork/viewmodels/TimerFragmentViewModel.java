@@ -61,7 +61,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private Context appContext;
     private List<String> buildingNames;
-
+    private List<String> cityBuildingNames;
 
     public TimerFragmentViewModel() {
         mTimerManager = App.getsAppComponent().getTimerManager();
@@ -75,23 +75,29 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         notificationUtils = new NotificationUtils(appContext);
 
         buildingNames = new ArrayList<>();
+        cityBuildingNames = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
             switch (i) {
                 case 0:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
                     break;
                 case 1:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building2));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building2));
                     break;
                 case 2:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building3));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building3));
                     break;
                 case 3:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
                     break;
                 case 4:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
                     break;
             }
         }
@@ -124,7 +130,9 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private void initAndStartTimer() {
         pomodoroManger.setTimeToPomodoro(timerValue);
-        pomodoroManger.getBuilding().setIconName(buildingNames.get(Calculator.calculateBuidling(timerValue)));
+        int index = Calculator.calculateBuidling(timerValue);
+        pomodoroManger.getBuilding().setIconName(buildingNames.get(index));
+        pomodoroManger.getBuilding().setCityIconName(cityBuildingNames.get(index));
         saveBuidlingToDB();
         saveCityToDB();
         startTimer(createTimer(timerValue));

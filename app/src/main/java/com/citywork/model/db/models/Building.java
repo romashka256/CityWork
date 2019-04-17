@@ -7,8 +7,6 @@ import org.parceler.Parcel;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.RealmField;
-import io.realm.annotations.Required;
 import io.realm.com_citywork_model_db_models_BuildingRealmProxy;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,4 +46,7 @@ public class Building extends RealmObject {
     @Getter
     @Setter
     String iconName;
+    @Getter
+    @Setter
+    String cityIconName;
 }
