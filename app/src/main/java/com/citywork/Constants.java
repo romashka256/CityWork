@@ -1,5 +1,8 @@
 package com.citywork;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Constants {
 
     //Else
@@ -23,4 +26,9 @@ public class Constants {
     public final static int DEFAULT_PEOPLE_PER_30SEC = 3;
 
     public final static long DEFAULT_TIME_AFTER_NOT_SHOW = 86400000;
+
+    @Getter
+    @Setter
+    public final static int[] dataSet = new int[]{5, 10, 15, 20, 25};
+
 }

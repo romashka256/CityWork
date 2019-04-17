@@ -37,6 +37,9 @@ public interface ITimerFragmentViewModel {
 
     void onServiceConnected(Building building);
 
+    int getLongBreakValue();
+    int getShortBreakValue();
+
     LiveData<Long> getChangeTimeEvent();
 
     LiveData<Building> getTimerCompleteEvent();

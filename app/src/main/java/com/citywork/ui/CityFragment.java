@@ -16,27 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.ui.customviews.LineChart;
-import com.citywork.ui.customviews.OnBarSelected;
 import com.citywork.viewmodels.CityFragmentViewModel;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class CityFragment extends Fragment {
 
@@ -146,7 +136,7 @@ public class CityFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
 
         cityFragmentViewModel.getCitiesLoaded().observe(this, cities -> {
-            adapter = new CityAdapter(cities, context);
+            adapter = new CityAdapter(cities.subList(0, 14), context);
             recyclerView.setAdapter(adapter);
             cityFragmentViewModel.setCities(cities);
         });

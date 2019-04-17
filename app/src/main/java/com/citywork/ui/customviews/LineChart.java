@@ -13,14 +13,13 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.citywork.R;
+import com.citywork.ui.listeners.OnBarSelected;
 import com.citywork.utils.chart.BarModeState;
 import com.citywork.utils.chart.ChartBar;
 import com.citywork.utils.chart.CustomChartUtils;
-import com.citywork.viewmodels.CityFragmentViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

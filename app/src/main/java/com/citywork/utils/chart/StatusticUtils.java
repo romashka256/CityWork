@@ -48,7 +48,7 @@ public class StatusticUtils {
         getDataForWeek(cities);
         getDataForMonth(cities);
 
-        Collections.reverse(cityList);
+        //Collections.reverse(cityList);
     }
 
     private City getTodayCity() {

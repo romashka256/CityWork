@@ -85,7 +85,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Override
     public void onCreate() {
         citiesCreatedEvent.postValue(statusticUtils.getCities());
-        Collections.reverse(statusticUtils.getCities());
+
 
         mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
     }

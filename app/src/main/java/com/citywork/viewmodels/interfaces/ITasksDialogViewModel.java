@@ -2,6 +2,7 @@ package com.citywork.viewmodels.interfaces;
 
 import android.arch.lifecycle.LiveData;
 
+import com.citywork.SingleLiveEvent;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
 
@@ -20,7 +21,7 @@ public interface ITasksDialogViewModel {
 
     void addTask(String text);
 
-    LiveData<List<Pomodoro>> getPomodoroLoadedEvent();
+    SingleLiveEvent<List<Pomodoro>> getPomodoroLoadedEvent();
 
     void onTextChanged(String s);
 

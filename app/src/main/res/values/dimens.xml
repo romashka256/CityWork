@@ -4,7 +4,7 @@
     <dimen name="min_btn_width">110dp</dimen>
     <dimen name="bottom_navigation_height">64dp</dimen>
     <dimen name="button_padding">3dp</dimen>
-    <dimen name="tasks_dialog_title_textsize">20sp</dimen>
+    <dimen name="tasks_dialog_title_textsize">24sp</dimen>
 
 
     <dimen name="success_dialog_congrats_text_size">28sp</dimen>

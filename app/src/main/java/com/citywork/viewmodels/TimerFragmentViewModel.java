@@ -90,6 +90,9 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 case 3:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
                     break;
+                case 4:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.ic_icon_building1));
+                    break;
             }
         }
 
@@ -137,7 +140,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void on5MinRestClicked() {
-        startTimer(createTimer(300));
+        startTimer(createTimer(sharedPrefensecUtils.getLongBreak()));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (300 * 1000));
         pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
@@ -146,7 +149,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void on10MinRestClicked() {
-        startTimer(createTimer(600));
+        startTimer(createTimer(sharedPrefensecUtils.getShortBreak()));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (600 * 1000));
         pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
@@ -156,6 +159,16 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     private BehaviorSubject<Long> createTimer(long timerTime) {
         Timber.i("createTimer");
         return mTimerManager.startTimer(timerTime);
+    }
+
+    @Override
+    public int getLongBreakValue() {
+        return sharedPrefensecUtils.getLongBreak() / 60;
+    }
+
+    @Override
+    public int getShortBreakValue() {
+        return sharedPrefensecUtils.getShortBreak() / 60;
     }
 
     private BehaviorSubject<Long> getTimer() {

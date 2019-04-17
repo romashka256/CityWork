@@ -106,6 +106,8 @@ public class CityView extends ViewGroup {
             fullWidth += (buildingBitmap.getWidth() + buildingsMargin);
         }
 
+        fullWidth += buildingsMargin;
+
         if (minCityWidth <= fullWidth) {
             width = fullWidth;
         } else {

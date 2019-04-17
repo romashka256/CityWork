@@ -1,7 +1,9 @@
 package com.citywork.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +23,9 @@ import com.zcw.togglebutton.ToggleButton;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.citywork.ui.BreakChooseDialog.breakTypeTag;
+import static com.citywork.ui.BreakChooseDialog.selectedTag;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
@@ -55,6 +60,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private MainActivity mainActivity;
     private SettingsViewModel settingsViewModel;
 
+
+    public static final String TAG = "BreakChooseDialog";
+    private int BREAK_REQUEST_CODE = 123;
+
     @Override
     public void onAttach(Context context) {
         mainActivity = (MainActivity) context;
@@ -67,6 +76,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         settingsViewModel.onCreate();
+
+        settingsViewModel.getMShortBreakChangedEvent().observe(this, integer -> {
+            shortBreakTV.setText(integer + " " + getResources().getString(R.string.minute_short));
+        });
+
+        settingsViewModel.getMLongBreakChangedEvent().observe(this, integer -> {
+            longBreakTV.setText(integer + " " + getResources().getString(R.string.minute_short));
+        });
     }
 
     @Nullable
@@ -104,6 +121,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             settingsViewModel.onInNotifToggleChanged(on);
         });
 
+        longBreakBlock.setOnClickListener(v -> {
+            settingsViewModel.onLongBreakClicked();
+            showBreakDialog(BreakChooseDialog.BreakType.LONG);
+        });
+
+        shortBreakBlock.setOnClickListener(v -> {
+            settingsViewModel.onShortBreakClicked();
+            showBreakDialog(BreakChooseDialog.BreakType.SHORT);
+        });
+
         winnotifBlock.setOnClickListener(this);
         deleteAfter24Block.setOnClickListener(this);
         startendsoundBlock.setOnClickListener(this);
@@ -113,6 +140,25 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         longBreakTV.setText(settingsViewModel.getLongBreakValue() + " мин");
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == BREAK_REQUEST_CODE) {
+            settingsViewModel.onDialogFinished(data);
+        }
+    }
+
+    public void showBreakDialog(BreakChooseDialog.BreakType breakType) {
+        BreakChooseDialog dialog = new BreakChooseDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt(selectedTag, settingsViewModel.getSelectedBreak());
+        bundle.putString(breakTypeTag, breakType.toString());
+        dialog.setTargetFragment(this, BREAK_REQUEST_CODE);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), TAG);
     }
 
     @Override
