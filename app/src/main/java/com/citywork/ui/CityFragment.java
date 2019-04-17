@@ -136,7 +136,7 @@ public class CityFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
 
         cityFragmentViewModel.getCitiesLoaded().observe(this, cities -> {
-            adapter = new CityAdapter(cities, context);
+            adapter = new CityAdapter(cities.subList(0, 14), context);
             recyclerView.setAdapter(adapter);
             cityFragmentViewModel.setCities(cities);
         });

@@ -1,5 +1,6 @@
 package com.citywork.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,9 @@ import com.zcw.togglebutton.ToggleButton;
 import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.citywork.ui.BreakChooseDialog.breakTypeTag;
+import static com.citywork.ui.BreakChooseDialog.selectedTag;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
@@ -72,6 +76,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         settingsViewModel.onCreate();
+
+        settingsViewModel.getMShortBreakChangedEvent().observe(this, integer -> {
+            shortBreakTV.setText(integer + " " + getResources().getString(R.string.minute_short));
+        });
+
+        settingsViewModel.getMLongBreakChangedEvent().observe(this, integer -> {
+            longBreakTV.setText(integer + " " + getResources().getString(R.string.minute_short));
+        });
     }
 
     @Nullable
@@ -111,12 +123,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         longBreakBlock.setOnClickListener(v -> {
             settingsViewModel.onLongBreakClicked();
-            showBreakDialog();
+            showBreakDialog(BreakChooseDialog.BreakType.LONG);
         });
 
         shortBreakBlock.setOnClickListener(v -> {
             settingsViewModel.onShortBreakClicked();
-            showBreakDialog();
+            showBreakDialog(BreakChooseDialog.BreakType.SHORT);
         });
 
         winnotifBlock.setOnClickListener(this);
@@ -135,15 +147,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == BREAK_REQUEST_CODE) {
-             settingsViewModel.onDialogFinished(data);
+            settingsViewModel.onDialogFinished(data);
         }
     }
 
-    public void showBreakDialog(){
+    public void showBreakDialog(BreakChooseDialog.BreakType breakType) {
         BreakChooseDialog dialog = new BreakChooseDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt(selectedTag, settingsViewModel.getSelectedBreak());
+        bundle.putString(breakTypeTag, breakType.toString());
         dialog.setTargetFragment(this, BREAK_REQUEST_CODE);
-
-        dialog.show(mainActivity.getSupportFragmentManager(), TAG);
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), TAG);
     }
 
     @Override

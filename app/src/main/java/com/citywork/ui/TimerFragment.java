@@ -238,6 +238,9 @@ public class TimerFragment extends Fragment {
             }
         });
 
+        m5minRest.setText(iTimerFragmentViewModel.getShortBreakValue() + " " + getResources().getString(R.string.minute));
+        m10minRest.setText(iTimerFragmentViewModel.getLongBreakValue() + " " + getResources().getString(R.string.minute));
+
         m5minRest.setOnClickListener(v -> {
             iTimerFragmentViewModel.on5MinRestClicked();
         });

@@ -4,15 +4,22 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +33,8 @@ import butterknife.ButterKnife;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.citywork.Constants.dataSet;
+
 public class BreakChooseDialog extends DialogFragment {
 
     @BindView(R.id.break_choose_dialog_lv)
@@ -34,10 +43,8 @@ public class BreakChooseDialog extends DialogFragment {
     TextView dialogTitle;
 
     private BreakType breakType;
+    private int screenHeight;
 
-    @Getter
-    @Setter
-    private int[] dataSet = new int[]{5, 10, 15, 20, 25};
 
     private int selected;
 
@@ -45,14 +52,17 @@ public class BreakChooseDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        selected = getArguments().getInt("selected");
-        breakType = BreakType.valueOf(getArguments().getString("breaktype"));
+        selected = getArguments().getInt(selectedTag);
+        breakType = BreakType.valueOf(getArguments().getString(breakTypeTag));
+
 
     }
 
     public static final String shortBreakTag = "SHORT";
     public static final String longBreakTag = "LONG";
     public static final String resulttag = "resulttag";
+    public static final String selectedTag = "selected";
+    public static final String breakTypeTag = "breakType";
 
     @Nullable
     @Override
@@ -61,10 +71,17 @@ public class BreakChooseDialog extends DialogFragment {
 
         ButterKnife.bind(this, view);
 
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenHeight = size.y;
+
         optionsList.setAdapter(new BreakDataSetAdapter(dataSet, getContext(), value -> {
             Intent intent = new Intent();
             intent.putExtra(resulttag, value);
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+            dismiss();
         }, selected));
 
         switch (breakType) {
@@ -79,6 +96,24 @@ public class BreakChooseDialog extends DialogFragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+
+        Window window = getDialog().getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams p = getDialog().getWindow().getAttributes();
+        p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+        float free = screenHeight - getView().getMeasuredHeight();
+        float y = free * 0.05f;
+        p.y = (int) y;
+
+        getDialog().getWindow().setAttributes(p);
+    }
 
     public enum BreakType {
         SHORT, LONG;

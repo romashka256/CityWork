@@ -48,10 +48,12 @@ public class BreakDataSetAdapter extends BaseAdapter {
 
         TextView textView = view.findViewById(R.id.break_choose_dialog_text);
 
-        textView.setText(dataSet[position] + context.getResources().getString(R.string.minute));
+        textView.setText(dataSet[position] + " " + context.getResources().getString(R.string.minute));
 
-        if (selected == position)
+        if (selected == dataSet[position])
             textView.setTextColor(context.getResources().getColor(R.color.blue));
+
+        view.setOnClickListener(v -> onBreakValueSelected.onBreakValueSelected(dataSet[position]));
 
         return view;
     }

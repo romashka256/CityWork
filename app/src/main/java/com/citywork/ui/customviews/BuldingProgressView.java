@@ -88,6 +88,7 @@ public class BuldingProgressView extends View {
 
     public void setImage(Bitmap bitmapOrg) {
         this.bitmapOrg = bitmapOrg;
+        bitmapOrg.getHeight();
         invalidate();
     }
 
@@ -208,8 +209,8 @@ public class BuldingProgressView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(bitmapOrg.getWidth());
-        int height = MeasureSpec.getSize(bitmapOrg.getHeight());
+        int width = MeasureSpec.getSize((int) buildingWidth);
+        int height = MeasureSpec.getSize((int) buildingHeight);
 
         width += screenWidth / 2;
         height += bottomLineHeight;
