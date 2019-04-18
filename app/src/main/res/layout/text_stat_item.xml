@@ -15,7 +15,7 @@
         android:hint="0"
         android:text="10"
         android:textColor="@color/black"
-        android:textSize="23sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_stat_item_number"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="3dp"
         android:textColor="@color/transoarent20_black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +40,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="3dp"
         android:text="выполнено"
-        android:textColor="@color/transoarent10_black"
+        android:textStyle="bold"
+        android:textColor="@color/transoarent35_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_stat_item_name" />

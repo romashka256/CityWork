@@ -48,7 +48,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
 
         for (Building building : city.getBuildings()) {
             if (building.getPomodoro().getTimerState() != TimerState.CANCELED && building.getPomodoro().getTimerState() != TimerState.ONGOING && building.getPomodoro().getTimerState() != TimerState.NOT_ONGOING)
-                buildingNames.add(building.getIconName());
+                buildingNames.add(building.getCityIconName());
         }
 
         cityVH.cityView.setBuildings(buildingNames);

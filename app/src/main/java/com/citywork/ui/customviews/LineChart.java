@@ -183,7 +183,7 @@ public class LineChart extends View {
         barsLeftMargin = (int) (DEFAULT_BOTTOM_LABEL_MARGIN_PERCENT * width);
 
         //TODO : ADD LABEL HEIGHT
-        heightForBars = height - (topLabelMargin + bottomLabelMargin + labelFontHeight);
+        heightForBars = height - (topLabelMargin + bottomLabelMargin);
 
         setMeasuredDimension(width, height);
     }

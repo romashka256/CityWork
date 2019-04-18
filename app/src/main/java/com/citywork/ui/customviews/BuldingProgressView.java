@@ -93,7 +93,9 @@ public class BuldingProgressView extends View {
     }
 
     private void init() {
-        bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.ic_icon_building1);
+        bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.icon_building4);
+
+        Bitmap bitmapOrgasd = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.icon_building0_white);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         screenWidth = metrics.widthPixels;
@@ -209,8 +211,8 @@ public class BuldingProgressView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize((int) buildingWidth);
-        int height = MeasureSpec.getSize((int) buildingHeight);
+        int width = (int) buildingWidth;
+        int height =(int) buildingHeight;
 
         width += screenWidth / 2;
         height += bottomLineHeight;
