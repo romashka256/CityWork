@@ -80,8 +80,8 @@ public class BottomNavigationItemView extends ViewGroup {
         this.context = context;
 
         backgroundRectPaint = new Paint();
-        backgroundRectPaint.setColor(getResources().getColor(R.color.colorPrimary));
-        backgroundRectPaint.setAlpha(100);
+        backgroundRectPaint.setColor(getResources().getColor(R.color.nav_bar_item_bg));
+       // backgroundRectPaint.setAlpha(100);
 
         backgroundRect = new RectF();
 
@@ -129,7 +129,7 @@ public class BottomNavigationItemView extends ViewGroup {
 
         animatorSet = new AnimatorSet();
 
-        backgroundAlphaAnim = ValueAnimator.ofInt(0, 140);
+        backgroundAlphaAnim = ValueAnimator.ofInt(0, 210);
         backgroundAlphaAnim.setInterpolator(new AccelerateInterpolator());
         backgroundAlphaAnim.setDuration(100);
         final BottomNavigationItemView v = this;

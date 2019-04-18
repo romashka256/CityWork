@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
@@ -40,6 +41,8 @@ public class TasksDialog extends DialogFragment {
     ImageView sendIV;
     @BindView(R.id.tasks_dialog_settings)
     ImageView settingIV;
+    @BindView(R.id.tasks_dialog_no_tasks_tv)
+    TextView noTasksTV;
 
     public static final String TAG = "TasksDialog";
 
@@ -91,8 +94,14 @@ public class TasksDialog extends DialogFragment {
                 iTasksDialogViewModel.onTaskClicked(task);
 
             });
+            recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(taskListAdapter);
             taskListAdapter.notifyDataSetChanged();
+        });
+
+        iTasksDialogViewModel.getNoTasksEvent().observe(this, empty -> {
+            noTasksTV.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         });
 
         closeIV.setOnClickListener(v -> {
@@ -126,6 +135,7 @@ public class TasksDialog extends DialogFragment {
             dismiss();
             Navigation.findNavController(getActivity(), R.id.toolbar_settings_iv).navigate(R.id.action_timerFragment_to_settingsFragment);
         });
+
     }
 
     @Override

@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListVH> {
 
     private Context context;
-    private List<Task> tasks;
     private OnTaskClickListener onTaskClickListener;
     private List<Pomodoro> pomodoros;
 
@@ -32,10 +31,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         this.context = context;
         this.pomodoros = pomodoros;
         this.onTaskClickListener = onTaskClickListener;
-        tasks = new ArrayList<>();
-        for (Pomodoro pom : pomodoros) {
-            tasks.addAll(pom.getTasks());
-        }
     }
 
     @NonNull

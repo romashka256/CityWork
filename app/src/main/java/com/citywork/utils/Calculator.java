@@ -38,7 +38,7 @@ public class Calculator {
     }
 
     public static int calculateBuidling(long time) {
-        return (int) (time / (15 * 60));
+        return (int) (time / (15 * 61));
     }
 
     public static int calculatePeopleCount(List<City> cityList) {

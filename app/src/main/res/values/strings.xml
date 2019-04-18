@@ -15,6 +15,7 @@
     <string name="todo">TODO</string>
     <string name="delete_afet24hours">Удалять задачу после 24 часов</string>
     <string name="task_dialog_edittext_hint">Что делаем ?</string>
+    <string name="no_tasks">Нет задач</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/totalwhite"
-    android:layout_height="wrap_content">
+    android:minHeight="300dp">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/tasks_dialog_title"
@@ -27,7 +27,21 @@
         app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/tasks_dialog_no_tasks_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/no_tasks"
+        android:visibility="gone"
+        android:textColor="@color/transoarent35_black"
+        app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_edittext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <ImageView
         android:id="@+id/tasks_dialog_settings"
@@ -56,12 +70,13 @@
         android:id="@+id/divider16"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/statistics_divider_hor"
         app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_edittext"
-        app:layout_constraintTop_toBottomOf="@+id/tasks_dialog_rv" />
+        app:layout_constraintTop_toBottomOf="@+id/tasks_dialog_rv"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/tasks_dialog_edittext"
@@ -69,13 +84,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:textColorHint="@color/transoarent50_black"
-        android:textColor="@color/black"
+        android:layout_marginBottom="24dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/task_dialog_edittext_hint"
         android:inputType="textMultiLine"
+        android:textColor="@color/black"
+        android:textColorHint="@color/transoarent50_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tasks_dialog_sendiv"
         app:layout_constraintStart_toStartOf="parent" />

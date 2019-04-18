@@ -4,6 +4,6 @@
     <size
         android:height="6dp" />
     <solid
-        android:color="@color/transoarent50_black" />
+        android:color="@color/transoarent10_black" />
 
 </shape>

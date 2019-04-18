@@ -23,6 +23,8 @@ public interface ITasksDialogViewModel {
 
     SingleLiveEvent<List<Pomodoro>> getPomodoroLoadedEvent();
 
+    SingleLiveEvent<Boolean> getNoTasksEvent();
+
     void onTextChanged(String s);
 
     void onDismiss();

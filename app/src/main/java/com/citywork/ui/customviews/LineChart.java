@@ -198,6 +198,17 @@ public class LineChart extends View {
 
         canvas.drawColor(getResources().getColor(R.color.totalwhite));
 
+        int heightused = 0;
+        int spaceBetweenGrid = heightForBars / 4;
+        for (int i = 0; i < 5; i++) {
+            gridLine.reset();
+            gridLine.moveTo(0, heightused);
+            gridLine.lineTo(width, heightused);
+            canvas.drawPath(gridLine, gridLinePaint);
+
+            heightused += spaceBetweenGrid;
+        }
+
         for (int i = 0; i < bars.size(); i++) {
             RectF rectF = bars.get(i);
             if (selected) {
@@ -219,19 +230,6 @@ public class LineChart extends View {
                 widthUsed += spaceBetweenLabel + labelFontWidth;
             }
         }
-
-        int heightused = 0;
-        int spaceBetweenGrid = heightForBars / 4;
-        for (int i = 0; i < 5; i++) {
-            gridLine.reset();
-            gridLine.moveTo(0, heightused);
-            gridLine.lineTo(width, heightused);
-            canvas.drawPath(gridLine, gridLinePaint);
-
-            heightused += spaceBetweenGrid;
-        }
-
-
     }
 
     public int dpToPx(int dp) {

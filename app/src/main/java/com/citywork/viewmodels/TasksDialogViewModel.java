@@ -14,12 +14,14 @@ import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.TaskValidator;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {
 
     private DBHelper dataBaseHelper;
     private SingleLiveEvent<List<Pomodoro>> newPomodorosEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Boolean> noTasksEvent = new SingleLiveEvent<>();
     private List<Pomodoro> pomodoros;
     private TaskValidator taskValidator;
     private String currentTask;
@@ -38,10 +40,24 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
         dataBaseHelper.getTasks(System.currentTimeMillis() - Constants.DEFAULT_TIME_AFTER_NOT_SHOW
                 , pomodoros -> {
                     this.pomodoros = pomodoros;
+
+                    List<Task> tasks = new ArrayList<>();
+                    for (Pomodoro pom : pomodoros) {
+                        tasks.addAll(pom.getTasks());
+                    }
+
                     newPomodorosEvent.postValue(pomodoros);
+
+                    if (tasks.isEmpty())
+                        noTasksEvent.postValue(true);
                 });
     }
 
+
+    @Override
+    public SingleLiveEvent<Boolean> getNoTasksEvent() {
+        return noTasksEvent;
+    }
 
     @Override
     public void onPositionChanged() {

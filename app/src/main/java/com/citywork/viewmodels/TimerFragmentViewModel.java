@@ -80,23 +80,23 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         for (int i = 0; i < 4; i++) {
             switch (i) {
                 case 0:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0_white));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0));
                     break;
                 case 1:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1_white));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1));
                     break;
                 case 2:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
                     break;
                 case 3:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3_white));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
                     break;
                 case 4:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4_white));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4));
                     break;
             }

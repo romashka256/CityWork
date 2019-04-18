@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:button="@drawable/task_checkbox"
         app:layout_constraintBottom_toBottomOf="@+id/task_item_tasktext"
         app:layout_constraintStart_toEndOf="@+id/task_item_dragimageview"
         app:layout_constraintTop_toTopOf="@+id/task_item_tasktext" />
