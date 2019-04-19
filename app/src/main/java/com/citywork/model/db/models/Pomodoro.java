@@ -46,12 +46,26 @@ public class Pomodoro extends io.realm.RealmObject {
     @Getter
     @Setter
     Long id;
-    @Getter
-    @Setter
+
     long starttime;
-    @Getter
-    @Setter
+
     long stoptime;
+
+    public long getStarttime() {
+        return starttime;
+    }
+
+    public void setStarttime(long starttime) {
+        this.starttime = starttime;
+    }
+
+    public Long getStoptime() {
+        return stoptime;
+    }
+
+    public void setStoptime(Long stoptime) {
+        this.stoptime = stoptime;
+    }
 
     RealmList<Task> tasks;
 

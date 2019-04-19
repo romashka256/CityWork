@@ -54,8 +54,10 @@ public class PomoTaskListAdapter extends BaseAdapter {
         taskText.setText(task.getText());
         CheckBox checkBox = view.findViewById(R.id.task_item_checkbox);
         checkBox.setChecked(task.isDone());
-        checkBox.setOnClickListener(v -> {
+
+        view.setOnClickListener(v -> {
             onclickAction(tasks.get(position));
+            checkBox.setChecked(!checkBox.isChecked());
         });
 
         return view;

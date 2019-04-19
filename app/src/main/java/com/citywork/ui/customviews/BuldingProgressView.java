@@ -89,6 +89,7 @@ public class BuldingProgressView extends View {
     public void setImage(Bitmap bitmapOrg) {
         this.bitmapOrg = bitmapOrg;
         bitmapOrg.getHeight();
+        calculateStep(bitmapOrg.getHeight());
         invalidate();
     }
 
@@ -179,7 +180,8 @@ public class BuldingProgressView extends View {
     protected void onDraw(Canvas canvas) {
         buildingX = (getWidth() / 2f) - bitmapOrg.getWidth() / 2f;
 
-        paddingLeft = dpToPx(radius / 2f + radius_arr) + buildingWidth + buildingX;
+        // paddingLeft = dpToPx(radius / 2f + radius_arr) + buildingWidth + buildingX;
+        paddingLeft = viewW * 0.66f;
         paddingTop = dpToPx(radius / 2f) + buildingHeight / 2;
 
         textpaddingLeft = paddingLeft + dpToPx(DEFAULT_PADDING_LEFT);
@@ -212,12 +214,10 @@ public class BuldingProgressView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = (int) buildingWidth;
-        int height =(int) buildingHeight;
+        int height = (int) buildingHeight;
 
         width += screenWidth / 2;
         height += bottomLineHeight;
-
-        progressStep = calculateStep(height);
 
         viewH = height;
         viewW = width;
@@ -237,9 +237,8 @@ public class BuldingProgressView extends View {
         return bmOverlay;
     }
 
-    private float calculateStep(int height) {
-        float asd = (height - bottomLineHeight) / 100f;
-        return asd;
+    private void calculateStep(int height) {
+        progressStep = (height - bottomLineHeight) / 99.5f;
     }
 
     public float spToPx(float px) {

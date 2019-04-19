@@ -3,6 +3,7 @@
     <dimen name="main_button_text_size">14sp</dimen>
     <dimen name="min_btn_width">110dp</dimen>
     <dimen name="bottom_navigation_height">64dp</dimen>
+    <dimen name="task_item_textsize">13sp</dimen>
     <dimen name="button_padding">3dp</dimen>
     <dimen name="tasks_dialog_title_textsize">24sp</dimen>
 

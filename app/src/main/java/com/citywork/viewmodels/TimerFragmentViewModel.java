@@ -80,23 +80,23 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         for (int i = 0; i < 4; i++) {
             switch (i) {
                 case 0:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0));
                     break;
                 case 1:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1));
                     break;
                 case 2:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
                     break;
                 case 3:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
                     break;
                 case 4:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4));
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4));
                     break;
             }
@@ -150,7 +150,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void on5MinRestClicked() {
         startTimer(createTimer(sharedPrefensecUtils.getLongBreak()));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (300 * 1000));
-        pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
+        pomodoroManger.getPomodoro().setReststarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
     }
@@ -159,7 +159,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void on10MinRestClicked() {
         startTimer(createTimer(sharedPrefensecUtils.getShortBreak()));
         pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (600 * 1000));
-        pomodoroManger.getPomodoro().setStarttime(System.currentTimeMillis());
+        pomodoroManger.getPomodoro().setReststarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
     }
@@ -218,9 +218,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     public void onStopClicked() {
         mTimerManager.stopTimer();
         mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
-
         pomodoroManger.setCanceled();
-
         saveBuidlingToDB();
         pomodoroManger.createEmptyInstance();
         saveBuidlingToDB();

@@ -156,8 +156,9 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         int people = 0;
 
         for (Building building : buildings) {
-            minutes += Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime());
+            minutes += Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime()) / 60;
             pomo++;
+
             people += building.getPeople_count();
         }
 
