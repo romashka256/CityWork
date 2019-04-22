@@ -106,18 +106,12 @@ public class Pomodoro extends io.realm.RealmObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pomodoro pomodoro = (Pomodoro) o;
-        return getId() == pomodoro.getId() &&
-                getStarttime() == pomodoro.getStarttime() &&
-                getStoptime() == pomodoro.getStoptime() &&
-                getReststarttime() == pomodoro.getReststarttime() &&
-                getStopresttime() == pomodoro.getStopresttime() &&
-                Objects.equals(getTasks(), pomodoro.getTasks()) &&
-                getTimerState() == pomodoro.getTimerState();
+        return getId() == pomodoro.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getStarttime(), getStoptime(), getTasks(), getTimerState(), getReststarttime(), getStopresttime());
+        return Objects.hash(getId());
     }
 
     public TimerState getTimerState() {

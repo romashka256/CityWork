@@ -87,7 +87,7 @@ public class TasksDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
             taskListAdapter = new TaskListAdapter(context, pomodoros, task -> {

@@ -1,6 +1,7 @@
 package com.citywork.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.citywork.viewmodels.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
 import androidx.navigation.Navigation;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -200,21 +202,12 @@ public class TimerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Timber.i("onViewCreated");
 
-        startButton.setOnClickListener(v -> {
-            iTimerFragmentViewModel.onStartClicked();
-        });
+        startButton.setOnClickListener(v -> iTimerFragmentViewModel.onStartClicked());
 
-        stopButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(mainActivity)
-                    .setTitle("Вы уверены, что хотите остановить ?")
-                    .setPositiveButton("Остановить", (dialog, which) -> {
-                        circleTimer.disable();
-                        iTimerFragmentViewModel.onStopClicked();
-                        dialog.cancel();
-                    })
-                    .setNegativeButton("Отмена", (dialog, which) -> dialog.cancel())
-                    .show();
-        });
+        stopButton.setOnClickListener(v -> new StopDialog(mainActivity, v1 -> {
+            circleTimer.disable();
+            iTimerFragmentViewModel.onStopClicked();
+        }).show());
 
         mBuidlingView.setOnClickListener(v -> {
             //    iTimerFragmentViewModel.onDebugBtnClicked();

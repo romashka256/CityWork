@@ -118,7 +118,13 @@ public class DataBaseHelper implements DBHelper {
         realm.executeTransaction(realm1 -> {
             RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
             List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
-            Pomodoro last = realm1.where(Pomodoro.class).findAll().last();
+            Pomodoro last;
+            try {
+                last = realm1.where(Pomodoro.class).findAll().last();
+            } catch (IndexOutOfBoundsException e) {
+                last = null;
+            }
+
             if (last != null && pomodoroList.isEmpty()) {
                 last = realm1.copyFromRealm(last);
                 pomodoroList.add(last);

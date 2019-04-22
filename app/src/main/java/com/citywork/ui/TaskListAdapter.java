@@ -39,7 +39,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         View view = LayoutInflater.from(context).inflate(R.layout.pomo_task_item, null, false);
 
 
-
         return new TaskListVH(view);
     }
 
@@ -47,10 +46,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     public void onBindViewHolder(@NonNull TaskListVH taskListVH, int i) {
         Pomodoro pomodoro = pomodoros.get(i);
 
-
-        taskListVH.taskTextV.setText("#" + i + " POMO");
-        if (i != 0)
+        taskListVH.taskTextV.setText("#" + (i + 1) + " POMO");
+        if (i != pomodoros.size() - 1)
             taskListVH.listView.setAlpha(0.6f);
+
+        if (i == pomodoros.size() - 1) {
+            taskListVH.taskTextV.setVisibility(View.GONE);
+        }
         taskListVH.listView.setAdapter(new PomoTaskListAdapter(context, pomodoro.getTasks(), onTaskClickListener));
         setListViewHeightBasedOnChildren(taskListVH.listView);
 
