@@ -19,12 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
-import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

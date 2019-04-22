@@ -1,7 +1,5 @@
 package com.citywork.viewmodels;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.citywork.App;
@@ -47,8 +45,9 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
                         if (pom.getId().equals(pomodoroManger.getPomodoro().getId())) {
                             pomodoros.remove(i);
                             pomodoros.add(i, pomodoroManger.getPomodoro());
-                        } else
-                            tasks.addAll(pom.getTasks());
+                        }
+
+                        tasks.addAll(pom.getTasks());
                     }
 
                     newPomodorosEvent.postValue(pomodoros);

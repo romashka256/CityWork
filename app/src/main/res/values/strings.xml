@@ -6,6 +6,8 @@
     <string name="statistics_title">Статистика</string>
     <string name="settings">Настройки</string>
     <string name="set_break">Перерыв</string>
+    <string name="timer">Таймер</string>
+    <string name="city">Город</string>
     <string name="notification">Уведомление</string>
     <string name="short_break">Короткий перерыв</string>
     <string name="long_break">Длинный перерыв</string>
