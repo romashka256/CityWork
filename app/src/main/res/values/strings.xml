@@ -17,6 +17,9 @@
     <string name="delete_afet24hours">Удалять задачу после 24 часов</string>
     <string name="task_dialog_edittext_hint">Что делаем ?</string>
     <string name="no_tasks">Нет задач</string>
+    <string name="cancel">Отмена</string>
+    <string name="stop">Остановить</string>
+    <string name="are_u_sure">Вы точно хотите \n остановить?</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>
