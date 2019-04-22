@@ -93,4 +93,7 @@ dependencies {
 
     //Graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //ProgressView
+    implementation 'com.moos:Material-ProgressView:1.0.6'
 }

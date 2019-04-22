@@ -9,6 +9,7 @@
     <string name="notification">Уведомление</string>
     <string name="short_break">Короткий перерыв</string>
     <string name="long_break">Длинный перерыв</string>
+    <string name="building_in_progress">Здание строится</string>
     <string name="in_notification_bar">В панель уведомлений</string>
     <string name="start_end_timer_sound">Звук запуска/окончания таймера</string>
     <string name="end_notifcation">Уведомление об окончании</string>
