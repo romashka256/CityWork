@@ -38,6 +38,8 @@ public class StatusticUtils {
 
     private final int dayDivider = 4;
     private final int monthDivider = 7;
+    private final int yearDivider = 91;
+
 
     public void prepareData(List<City> cityList) {
         this.cities = cityList;
@@ -47,6 +49,7 @@ public class StatusticUtils {
         getDataForToday(getTodayCity());
         getDataForWeek(cities);
         getDataForMonth(cities);
+        getDataForYear(cities);
 
         //Collections.reverse(cityList);
     }
@@ -82,8 +85,8 @@ public class StatusticUtils {
 
             int index = 0;
 
-            for (int o = dayDivider; o <= 24; o += dayDivider) {
-                values.add(new ChartBar(0,0));
+            for (int o = dayDivider; o <= 28; o += dayDivider) {
+                values.add(new ChartBar(0, 0));
                 pomodoroList.add(new ArrayList<>());
             }
 
@@ -111,6 +114,9 @@ public class StatusticUtils {
                     }
                 }
             }
+
+            Collections.reverse(values);
+
             toReturn = new Pair<>(values, pomodoroHashMap);
         } else {
             toReturn = new Pair<>(new ArrayList<>(), new HashMap<>());
@@ -133,7 +139,7 @@ public class StatusticUtils {
         Calendar cityCalendar = Calendar.getInstance();
 
         for (int o = 1; o <= 7; o++) {
-            values.add(new ChartBar(0,0));
+            values.add(new ChartBar(0, 0));
             week.add(new ArrayList<>());
         }
 
@@ -145,7 +151,7 @@ public class StatusticUtils {
                 if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
                     for (Building building : city.getBuildings()) {
                         values.get(i).setXValue(i);
-                        values.get(i).setYValue((values.get(i).getYValue() + new Random().nextInt(1000)));
+                        values.get(i).setYValue((values.get(i).getYValue() + Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime())));
                     }
                     for (Building building : city.getBuildings()) {
                         week.get(i).add(building);
@@ -154,7 +160,7 @@ public class StatusticUtils {
                 }
             }
         }
-
+        Collections.reverse(values);
         toReturn = new Pair<>(values, citiesHashmap);
 
         statisticData.put(BarModeState.WEEK, toReturn);
@@ -162,6 +168,8 @@ public class StatusticUtils {
 
     public void getDataForMonth(List<City> cities) {
         if (cities != null) {
+            List<City> cityList = cities.subList(0, 28);
+
             ArrayList<ChartBar> values = new ArrayList<>();
             HashMap<Integer, List<Building>> pomodoroHashMap = new HashMap<>();
 
@@ -169,30 +177,32 @@ public class StatusticUtils {
 
             int index = 0;
 
-            for (int o = monthDivider; o <= 28; o += monthDivider) {
-                values.add(new ChartBar(0,0));
+            for (int o = monthDivider; o <= cityList.size(); o += monthDivider) {
+                values.add(new ChartBar(0, 0));
                 pomodoroList.add(new ArrayList<>());
             }
 
             Pomodoro pomodoro;
 
             int lastIndex = 0;
-            for (int o = monthDivider; o <= 28; o += monthDivider) {
-                List<City> sevenDays = cities.subList(lastIndex, lastIndex + monthDivider);
+            for (int o = monthDivider; o <= cityList.size(); o += monthDivider) {
+                List<City> sevenDays = cityList.subList(lastIndex, lastIndex + monthDivider);
 
                 lastIndex = 0;
                 for (City city : sevenDays) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
                         values.get(index).setXValue(monthDivider);
-                        values.get(index).setYValue(values.get(index).getYValue() + new Random().nextInt(1000));
-                   //     values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
+                        values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(o, pomodoroList.get(index));
                         index = 0;
                     }
                 }
+                index++;
             }
+
+            Collections.reverse(values);
             toReturn = new Pair<>(values, pomodoroHashMap);
         } else {
             toReturn = new Pair<>(new ArrayList<>(), new HashMap<>());
@@ -202,42 +212,45 @@ public class StatusticUtils {
     }
 
     public void getDataForYear(List<City> cities) {
-        List<City> cityList = cities.subList(0, 28);
+        if (cities != null) {
+            ArrayList<ChartBar> values = new ArrayList<>();
+            HashMap<Integer, List<Building>> pomodoroHashMap = new HashMap<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(System.currentTimeMillis()));
+            List<List<Building>> pomodoroList = new ArrayList<>();
 
-        ArrayList<ChartBar> values = new ArrayList<>();
-        HashMap<Integer, List<Building>> citiesHashmap = new HashMap<>();
+            int index = 0;
 
-        List<List<Building>> week = new ArrayList<>();
+            for (int o = yearDivider; o <= cities.size(); o += yearDivider) {
+                values.add(new ChartBar(0, 0));
+                pomodoroList.add(new ArrayList<>());
+            }
 
-        Calendar cityCalendar = Calendar.getInstance();
+            index = 0;
+            Pomodoro pomodoro;
 
-        for (int o = 1; o <= 30; o++) {
-            values.add(new ChartBar(0,0));
-            week.add(new ArrayList<>());
-        }
+            int lastIndex = 0;
+            for (int o = yearDivider; o <= cities.size(); o += yearDivider) {
+                List<City> twomonths = cities.subList(lastIndex, lastIndex + yearDivider);
 
-        for (int i = 30; i >= 0; i--) {
-            calendar.setTime(new Date(System.currentTimeMillis()));
-            calendar.add(Calendar.DAY_OF_MONTH, -i);
-            for (City city : cityList) {
-                cityCalendar.setTime(city.getDate());
-                if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
+                lastIndex = 0;
+                for (City city : twomonths) {
                     for (Building building : city.getBuildings()) {
-                        values.get(i).setXValue(i);
-                        values.get(i).setYValue((values.get(i).getYValue() + new Random().nextInt(1000)));
-                    }
-                    for (Building building : city.getBuildings()) {
-                        week.get(i).add(building);
-                        citiesHashmap.put(i, week.get(i));
+                        pomodoro = building.getPomodoro();
+                        values.get(index).setXValue(yearDivider);
+                        values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
+                        pomodoroList.get(index).add(building);
+                        pomodoroHashMap.put(o, pomodoroList.get(index));
+                        index = 0;
                     }
                 }
+                index++;
             }
-        }
 
-        toReturn = new Pair<>(values, citiesHashmap);
+            Collections.reverse(values);
+            toReturn = new Pair<>(values, pomodoroHashMap);
+        } else {
+            toReturn = new Pair<>(new ArrayList<>(), new HashMap<>());
+        }
 
         statisticData.put(BarModeState.YEAR, toReturn);
     }

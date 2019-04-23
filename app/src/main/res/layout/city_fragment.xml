@@ -3,13 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:overScrollMode="never"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
+
     android:scrollbars="none">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
+        android:paddingBottom="10dp"
         android:layout_height="match_parent">
 
         <include
@@ -29,6 +32,7 @@
             android:id="@+id/city_fragment_rv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:overScrollMode="never"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/city_fragment_land"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,9 +75,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="22dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/statisctics_bg"
-            app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2">
@@ -193,14 +195,6 @@
 
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/bottom_navigation_height"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -142,7 +142,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     public void onMonthSelected() {
         this.barModeState = BarModeState.MONTH;
 
-        curLabels = customChartUtils.getWeekly();
+        curLabels = customChartUtils.getMonthly();
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
@@ -172,6 +172,11 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Override
     public void onYearSelected() {
         this.barModeState = BarModeState.YEAR;
+
+        curLabels = customChartUtils.getMonthly();
+        List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
+
+        barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
     }
 
 //    private List<Integer> getValuesForChart(List<ChartBar> list) {

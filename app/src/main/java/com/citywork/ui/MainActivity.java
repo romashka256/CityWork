@@ -13,6 +13,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
+import android.support.transition.TransitionSet;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -118,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void select(int id) {
         final ChangeBounds transition = new ChangeBounds();
-        transition.setDuration(300L); // Sets a duration of 600 milliseconds
+
+        transition.setDuration(180L); // Sets a duration of 600 milliseconds
         TransitionManager.beginDelayedTransition(bottomBar, transition);
         ConstraintSet cs = new ConstraintSet();
         cs.clone(homeAction);
@@ -126,29 +128,32 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.home_action) {
             DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, R.color.black));
             DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
-            homeAction.setPadding(homeAction.getPaddingLeft() + 40, homeAction.getPaddingTop(), homeAction.getPaddingRight() + 40, homeAction.getPaddingBottom());
+            //       homeAction.setPadding(homeAction.getPaddingLeft() + 40, homeAction.getPaddingTop(), homeAction.getPaddingRight() + 40, homeAction.getPaddingBottom());
             cs.setVisibility(homeIconText.getId(), ConstraintSet.VISIBLE);
         } else {
-            homeAction.setPadding(homeAction.getPaddingLeft() - 40, homeAction.getPaddingTop(), homeAction.getPaddingLeft() - 40, homeAction.getPaddingBottom());
+            //     homeAction.setPadding(homeAction.getPaddingLeft() - 40, homeAction.getPaddingTop(), homeAction.getPaddingLeft() - 40, homeAction.getPaddingBottom());
             DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
-            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
             cs.setVisibility(homeIconText.getId(), ConstraintSet.GONE);
+            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
         }
         cs.applyTo(homeAction);
 
         cs.clone(likesAction);
         if (id == R.id.likes_action) {
-            likesAction.setPadding(likesAction.getPaddingLeft() + 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() + 40, likesAction.getPaddingBottom());
+            //   likesAction.setPadding(likesAction.getPaddingLeft() + 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() + 40, likesAction.getPaddingBottom());
+            cs.setVisibility(likesIconText.getId(), ConstraintSet.VISIBLE);
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
             DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, R.color.black));
-            cs.setVisibility(likesIconText.getId(), ConstraintSet.VISIBLE);
+
         } else {
-            likesAction.setPadding(likesAction.getPaddingLeft() - 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() - 40, likesAction.getPaddingBottom());
+            //     likesAction.setPadding(likesAction.getPaddingLeft() - 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() - 40, likesAction.getPaddingBottom());
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
-            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
             cs.setVisibility(likesIconText.getId(), ConstraintSet.GONE);
+            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
         }
+
         cs.applyTo(likesAction);
+
     }
 
     @Override

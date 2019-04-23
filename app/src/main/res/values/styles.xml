@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listViewStyle">@style/ListViewStyle</item>
+        <item name="android:scrollViewStyle">@style/ScrollViewStyle</item>
     </style>
 
     <style name="button" parent="Base.TextAppearance.AppCompat.Button">
@@ -36,5 +38,14 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimAmount">.70</item>
+    </style>
+
+
+    <style name="ListViewStyle" parent="Widget.AppCompat.ListView">
+        <item name="android:overScrollMode">never</item>
+    </style>
+
+    <style name="ScrollViewStyle" parent="android:Widget.ScrollView">
+        <item name="android:overScrollMode">never</item>
     </style>
 </resources>

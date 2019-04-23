@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.citywork.R;
@@ -24,8 +25,8 @@ public class NotificationUtils {
     private Context context;
 
     private RemoteViews mTimerCustomView;
-    private Notification mTimerNotification;
-    private Notification.Builder mTimerNotificationBuilder;
+    private NotificationCompat mTimerNotification;
+    private NotificationCompat.Builder mTimerNotificationBuilder;
 
     public NotificationUtils(Context context) {
         this.context = context;
@@ -65,8 +66,12 @@ public class NotificationUtils {
         notificationManager.notify(TIMER_NOTIFICATION_ID, buildTimerNotification(time));
     }
 
-    public void updateTimerNotification(String time) {
+    public void updateTimerNotification(String time, int percent, int imageId) {
         mTimerCustomView.setTextViewText(R.id.timer_notification_time, time);
+        mTimerCustomView.setTextViewText(R.id.timer_notification_percentv, percent + "%");
+        mTimerCustomView.setImageViewResource(R.id.imageView, imageId);
+        mTimerCustomView.setImageViewResource(R.id.imageView4, R.drawable.ic_not_timer_icon);
+        mTimerCustomView.setProgressBar(R.id.timer_notification_progressbar, 100, percent, false);
         notificationManager.notify(TIMER_NOTIFICATION_ID, mTimerNotificationBuilder.build());
     }
 
@@ -78,20 +83,25 @@ public class NotificationUtils {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(TIMER_NOTIFICATION_CHANNEL_ID, context.getResources().getString(R.string.timer_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
-            mTimerNotificationBuilder = new Notification.Builder(context, TIMER_NOTIFICATION_CHANNEL_ID);
+            mTimerNotificationBuilder = new NotificationCompat.Builder(context, TIMER_NOTIFICATION_CHANNEL_ID);
             mTimerNotificationBuilder.setChannelId(TIMER_NOTIFICATION_CHANNEL_ID)
                     .setOnlyAlertOnce(true);
             notificationChannel.setDescription("Timer channel description");
             notificationChannel.enableVibration(false);
             notificationManager.createNotificationChannel(notificationChannel);
         } else {
-            mTimerNotificationBuilder = new Notification.Builder(context);
+            mTimerNotificationBuilder = new NotificationCompat.Builder(context);
             mTimerNotificationBuilder.setVibrate(null);
         }
 
+        RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
+        //    RemoteViews notificationLayoutExpanded = new RemoteViews(context.getPackageName(), R.layout.notification_large);
+
+
         mTimerNotificationBuilder.setContentIntent(pendIntent)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContent(notificationLayout)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContent(createTimerNotifLayout(time));
 
         return mTimerNotificationBuilder.build();

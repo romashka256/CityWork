@@ -18,7 +18,7 @@ public class CityUtils {
 
         boolean found = false;
 
-        for (int i = 0; i < 365; i++) {
+        for (int i = 0; i < 364; i++) {
             found = false;
             for (City city : cityList) {
                 cityDate.setTime(city.getDate());
