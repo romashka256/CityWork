@@ -188,7 +188,7 @@ public class StatusticUtils {
             for (int o = monthDivider; o <= cityList.size(); o += monthDivider) {
                 List<City> sevenDays = cityList.subList(lastIndex, lastIndex + monthDivider);
 
-                lastIndex = 0;
+                lastIndex += monthDivider;
                 for (City city : sevenDays) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
@@ -225,14 +225,13 @@ public class StatusticUtils {
                 pomodoroList.add(new ArrayList<>());
             }
 
-            index = 0;
             Pomodoro pomodoro;
 
             int lastIndex = 0;
             for (int o = yearDivider; o <= cities.size(); o += yearDivider) {
                 List<City> twomonths = cities.subList(lastIndex, lastIndex + yearDivider);
 
-                lastIndex = 0;
+                lastIndex += yearDivider;
                 for (City city : twomonths) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
