@@ -26,16 +26,4 @@ public class VectorUtils {
 
         return bitmap;
     }
-
-    private void ex(){
-
-        HandlerThread handlerThread = new HandlerThread("name");
-        Looper looper = handlerThread.getLooper();
-        Handler handler = new Handler(looper);
-
-        handler.post(() -> {
-            
-        });
-
-    }
 }
