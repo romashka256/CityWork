@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.ui.customviews.LineChart;
@@ -153,6 +155,8 @@ public class CityFragment extends Fragment {
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
         });
+
+        mSettings.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_cityFragment_to_settingsFragment));
 
         barChart.setOnBarClickListener(barIndex -> {
             showTextBlock();

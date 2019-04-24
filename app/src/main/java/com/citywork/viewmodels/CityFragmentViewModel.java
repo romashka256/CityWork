@@ -122,7 +122,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     @Override
     public void onDaySelected() {
-        curLabels = customChartUtils.getDaily();
+        curLabels = statusticUtils.getDayLabels();
         this.barModeState = BarModeState.DAY;
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
 
@@ -132,7 +132,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     @Override
     public void onWeekSelected() {
         this.barModeState = BarModeState.WEEK;
-        curLabels = customChartUtils.getWeekly();
+        curLabels = statusticUtils.getLongTermLabels(barModeState);
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
@@ -142,7 +142,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     public void onMonthSelected() {
         this.barModeState = BarModeState.MONTH;
 
-        curLabels = customChartUtils.getMonthly();
+        curLabels =  statusticUtils.getLongTermLabels(barModeState);
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
@@ -173,7 +173,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     public void onYearSelected() {
         this.barModeState = BarModeState.YEAR;
 
-        curLabels = customChartUtils.getMonthly();
+        curLabels =  statusticUtils.getLongTermLabels(barModeState);
         List<ChartBar> list = statusticUtils.getStatisticData().get(barModeState).first;
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(list));

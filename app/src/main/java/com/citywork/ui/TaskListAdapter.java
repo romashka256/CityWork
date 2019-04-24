@@ -53,6 +53,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         if (i == pomodoros.size() - 1) {
             taskListVH.taskTextV.setVisibility(View.GONE);
         }
+
+        if (pomodoro.getTasks() != null && pomodoro.getTasks().isEmpty()) {
+            taskListVH.listView.setVisibility(View.GONE);
+            taskListVH.taskTextV.setVisibility(View.GONE);
+        }
+
         taskListVH.listView.setAdapter(new PomoTaskListAdapter(context, pomodoro.getTasks(), onTaskClickListener));
         setListViewHeightBasedOnChildren(taskListVH.listView);
 

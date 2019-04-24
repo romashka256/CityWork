@@ -9,6 +9,9 @@ import com.citywork.ui.customviews.LineChart;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.CityUtils;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -253,5 +256,58 @@ public class StatusticUtils {
 
         statisticData.put(BarModeState.YEAR, toReturn);
     }
+
+    public List<String> getDayLabels() {
+        List<String> labels = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+
+        int divider = 24 / 4;
+
+        for (int i = 0; i < 4; i++) {
+            labels.add(String.format("%02d:00", calendar.get(Calendar.HOUR_OF_DAY)));
+            calendar.add(Calendar.HOUR_OF_DAY, -divider);
+        }
+
+        Collections.reverse(labels);
+
+        return labels;
+    }
+
+    public List<String> getLongTermLabels(BarModeState barModeState) {
+        List<String> labels = new ArrayList<>();
+
+        int divider = 0;
+
+        switch (barModeState) {
+            case WEEK:
+                divider = 2;
+                break;
+            case MONTH:
+                divider = 28;
+                divider /= 4;
+                break;
+            case YEAR:
+                divider = 364;
+                divider /= 4;
+                break;
+        }
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(System.currentTimeMillis()));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM");
+
+        for (int i = 0; i < 4; i++) {
+            labels.add(simpleDateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_MONTH, -divider);
+        }
+
+        Collections.reverse(labels);
+
+        return labels;
+    }
+
 
 }

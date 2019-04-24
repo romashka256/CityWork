@@ -122,7 +122,7 @@ public class LineChart extends View {
         gridLine = new Path();
 
         labelPaint = new Paint();
-        labelPaint.setColor(getResources().getColor(R.color.barcolor));
+        labelPaint.setColor(getResources().getColor(R.color.transoarent35_black));
         labelPaint.setTextSize(labelTextSize);
 
         barPaint = new Paint();
@@ -147,7 +147,7 @@ public class LineChart extends View {
         this.labelCount = xLabels.size();
         this.labelFontHeight = (int) getFontHeight(labelPaint);
         this.labelFontWidth = (int) getFontWidth(labelPaint, labels.get(0));
-        this.spaceBetweenLabel = ((width - (barsLeftMargin * 2)) / labelCount) - (labelFontWidth / 12);
+        this.spaceBetweenLabel = ((width - (barsLeftMargin * 2)) / (labelCount - 1) - (labelFontWidth * 4));
 
         Pair<Integer, Integer> sizes = customChartUtils.calculateBarAndSpace(width - (barsLeftMargin + barsLeftMargin), values.size());
 
