@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
@@ -22,5 +25,17 @@ public class VectorUtils {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    private void ex(){
+
+        HandlerThread handlerThread = new HandlerThread("name");
+        Looper looper = handlerThread.getLooper();
+        Handler handler = new Handler(looper);
+
+        handler.post(() -> {
+            
+        });
+
     }
 }

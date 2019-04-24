@@ -327,11 +327,10 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             pomodoroManger.setPeopleCount(peopleCount);
         }
         String iconName = buildingNames.get(Calculator.calculateBuidling(time));
-        if (pomodoroManger.getBuilding().getIconName() != iconName) {
+        if (pomodoroManger.getBuilding().getIconName() == null || !pomodoroManger.getBuilding().getIconName().equals(iconName)) {
             pomodoroManger.getBuilding().setIconName(iconName);
             mBuidingChanged.postValue(iconName);
         }
-
 
         timerValue = time;
     }

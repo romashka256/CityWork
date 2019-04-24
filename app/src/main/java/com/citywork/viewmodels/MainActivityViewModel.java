@@ -66,34 +66,28 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onCreate() {
         dataBaseHelper.loadCities(cityList -> {
-            if (cityList != null) {
-                if (!cityList.isEmpty()) {
-                    statusticUtils.prepareData(cityUtils.getCityList(cityList));
-                    City city = cityList.get(cityList.size() - 1);
-                    if (city != null) {
-                        Building building = city.getBuildings().get(city.getBuildings().size() - 1);
+            if (cityList != null && !cityList.isEmpty()) {
+                statusticUtils.prepareData(cityUtils.getCityList(cityList));
+                City city = cityList.get(cityList.size() - 1);
+                if (city != null) {
+                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
 
-                        pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
-                        pomodoroManger.setCity(city);
-                        if (building == null ||
-                                (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-                                        building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-                                        building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-                            pomodoroManger.createEmptyInstance();
-                        } else {
-                            pomodoroManger.setBuilding(building);
+                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
+                    pomodoroManger.setCity(city);
+                    if (building == null ||
+                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
+                        pomodoroManger.createEmptyInstance();
+                    } else {
+                        pomodoroManger.setBuilding(building);
 
-                            if (Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                                Timber.i("building.getPomodoro().getStoptime()) <= 0");
-                                return;
-                            }
-                            buildingMutableLiveData.postValue(building);
-                        }
+                        buildingMutableLiveData.postValue(building);
                     }
-                } else {
-                    statusticUtils.prepareData(cityUtils.getCityList(cityList));
-                    pomodoroManger.createEmptyInstance();
                 }
+            } else {
+                statusticUtils.prepareData(cityUtils.getCityList(cityList));
+                pomodoroManger.createEmptyInstance();
             }
 
             timerManager = App.getsAppComponent().getTimerManager();
@@ -108,14 +102,14 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onStop() {
-        if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING && pomodoroManger.getPomodoro() != null && pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-            //  dataBaseHelper.getLastPomodoro(pomodoro -> {
+        if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
+                pomodoroManger.getPomodoro() != null &&
+                pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
             } else {
                 context.startService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
             }
-            //  });
         }
     }
 

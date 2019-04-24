@@ -178,13 +178,4 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
         barModeStateChangedEvent.postValue(customChartUtils.createBars(list));
     }
-
-//    private List<Integer> getValuesForChart(List<ChartBar> list) {
-//        List<Integer> integers = new ArrayList<>();
-//        integers.clear();
-//        for (ChartBar chartBar : list) {
-//            integers.add(chartBar.getYValue());
-//        }
-//        return integers;
-//    }
 }
