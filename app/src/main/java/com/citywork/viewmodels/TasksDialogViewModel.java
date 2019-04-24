@@ -39,15 +39,21 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
                 , pomodoros -> {
                     this.pomodoros = pomodoros;
 
+                    boolean added = false;
                     List<Task> tasks = new ArrayList<>();
                     for (int i = 0; i < pomodoros.size(); i++) {
                         Pomodoro pom = pomodoros.get(i);
                         if (pom.getId().equals(pomodoroManger.getPomodoro().getId())) {
                             pomodoros.remove(i);
                             pomodoros.add(i, pomodoroManger.getPomodoro());
+                            added = true;
                         }
-
                         tasks.addAll(pom.getTasks());
+                    }
+
+                    if(!added){
+
+                        pomodoros.add(pomodoroManger.getPomodoro());
                     }
 
                     newPomodorosEvent.postValue(pomodoros);
@@ -94,7 +100,6 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
             Task task = new Task(currentTask);
             pomodoroManger.getPomodoro().getTasks().add(task);
             dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
-//            pomodoros.get(pomodoros.size() - 1).getTasks().add(task);
             newPomodorosEvent.postValue(pomodoros);
         }
     }
