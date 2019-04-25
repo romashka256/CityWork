@@ -102,9 +102,13 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onStop() {
+<<<<<<< HEAD
         if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
                 pomodoroManger.getPomodoro() != null &&
                 pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+=======
+        if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING && pomodoroManger.getPomodoro() != null && pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+>>>>>>> b378103342294e93fd9a7bc56f90dd40c05c0690
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
             } else {
