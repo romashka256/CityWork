@@ -13,6 +13,9 @@ public class TimerImpl implements Timer {
         stopped = false;
     }
 
+    /**
+     *  @param time in seconds
+     **/
     @Override
     public Flowable<Long> startTimer(long time) {
         stopped = false;

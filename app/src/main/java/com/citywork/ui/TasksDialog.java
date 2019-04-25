@@ -26,6 +26,8 @@ import com.citywork.R;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -91,6 +93,7 @@ public class TasksDialog extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
+
             taskListAdapter = new TaskListAdapter(context, pomodoros, task -> {
                 iTasksDialogViewModel.onTaskClicked(task);
 

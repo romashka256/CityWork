@@ -94,7 +94,7 @@ public class BuldingProgressView extends View {
     }
 
     private void init() {
-        bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.icon_building4);
+        bitmapOrg = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.icon_building4_white);
 
         Bitmap bitmapOrgasd = VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), R.drawable.icon_building0_white);
 

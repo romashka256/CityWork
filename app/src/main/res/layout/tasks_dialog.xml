@@ -19,12 +19,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
+    <com.citywork.ui.FixedMaxHeightRecylerView
         android:id="@+id/tasks_dialog_rv"
         android:layout_width="match_parent"
-        android:overScrollMode="never"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/divider16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

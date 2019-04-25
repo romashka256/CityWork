@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
+import androidx.navigation.NavigatorProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.citywork.R;
 import com.citywork.service.TimerService;
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.likes_icon)
     ImageView likesIcon;
 
+    private int currentFragment;
+
     private IMainActivityViewModel iMainActivityViewModel;
 
     @Override
@@ -92,27 +96,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         homeAction.setOnClickListener(v -> {
-            select(homeAction.getId());
-            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+            if (currentFragment != TimerFragment.fragmnetIndex) {
+                currentFragment = TimerFragment.fragmnetIndex;
+                select(homeAction.getId());
+                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+            }
         });
 
         likesAction.setOnClickListener(v -> {
-            select(likesAction.getId());
-            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+            if (currentFragment != CityFragment.fragmnetIndex) {
+                currentFragment = CityFragment.fragmnetIndex;
+                select(likesAction.getId());
+                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+            }
         });
-
-
-//        timerTabBtn.setDataToImet("Таймер", R.drawable.ic_timer_icon_focused);
-//        cityTabBtn.setDataToImet("Город", R.drawable.ic_city_icon_focused);
-//
-//        bottomNaigationLayout.addItem(timerTabBtn, v -> {
-//            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
-//        });
-//        bottomNaigationLayout.addItem(cityTabBtn, (v) -> {
-//            Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
-//        });
-//
-//        bottomNaigationLayout.activateTab(timerTabBtn);
 
         iMainActivityViewModel.onCreate();
     }
@@ -128,10 +125,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.home_action) {
             DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, R.color.black));
             DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
-            //       homeAction.setPadding(homeAction.getPaddingLeft() + 40, homeAction.getPaddingTop(), homeAction.getPaddingRight() + 40, homeAction.getPaddingBottom());
             cs.setVisibility(homeIconText.getId(), ConstraintSet.VISIBLE);
         } else {
-            //     homeAction.setPadding(homeAction.getPaddingLeft() - 40, homeAction.getPaddingTop(), homeAction.getPaddingLeft() - 40, homeAction.getPaddingBottom());
             DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
             cs.setVisibility(homeIconText.getId(), ConstraintSet.GONE);
             DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
@@ -140,13 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
         cs.clone(likesAction);
         if (id == R.id.likes_action) {
-            //   likesAction.setPadding(likesAction.getPaddingLeft() + 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() + 40, likesAction.getPaddingBottom());
             cs.setVisibility(likesIconText.getId(), ConstraintSet.VISIBLE);
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
             DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, R.color.black));
 
         } else {
-            //     likesAction.setPadding(likesAction.getPaddingLeft() - 40, likesAction.getPaddingTop(), likesAction.getPaddingLeft() - 40, likesAction.getPaddingBottom());
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
             cs.setVisibility(likesIconText.getId(), ConstraintSet.GONE);
             DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
@@ -204,9 +197,6 @@ public class MainActivity extends AppCompatActivity {
                 timerService.stopForeground(true);
                 timerService.stopSelf();
                 timerService.cancelTimer();
-
-//                NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host);
-//                ((TimerFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).iTimerFragmentViewModel.onServiceConnected(timerService.getPomodoro());
             }
         }
 
@@ -216,15 +206,6 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("onServiceDisconnected");
         }
     };
-
-//    public void showBottomNav() {
-//        bottomNaigationLayout.setVisibility(View.VISIBLE);
-//    }
-//
-//    public void hideBottomNav() {
-//        bottomNaigationLayout.setVisibility(View.GONE);
-//    }
-
 
     public void showBottomNav() {
         bottomBar.setVisibility(View.VISIBLE);

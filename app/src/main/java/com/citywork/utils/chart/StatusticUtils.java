@@ -195,11 +195,11 @@ public class StatusticUtils {
                 for (City city : sevenDays) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
-                        values.get(index).setXValue(monthDivider);
+                        values.get(index).setXValue(o);
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(o, pomodoroList.get(index));
-                        index = 0;
+
                     }
                 }
                 index++;
@@ -238,11 +238,10 @@ public class StatusticUtils {
                 for (City city : twomonths) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
-                        values.get(index).setXValue(yearDivider);
+                        values.get(index).setXValue(o);
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(o, pomodoroList.get(index));
-                        index = 0;
                     }
                 }
                 index++;

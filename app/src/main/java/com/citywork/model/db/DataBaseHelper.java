@@ -154,8 +154,11 @@ public class DataBaseHelper implements DBHelper {
     public void loadCities(OnCitiesLoadedListener onCitiesLoadedListener) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
-            onCitiesLoadedListener.loadCiities(realm1.copyFromRealm(realm1.where(City.class)
-                    .findAll()));
+            List<City> list = realm1.copyFromRealm(realm1.where(City.class).findAll());
+            if(list == null){
+                list = new ArrayList<>();
+            }
+            onCitiesLoadedListener.loadCiities(list);
         });
         realm.close();
     }

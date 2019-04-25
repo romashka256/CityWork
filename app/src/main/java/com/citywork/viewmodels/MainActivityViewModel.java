@@ -66,8 +66,8 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onCreate() {
         dataBaseHelper.loadCities(cityList -> {
-            if (cityList != null && !cityList.isEmpty()) {
-                statusticUtils.prepareData(cityUtils.getCityList(cityList));
+            statusticUtils.prepareData(cityUtils.getCityList(cityList));
+            if (!cityList.isEmpty()) {
                 City city = cityList.get(cityList.size() - 1);
                 if (city != null) {
                     Building building = city.getBuildings().get(city.getBuildings().size() - 1);
@@ -86,7 +86,6 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
                     }
                 }
             } else {
-                statusticUtils.prepareData(cityUtils.getCityList(cityList));
                 pomodoroManger.createEmptyInstance();
             }
 
@@ -102,17 +101,15 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onStop() {
-<<<<<<< HEAD
-        if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
-                pomodoroManger.getPomodoro() != null &&
-                pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-=======
-        if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING && pomodoroManger.getPomodoro() != null && pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
->>>>>>> b378103342294e93fd9a7bc56f90dd40c05c0690
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
-            } else {
-                context.startService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+        if (sharedPrefensecUtils.getInNotifBar()) {
+            if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
+                    pomodoroManger.getPomodoro() != null &&
+                    pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+                } else {
+                    context.startService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+                }
             }
         }
     }

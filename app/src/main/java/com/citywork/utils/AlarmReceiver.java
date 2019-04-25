@@ -34,7 +34,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (message.equals(INTENT_MESSAGE)) {
             Timber.i("showAlarmNotification");
-            notificationUtils.showAlarmNotification();
+            if (sharedPrefensecUtils.getInNotifBar())
+                notificationUtils.showAlarmNotification();
             dataBaseHelper.getLastBuilding(building -> {
                 this.building = building;
             });

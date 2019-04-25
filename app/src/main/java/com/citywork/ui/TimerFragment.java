@@ -33,6 +33,7 @@ import androidx.navigation.Navigation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.Getter;
 import timber.log.Timber;
 
 public class TimerFragment extends Fragment {
@@ -61,6 +62,9 @@ public class TimerFragment extends Fragment {
     ImageView mShareIV;
     @BindView(R.id.toolbar_city_people_count)
     TextView mCityPeopleCountTV;
+
+    @Getter
+    public final static int fragmnetIndex = 0;
 
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;

@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:appcompat="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <com.citywork.ui.customviews.CityView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,5 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layerType="software"
-        android:background="@drawable/ic_dash_line"/>
+        appcompat:srcCompat="@drawable/ic_dash_line"/>
+
 </LinearLayout>

@@ -84,15 +84,12 @@ public class TimerService extends Service {
         if (intent != null) {
             building = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_BUILDING));
 
-            //      int percent = Calculator.calculatePercentOfTime(Calculator.getRemainingTime(building.getPomodoro().getStoptime()), Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime()))
-
             startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
                     Calculator.getRemainingTime(building.getPomodoro().getStoptime()))));
 
             int buildingImageId = getResources().getIdentifier(building.getCityIconName(), "drawable", getPackageName());
 
             disposable = mTimerManager.getTimer()
-                    // .map(Calculator::getMinutesAndSecondsFromSeconds)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(time -> {

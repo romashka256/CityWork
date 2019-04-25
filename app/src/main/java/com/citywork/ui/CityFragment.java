@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 public class CityFragment extends Fragment {
 
@@ -52,6 +53,9 @@ public class CityFragment extends Fragment {
     ConstraintLayout pplStat;
     @BindView(R.id.city_fragment_statistics_block_textstat_lay)
     LinearLayout textStatBlock;
+
+    @Getter
+    public final static int fragmnetIndex = 1;
 
     TextView pomoCountTV;
     TextView minCountTV;
@@ -88,7 +92,6 @@ public class CityFragment extends Fragment {
         View view = inflater.inflate(R.layout.city_fragment, container, false);
 
         ButterKnife.bind(this, view);
-
 
 
         return view;

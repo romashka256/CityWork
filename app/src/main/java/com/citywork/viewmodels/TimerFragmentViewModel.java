@@ -148,8 +148,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void on5MinRestClicked() {
-        startTimer(createTimer(sharedPrefensecUtils.getLongBreak()));
-        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (300 * 1000));
+        startTimer(createTimer(sharedPrefensecUtils.getShortBreak()));
+        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (sharedPrefensecUtils.getShortBreak() * 1000));
         pomodoroManger.getPomodoro().setReststarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
@@ -157,8 +157,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void on10MinRestClicked() {
-        startTimer(createTimer(sharedPrefensecUtils.getShortBreak()));
-        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (600 * 1000));
+        startTimer(createTimer(sharedPrefensecUtils.getLongBreak()));
+        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (sharedPrefensecUtils.getLongBreak() * 1000));
         pomodoroManger.getPomodoro().setReststarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
@@ -205,6 +205,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                     if (pomodoroManger.setComleted() == TimerState.COMPLETED) {
                         saveBuidlingToDB();
                         pomodoroManger.createEmptyInstance();
+                        saveBuidlingToDB();
                     }
 
                     mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());

@@ -9,10 +9,13 @@ import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
 import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.TaskValidator;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {
@@ -24,18 +27,26 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     private TaskValidator taskValidator;
     private String currentTask;
     private PomodoroManger pomodoroManger;
+    private SharedPrefensecUtils sharedPrefensecUtils;
 
     @Override
     public void onCreate() {
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
 
         //TODO INJECT
         taskValidator = new TaskValidator();
 
         currentTask = "";
 
-        dataBaseHelper.getTasks(System.currentTimeMillis() - Constants.DEFAULT_TIME_AFTER_NOT_SHOW
+        long timeTerm = 0;
+
+        if (!sharedPrefensecUtils.get24hDelete()) {
+            timeTerm = System.currentTimeMillis() - Constants.DEFAULT_TIME_AFTER_NOT_SHOW;
+        }
+
+        dataBaseHelper.getTasks(timeTerm
                 , pomodoros -> {
                     this.pomodoros = pomodoros;
 
@@ -51,8 +62,7 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
                         tasks.addAll(pom.getTasks());
                     }
 
-                    if(!added){
-
+                    if (!added) {
                         pomodoros.add(pomodoroManger.getPomodoro());
                     }
 
