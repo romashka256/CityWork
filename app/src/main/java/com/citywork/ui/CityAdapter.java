@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.citywork.R;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
+import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.customviews.CityView;
 import com.citywork.utils.timer.TimerState;
 
@@ -46,9 +47,17 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
         buildingNames.clear();
         cityVH.cityView.clear();
 
+        Pomodoro pomodoro;
+
         for (Building building : city.getBuildings()) {
-            if (building.getPomodoro().getTimerState() != TimerState.CANCELED && building.getPomodoro().getTimerState() != TimerState.ONGOING && building.getPomodoro().getTimerState() != TimerState.NOT_ONGOING)
+            pomodoro = building.getPomodoro();
+            if (pomodoro.getTimerState() != TimerState.CANCELED && pomodoro.getTimerState() != TimerState.ONGOING && pomodoro.getTimerState() != TimerState.NOT_ONGOING) {
                 buildingNames.add(building.getCityIconName());
+                if (pomodoro.getTimerState() == TimerState.WORK_COMPLETED) {
+                    buildingNames.add("ic_icon_tree");
+                }
+            }
+
         }
 
         cityVH.cityView.setBuildings(buildingNames);

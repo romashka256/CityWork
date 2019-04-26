@@ -16,13 +16,6 @@ public class CustomChartUtils {
     private final float DEFAULT_SPACE_WEIGHT = 1;
     private final float DEFAULT_BAR_WEIGHT = 1;
 
-    @Getter
-    private List<String> daily = new ArrayList<>(Arrays.asList("04:00", "08:00", "12:00", "16:00", "20:00", "24:00"));
-    @Getter
-    private List<String> weekly = new ArrayList<>(Arrays.asList("пн", "вт", "ср", "чт", "пт", "сб", "вс"));
-    @Getter
-    private List<String> monthly = new ArrayList<>(Arrays.asList("1 неделя", "2 неделя", "3 неделя", "4 неделя"));
-
     public List<ChartBar> createBars(List<ChartBar> values) {
         if (values != null && !values.isEmpty()) {
             List<Integer> integers = new ArrayList<>();

@@ -27,7 +27,7 @@ public class CityView extends ViewGroup {
     private int minCityHeight;
 
     private List<Bitmap> buildingBitmaps;
-    private List<String> buildingIconNames;
+    private List<String> viewIconNames;
 
     private int cityWidth;
     private int cityHeight;
@@ -66,16 +66,16 @@ public class CityView extends ViewGroup {
         invalidate();
     }
 
-    public void setBuildings(List<String> buildings) {
-        this.buildingIconNames = buildings;
+    public void setBuildings(List<String> views) {
+        this.viewIconNames = views;
         buildingBitmaps.clear();
         this.removeAllViews();
 
-        for (String buildingName : buildingIconNames) {
+        for (String viewName : viewIconNames) {
 
             try {
                 Bitmap bitmap;
-                int id = context.getResources().getIdentifier(buildingName, "drawable", context.getPackageName());
+                int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
 
                 Drawable drawable = getResources().getDrawable(id);
                 bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

@@ -3,15 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/linearlayout12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="50dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearlayout13"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +46,7 @@
         android:src="@drawable/img1"
         app:layout_constraintBottom_toTopOf="@+id/linearlayout12"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,7 +54,7 @@
         android:id="@+id/linearlayout13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearlayout12">
@@ -64,10 +62,10 @@
         <TextView
             android:id="@+id/tutorial_fragment_skip_btn"
             android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:text="@string/skip"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="24dp"
+            android:text="@string/skip"
             android:textAllCaps="false"
             android:textColor="@color/totalwhite"
             app:layout_constraintBottom_toBottomOf="@+id/tutorial_fragment_next_btn"
