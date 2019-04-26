@@ -97,4 +97,7 @@ dependencies {
     //ProgressView
     implementation 'com.moos:Material-ProgressView:1.0.6'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    //ViewPager bottom indicator
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 }

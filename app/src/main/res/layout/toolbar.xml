@@ -7,13 +7,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/toolbar_city_people_count_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
         android:text="У вас в городе"
         android:textSize="12sp"
-        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_city_people_count"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar_city_people_count" />
@@ -26,9 +25,8 @@
         android:text="1 350 человек"
         android:textSize="15sp"
         android:textColor="@color/white"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_share_iv"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/toolbar_city_people_count_text"
         app:layout_constraintTop_toTopOf="@+id/toolbar_share_iv" />
 
     <ImageView

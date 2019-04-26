@@ -19,6 +19,12 @@ public class SharedPrefensecUtils {
     private Context context;
     private SharedPreferences sharedPreferences;
 
+    public boolean isFirstRun() {
+        boolean first = sharedPreferences.getBoolean("firstrun", true);
+        sharedPreferences.edit().putBoolean("firstrun", false).apply();
+        return first;
+    }
+
     public SharedPrefensecUtils(Context context) {
         this.context = context;
 

@@ -41,6 +41,8 @@ public class CityFragment extends Fragment {
     ImageView mSettings;
     @BindView(R.id.toolbar_city_people_count)
     TextView mPeopleCountTV;
+    @BindView(R.id.toolbar_city_people_count_text)
+    TextView mPeopleCountTextTV;
     @BindView(R.id.city_fragment_statistics_block_chart)
     LineChart barChart;
     @BindView(R.id.city_fragment_statistics_block_tablayout)
@@ -73,10 +75,12 @@ public class CityFragment extends Fragment {
     private CityAdapter adapter;
 
     private Context context;
+    private FontUtils fontUtils;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fontUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
@@ -137,6 +141,8 @@ public class CityFragment extends Fragment {
         tabLayout.addTab(tabw);
         tabLayout.addTab(tabm);
         tabLayout.addTab(taby);
+
+        setFonts();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true));
 
@@ -219,5 +225,10 @@ public class CityFragment extends Fragment {
 
     private void showTextBlock() {
         textStatBlock.setVisibility(View.VISIBLE);
+    }
+
+    private void setFonts() {
+        mPeopleCountTV.setTypeface(fontUtils.getBold());
+        mPeopleCountTextTV.setTypeface(fontUtils.getLight());
     }
 }

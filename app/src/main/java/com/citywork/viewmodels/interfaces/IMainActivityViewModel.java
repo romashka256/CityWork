@@ -14,5 +14,5 @@ public interface IMainActivityViewModel {
     long getTimeToGo();
     void closeNotifications();
     void onDestroy();
-
+    boolean isFirstRun();
 }

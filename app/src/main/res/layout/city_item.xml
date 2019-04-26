@@ -13,10 +13,9 @@
 
     </com.citywork.ui.customviews.CityView>
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <com.citywork.ui.customviews.DottedLine
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:layerType="software"
-        appcompat:srcCompat="@drawable/ic_dash_line"/>
+        android:layerType="software" />
 
 </LinearLayout>

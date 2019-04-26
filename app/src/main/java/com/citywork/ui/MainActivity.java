@@ -13,7 +13,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
-import android.support.transition.TransitionSet;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +22,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
-import androidx.navigation.NavigatorProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
+import com.citywork.App;
 import com.citywork.R;
 import com.citywork.service.TimerService;
+import com.citywork.ui.tutorial.TutorialActivity;
 import com.citywork.viewmodels.MainActivityViewModel;
 import com.citywork.viewmodels.SharedViewModel;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
@@ -69,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     private IMainActivityViewModel iMainActivityViewModel;
 
+    private FontUtils fontUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
         intent = new Intent(getApplicationContext(), TimerService.class);
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+        fontUtils = App.getsAppComponent().getFontUtils();
+
+       // if (iMainActivityViewModel.isFirstRun()) {
+        if (true) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().setValue(building);
@@ -110,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
             }
         });
+
+        likesIconText.setTypeface(fontUtils.getRegular());
+        homeIconText.setTypeface(fontUtils.getRegular());
 
         iMainActivityViewModel.onCreate();
     }

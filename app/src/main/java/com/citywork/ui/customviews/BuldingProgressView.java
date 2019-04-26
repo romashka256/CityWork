@@ -10,6 +10,7 @@ import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -223,6 +224,10 @@ public class BuldingProgressView extends View {
         viewW = width;
 
         setMeasuredDimension(width, height);
+    }
+
+    public void setTextTypeface(Typeface textTypeface){
+        textPaint.setTypeface(textTypeface);
     }
 
     private Bitmap cropBitmap1(Bitmap bitmap) {

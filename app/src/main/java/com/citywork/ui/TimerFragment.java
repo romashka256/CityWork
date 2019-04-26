@@ -21,6 +21,10 @@ import android.widget.TextView;
 import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.R;
+import com.citywork.ui.MainActivity;
+import com.citywork.ui.StopDialog;
+import com.citywork.ui.SuccessDialogFragment;
+import com.citywork.ui.TasksDialog;
 import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.utils.Calculator;
@@ -62,6 +66,8 @@ public class TimerFragment extends Fragment {
     ImageView mShareIV;
     @BindView(R.id.toolbar_city_people_count)
     TextView mCityPeopleCountTV;
+    @BindView(R.id.toolbar_city_people_count_text)
+    TextView mCityPeopleCountTextTV;
 
     @Getter
     public final static int fragmnetIndex = 0;
@@ -69,6 +75,7 @@ public class TimerFragment extends Fragment {
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
     private SuccessDialogFragment successDialogFragment;
+    private FontUtils fontUtils;
 
     @Override
     public void onAttach(Context context) {
@@ -80,6 +87,9 @@ public class TimerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.i("onCreate");
+
+        fontUtils = App.getsAppComponent().getFontUtils();
+
         iTimerFragmentViewModel = ViewModelProviders.of(this).get(TimerFragmentViewModel.class);
         iTimerFragmentViewModel.getChangeTimeEventInPercent().observe(this, percent -> mBuidlingView.setProgress(percent));
         iTimerFragmentViewModel.getChangeTimeEvent().observe(this, time -> circleTimer.setProgress(time));
@@ -155,41 +165,6 @@ public class TimerFragment extends Fragment {
         }
     }
 
-    private void timerongoingView() {
-        mRestTV.setVisibility(View.GONE);
-        stopButton.setVisibility(View.VISIBLE);
-        startButton.setVisibility(View.GONE);
-        m5minRest.setVisibility(View.GONE);
-        mTodoTV.setVisibility(View.VISIBLE);
-        m10minRest.setVisibility(View.GONE);
-        mBuidlingView.setVisibility(View.VISIBLE);
-    }
-
-    private void restView() {
-        Timber.i("Show Rest View");
-        mRestTV.setVisibility(View.GONE);
-        startButton.setVisibility(View.GONE);
-        stopButton.setVisibility(View.GONE);
-        m5minRest.setVisibility(View.VISIBLE);
-        m10minRest.setVisibility(View.VISIBLE);
-        mTodoTV.setVisibility(View.GONE);
-        mBuidlingView.setVisibility(View.VISIBLE);
-        circleTimer.setTime(0);
-        circleTimer.enable();
-    }
-
-    private void notongoingView() {
-        mRestTV.setVisibility(View.GONE);
-        m5minRest.setVisibility(View.GONE);
-        m10minRest.setVisibility(View.GONE);
-        stopButton.setVisibility(View.GONE);
-        startButton.setVisibility(View.VISIBLE);
-        mTodoTV.setVisibility(View.VISIBLE);
-        circleTimer.disable();
-        mBuidlingView.setVisibility(View.VISIBLE);
-        circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
-    }
-
 
     @Nullable
     @Override
@@ -205,6 +180,8 @@ public class TimerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Timber.i("onViewCreated");
+
+        setFonts();
 
         startButton.setOnClickListener(v -> iTimerFragmentViewModel.onStartClicked());
 
@@ -234,6 +211,7 @@ public class TimerFragment extends Fragment {
 
             }
         });
+
 
         m5minRest.setText(iTimerFragmentViewModel.getShortBreakValue() + " " + getResources().getString(R.string.minute));
         m10minRest.setText(iTimerFragmentViewModel.getLongBreakValue() + " " + getResources().getString(R.string.minute));
@@ -315,5 +293,52 @@ public class TimerFragment extends Fragment {
         super.onDestroy();
         Timber.i("onDestroy");
 
+    }
+
+    private void timerongoingView() {
+        mRestTV.setVisibility(View.GONE);
+        stopButton.setVisibility(View.VISIBLE);
+        startButton.setVisibility(View.GONE);
+        m5minRest.setVisibility(View.GONE);
+        mTodoTV.setVisibility(View.VISIBLE);
+        m10minRest.setVisibility(View.GONE);
+        mBuidlingView.setVisibility(View.VISIBLE);
+    }
+
+    private void restView() {
+        Timber.i("Show Rest View");
+        mRestTV.setVisibility(View.GONE);
+        startButton.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+        m5minRest.setVisibility(View.VISIBLE);
+        m10minRest.setVisibility(View.VISIBLE);
+        mTodoTV.setVisibility(View.GONE);
+        mBuidlingView.setVisibility(View.VISIBLE);
+        circleTimer.setTime(0);
+        circleTimer.enable();
+    }
+
+    private void notongoingView() {
+        mRestTV.setVisibility(View.GONE);
+        m5minRest.setVisibility(View.GONE);
+        m10minRest.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+        startButton.setVisibility(View.VISIBLE);
+        mTodoTV.setVisibility(View.VISIBLE);
+        circleTimer.disable();
+        mBuidlingView.setVisibility(View.VISIBLE);
+        circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
+    }
+
+    private void setFonts() {
+        mTodoTV.setTypeface(fontUtils.getLight());
+        startButton.setTypeface(fontUtils.getRegular());
+        mCityPeopleCountTV.setTypeface(fontUtils.getBold());
+        mCityPeopleCountTextTV.setTypeface(fontUtils.getLight());
+        circleTimer.setTimerTypeface(fontUtils.getRegular());
+        circleTimer.setSubtitleTypeface(fontUtils.getLight());
+        circleTimer.setNumbersTypeface(fontUtils.getRegular());
+        mBuidlingView.setTextTypeface(fontUtils.getRegular());
+        stopButton.setTypeface(fontUtils.getRegular());
     }
 }

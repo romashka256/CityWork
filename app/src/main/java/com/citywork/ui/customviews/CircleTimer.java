@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -12,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.citywork.utils.Calculator;
+
+import java.util.Locale;
 
 public class CircleTimer extends View {
 
@@ -61,7 +64,7 @@ public class CircleTimer extends View {
     private static final float DEFAULT_GAM_BETWEEN_LINE_AND_CIRCLE = 1;
     private static final float DEFAULT_TIMER_NUMBER_SIZE = 12;
     private static final float DEFAULT_TIMER_TEXT_SIZE = 12;
-    private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 15;
+    private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 12;
 
     //Default olors
     private final int DEFAULT_CIRCLE_COLOR = 0x1A000000;
@@ -119,7 +122,6 @@ public class CircleTimer extends View {
     }
 
     private void init() {
-
         mCircleColor = DEFAULT_CIRCLE_COLOR;
         mColorPorgress = DEFAULT_PROGRESS_COLOR;
         mTimerNumberColor = DEFAULT_TIMER_NUMBER_COLOR;
@@ -136,7 +138,7 @@ public class CircleTimer extends View {
         mLineWidth = dpToPx(DEFAULT_LINE_WIDTH);
         mLongerLineWidth = dpToPx(DEFAULT_LONGER_LINE_WIDTH);
         mCircleButtonRadius = dpToPx(DEFAULT_CIRCLE_BUTTON_RADIUS);
-        mGapBetweenTimerNumberAndText = dpToPx(DEFAULT_CIRCLE_WIDTH);
+        mGapBetweenTimerNumberAndText = dpToPx(DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT);
         mCircleLineWidth = dpToPx(DEFAULT_CIRCLE_WIDTH);
         mGapBetweenCircleAndLine = dpToPx(DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE);
         mTimerTextSize = dpToPx(DEFAULT_TIMER_TEXT_SIZE);
@@ -394,6 +396,23 @@ public class CircleTimer extends View {
         invalidate();
     }
 
+    public void setTimerTypeface(Typeface timerTypeface) {
+        mTimeNumberPaint.setTypeface(timerTypeface);
+        invalidate();
+    }
+
+    public void setSubtitleTypeface(Typeface typeface) {
+        mTimeTextPaint.setTypeface(typeface);
+        invalidate();
+    }
+
+    public void setNumbersTypeface(Typeface typeface) {
+        mTimeNumbersPaint.setTypeface(typeface);
+        invalidate();
+    }
+
+
+
     public void setMaxTime(int maxTime) {
         this.maxTime = maxTime;
     }
@@ -429,6 +448,4 @@ public class CircleTimer extends View {
     public float dpToPx(float dp) {
         return dp * getResources().getDisplayMetrics().density;
     }
-
-
 }

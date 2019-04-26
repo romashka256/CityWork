@@ -36,4 +36,21 @@
     <string name="pomo_verb">выполнено</string>
     <string name="minute_verb">продуктивности</string>
     <string name="people_verb">к населению</string>
+
+    <string name="skip">Пропустить</string>
+    <string name="next">Далее</string>
+
+
+    //TUTORIAL SCREEN
+    <string name="first_tutor_title">Pomodoro таймер</string>
+    <string name="second_tutor_title">Город продуктивности</string>
+    <string name="third_tutor_title">ToDo лист</string>
+
+    <string name="first_subtitle_title">Максимально сосредоточьтесь\nна работе или учебе</string>
+    <string name="second_subtitle_title">Создайте свой личный город и\nследите за тенденцией\nпродуктивности</string>
+    <string name="third_subtitle_title">Не отвлекаясь от работы\nдобавляй срочные задачи в\ntodo лист</string>
+
+    <string name="last_tutor_btn_text">Начать новую жизнь</string>
+    //////
+
 </resources>

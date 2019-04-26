@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/tutorial_navigation"
+    app:startDestination="@id/firstTutorialFragment">
+
+    <fragment
+        android:id="@+id/firstTutorialFragment"
+        android:name="com.citywork.ui.tutorial.FirstTutorialFragment"
+        android:label="FirstTutorialFragment" >
+        <action
+            android:id="@+id/action_firstTutorialFragment_to_secondTutorialFragment"
+            app:destination="@id/secondTutorialFragment"
+            app:popUpTo="@+id/firstTutorialFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondTutorialFragment"
+        android:name="com.citywork.ui.tutorial.SecondTutorialFragment"
+        android:label="SecondTutorialFragment" >
+        <action
+            android:id="@+id/action_secondTutorialFragment_to_thirdTutorialFragment"
+            app:destination="@id/thirdTutorialFragment"
+            app:popUpTo="@+id/secondTutorialFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/thirdTutorialFragment"
+        android:name="com.citywork.ui.tutorial.ThirdTutorialFragment"
+        android:label="ThirdTutorialFragment" />
+</navigation>

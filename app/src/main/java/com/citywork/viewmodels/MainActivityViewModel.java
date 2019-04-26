@@ -128,4 +128,9 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     public void onServiceConnected(Pomodoro pomodoro) {
         dataBaseHelper.savePomodoro(pomodoro);
     }
+
+    @Override
+    public boolean isFirstRun(){
+        return sharedPrefensecUtils.isFirstRun();
+    }
 }

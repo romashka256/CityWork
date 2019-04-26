@@ -5,6 +5,7 @@ import android.content.Context;
 import com.citywork.di.modules.AppModule;
 import com.citywork.di.modules.TimerManagerModule;
 import com.citywork.model.db.DataBaseHelper;
+import com.citywork.ui.FontUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
@@ -34,4 +35,6 @@ public interface AppComponent {
     StatusticUtils getStatisticsUtils();
 
     Timer getTimer();
+
+    FontUtils getFontUtils();
 }
