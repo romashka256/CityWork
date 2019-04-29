@@ -60,6 +60,10 @@ public class PomoTaskListAdapter extends BaseAdapter {
             checkBox.setChecked(!checkBox.isChecked());
         });
 
+        checkBox.setOnClickListener(v -> {
+            onclickAction(tasks.get(position));
+        });
+
         return view;
     }
 

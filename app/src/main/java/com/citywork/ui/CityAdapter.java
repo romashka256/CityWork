@@ -53,7 +53,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityVH> {
             pomodoro = building.getPomodoro();
             if (pomodoro.getTimerState() != TimerState.CANCELED && pomodoro.getTimerState() != TimerState.ONGOING && pomodoro.getTimerState() != TimerState.NOT_ONGOING) {
                 buildingNames.add(building.getCityIconName());
-                if (pomodoro.getTimerState() == TimerState.WORK_COMPLETED) {
+                if (pomodoro.getTimerState() == TimerState.COMPLETED) {
                     buildingNames.add("ic_icon_tree");
                 }
             }

@@ -7,9 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
-
-import androidx.navigation.Navigation;
-import androidx.navigation.NavigatorProvider;
+import android.widget.LinearLayout;
 
 import com.citywork.R;
 
@@ -36,8 +34,16 @@ public class TutorialActivity extends AppCompatActivity {
         tabLayout.setEnabled(false);
 
         tabLayout.addTab(tabLayout.newTab(), true);
+
         tabLayout.addTab(tabLayout.newTab());
         tabLayout.addTab(tabLayout.newTab());
+
+        tabLayout.clearOnTabSelectedListeners();
+
+        LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
+        for(int i = 0; i < tabStrip.getChildCount(); i++) {
+            tabStrip.getChildAt(i).setOnTouchListener((v, event) -> true);
+        }
     }
 
     public void setSelectedTab(int position) {

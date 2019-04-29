@@ -119,8 +119,6 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 mTimerStateChangedEvent.postValue(TimerState.ONGOING);
             }
         });
-
-        mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
     }
 
     @Override
@@ -279,6 +277,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
+            mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
         }
     }
 

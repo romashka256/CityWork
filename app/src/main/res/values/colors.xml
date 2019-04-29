@@ -23,4 +23,5 @@
     <color name="divider_color">#80C4C4C4</color>
     <color name="gray35_color">#59C4C4C4</color>
     <color name="barcolor">#DCDCDC</color>
+    <color name="nav_bg">#2C2C2C</color>
 </resources>

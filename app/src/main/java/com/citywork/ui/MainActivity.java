@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         fontUtils = App.getsAppComponent().getFontUtils();
 
-       // if (iMainActivityViewModel.isFirstRun()) {
-        if (true) {
+        if (iMainActivityViewModel.isFirstRun()) {
             Intent intent = new Intent(this, TutorialActivity.class);
             intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         cs.clone(homeAction);
 
         if (id == R.id.home_action) {
-            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, R.color.black));
+            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, R.color.nav_bg));
             DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
             cs.setVisibility(homeIconText.getId(), ConstraintSet.VISIBLE);
         } else {
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.likes_action) {
             cs.setVisibility(likesIconText.getId(), ConstraintSet.VISIBLE);
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
-            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, R.color.black));
+            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, R.color.nav_bg));
 
         } else {
             DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
