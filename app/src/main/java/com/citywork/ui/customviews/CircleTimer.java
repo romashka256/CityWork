@@ -14,8 +14,6 @@ import android.view.View;
 
 import com.citywork.utils.Calculator;
 
-import java.util.Locale;
-
 public class CircleTimer extends View {
 
     //Params
@@ -61,7 +59,6 @@ public class CircleTimer extends View {
     private static final float DEFAULT_LONGER_LINE_WIDTH = 3f;
     private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 12;
     private static final float DEFAULT_CIRCLE_WIDTH = 3f;
-    private static final float DEFAULT_GAM_BETWEEN_LINE_AND_CIRCLE = 1;
     private static final float DEFAULT_TIMER_NUMBER_SIZE = 12;
     private static final float DEFAULT_TIMER_TEXT_SIZE = 12;
     private static final float DEFAULT_GAP_BETWEEN_TIMER_NUMBER_AND_TEXT = 12;
@@ -234,23 +231,21 @@ public class CircleTimer extends View {
                 }
 
                 canvas.drawLine(mCx,
-                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + mGapBetweenCircleAndLine,
+                        mCy - mRadius + mCircleLineWidth / 2,
                         mCx,
-                        getMeasuredHeight() / 2 - mRadius + mCircleLineWidth + lineLength + mGapBetweenCircleAndLine,
+                        mCy - mRadius + mCircleLineWidth / 2 + lineLength,
                         mProgressCirclePaintMoving);
 
                 canvas.restore();
             }
 
-            canvas.restore();
-
             // Number it is rubbish code
             float textLength = mTimeNumbersPaint.measureText("15");
-            canvas.drawText("60", mCx, getMeasuredHeight() / 2 - mRadius + mGapBetweenCircleAndLine + mLongerLineLength + mGapBetweenNumberAndLine + mCircleLineWidth / 2 + mCircleButtonRadius / 2 + getFontHeight(mTimeNumbersPaint) / 2, mTimeNumbersPaint);
+            canvas.drawText("60", mCx, mCy - mRadius + mGapBetweenCircleAndLine + mLongerLineLength + mGapBetweenNumberAndLine + mCircleLineWidth / 2 + mCircleButtonRadius / 2 + getFontHeight(mTimeNumbersPaint) / 2, mTimeNumbersPaint);
             canvas.drawText("15", mCx + mRadius - mCircleLineWidth / 2 - mGapBetweenCircleAndLine - mLongerLineLength -
                     textLength / 2
                     - mGapBetweenNumberAndLine, mCy + getFontHeight(mTimeNumbersPaint) / 2, mTimeNumbersPaint);
-            canvas.drawText("30", mCx, getMeasuredHeight() / 2 + mRadius - mCircleLineWidth / 2 - mGapBetweenCircleAndLine -
+            canvas.drawText("30", mCx, mCy + mRadius - mCircleLineWidth / 2 - mGapBetweenCircleAndLine -
                     mLongerLineLength - mGapBetweenNumberAndLine, mTimeNumbersPaint);
             canvas.drawText("45", mCx - mRadius + mCircleLineWidth / 2 + mGapBetweenCircleAndLine +
                             mLongerLineLength + mGapBetweenNumberAndLine + textLength / 2, mCy + getFontHeight(mTimeNumbersPaint) / 2,
@@ -260,7 +255,7 @@ public class CircleTimer extends View {
             // Circle button
             canvas.rotate((float) Math.toDegrees(mCurrentRadian), mCx, mCy);
 
-            canvas.drawCircle(mCx, getMeasuredHeight() / 2 - mRadius, mCircleButtonRadius, mCircleButtonPaint);
+            canvas.drawCircle(mCx, mCy - mRadius, mCircleButtonRadius, mCircleButtonPaint);
             canvas.restore();
             // Timer Text
             canvas.save();
@@ -410,7 +405,6 @@ public class CircleTimer extends View {
         mTimeNumbersPaint.setTypeface(typeface);
         invalidate();
     }
-
 
 
     public void setMaxTime(int maxTime) {

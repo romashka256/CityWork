@@ -101,7 +101,7 @@ public class NotificationUtils {
         mTimerNotificationBuilder.setContentIntent(pendIntent)
                 .setOngoing(true)
                 .setContent(notificationLayout)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.small_wh)
                 .setContent(createTimerNotifLayout(time));
 
         return mTimerNotificationBuilder.build();
