@@ -116,7 +116,12 @@ public class DataBaseHelper implements DBHelper {
     public void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
-            RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter).findAll();
+
+            RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter)
+                    .or()
+                    .equalTo("timerState", TimerState.NOT_ONGOING.toString())
+                    .findAll();
+
             List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
             Pomodoro last;
             try {
@@ -155,7 +160,7 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             List<City> list = realm1.copyFromRealm(realm1.where(City.class).findAll());
-            if(list == null){
+            if (list == null) {
                 list = new ArrayList<>();
             }
             onCitiesLoadedListener.loadCiities(list);

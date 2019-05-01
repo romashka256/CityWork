@@ -23,7 +23,6 @@ import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
 import lombok.Getter;
-import timber.log.Timber;
 
 public class MainActivityViewModel extends ViewModel implements IMainActivityViewModel {
 
@@ -69,6 +68,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
             statusticUtils.prepareData(cityUtils.getCityList(cityList));
             if (!cityList.isEmpty()) {
                 City city = cityList.get(cityList.size() - 1);
+
                 if (city != null) {
                     Building building = city.getBuildings().get(city.getBuildings().size() - 1);
 
@@ -130,7 +130,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     }
 
     @Override
-    public boolean isFirstRun(){
+    public boolean isFirstRun() {
         return sharedPrefensecUtils.isFirstRun();
     }
 }

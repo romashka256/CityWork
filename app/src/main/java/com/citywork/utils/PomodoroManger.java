@@ -44,6 +44,7 @@ public class PomodoroManger {
     public void createEmptyInstance() {
         pomodoro = new Pomodoro(TimerState.NOT_ONGOING);
         building = new Building(pomodoro);
+
     }
 
     public void setTimeToPomodoro(long timerValue) {

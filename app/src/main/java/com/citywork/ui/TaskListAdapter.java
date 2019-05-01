@@ -10,12 +10,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.model.db.models.Task;
 import com.citywork.ui.listeners.OnTaskClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,9 +25,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     private Context context;
     private OnTaskClickListener onTaskClickListener;
     private List<Pomodoro> pomodoros;
+    private FontUtils fontUtils;
 
     public TaskListAdapter(Context context, List<Pomodoro> pomodoros, OnTaskClickListener onTaskClickListener) {
         this.context = context;
+        fontUtils = App.getsAppComponent().getFontUtils();
         this.pomodoros = pomodoros;
         this.onTaskClickListener = onTaskClickListener;
     }
@@ -47,6 +48,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         Pomodoro pomodoro = pomodoros.get(i);
 
         taskListVH.taskTextV.setText("#" + (i + 1) + " POMO");
+        taskListVH.taskTextV.setTypeface(fontUtils.getMedium());
         if (i != pomodoros.size() - 1)
             taskListVH.listView.setAlpha(0.6f);
 

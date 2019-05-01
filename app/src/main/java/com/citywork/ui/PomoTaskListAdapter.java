@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Task;
 import com.citywork.ui.listeners.OnTaskClickListener;
@@ -18,10 +19,12 @@ public class PomoTaskListAdapter extends BaseAdapter {
     private List<Task> tasks;
     private LayoutInflater layoutInflater;
     private OnTaskClickListener onTaskClickListener;
+    private FontUtils fontUtils;
 
     public PomoTaskListAdapter(Context context, List<Task> tasks, OnTaskClickListener onTaskClickListener) {
         this.tasks = tasks;
         this.onTaskClickListener = onTaskClickListener;
+        fontUtils = App.getsAppComponent().getFontUtils();
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -52,6 +55,7 @@ public class PomoTaskListAdapter extends BaseAdapter {
 
         TextView taskText = view.findViewById(R.id.task_item_tasktext);
         taskText.setText(task.getText());
+        taskText.setTypeface(fontUtils.getRegular());
         CheckBox checkBox = view.findViewById(R.id.task_item_checkbox);
         checkBox.setChecked(task.isDone());
 

@@ -47,10 +47,10 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/success_dialog_congrats1_tv" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/success_dialog_congrats_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/success_dialog_buidling_view" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/success_dialog_congrats1_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -71,7 +71,7 @@
         android:textSize="@dimen/success_dialog_congrats_botton_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/success_dialog_congrats_tv" />
 
 
 </android.support.constraint.ConstraintLayout>

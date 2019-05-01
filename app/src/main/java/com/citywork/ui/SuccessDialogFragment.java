@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
@@ -39,6 +40,12 @@ public class SuccessDialogFragment extends DialogFragment {
     Button vToCityBtn;
     @BindView(R.id.success_dialog_buidling_view)
     BuldingProgressView mBuidlingView;
+    @BindView(R.id.success_dialog_congrats_tv)
+    TextView mCongratsTV;
+    @BindView(R.id.success_dialog_congrats1_tv)
+    TextView mCongrats1TV;
+
+    private FontUtils fontUtils;
 
     private Building building;
     private static final String BUILDING = "buidling";
@@ -58,6 +65,7 @@ public class SuccessDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fontUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         building = Parcels.unwrap((Parcelable) getArguments().get(BUILDING));
@@ -76,6 +84,9 @@ public class SuccessDialogFragment extends DialogFragment {
         mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(building.getIconName(), "drawable", context.getPackageName())));
 
         mBuidlingView.setProgress(100);
+
+        setFonts();
+
         return view;
     }
 
@@ -99,5 +110,11 @@ public class SuccessDialogFragment extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
+    }
+
+    private void setFonts() {
+        vToCityBtn.setTypeface(fontUtils.getRegular());
+        mCongrats1TV.setTypeface(fontUtils.getRegular());
+        mCongratsTV.setTypeface(fontUtils.getRegular());
     }
 }

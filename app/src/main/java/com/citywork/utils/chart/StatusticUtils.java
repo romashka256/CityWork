@@ -5,12 +5,9 @@ import android.util.Pair;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
-import com.citywork.ui.customviews.LineChart;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.CityUtils;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +16,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -88,7 +84,7 @@ public class StatusticUtils {
 
             int index = 0;
 
-            for (int o = dayDivider; o <= 28; o += dayDivider) {
+            for (int o = 0; o < 24; o += dayDivider) {
                 values.add(new ChartBar(0, 0));
                 pomodoroList.add(new ArrayList<>());
             }
@@ -102,7 +98,7 @@ public class StatusticUtils {
 
                 curhour = calendar.get(Calendar.HOUR_OF_DAY);
 
-                for (int i = dayDivider; i < 24; i += dayDivider) {
+                for (int i = 0; i < 24; i += dayDivider) {
                     curhour -= dayDivider;
                     index++;
                     if (curhour >= dayDivider) {
@@ -117,8 +113,6 @@ public class StatusticUtils {
                     }
                 }
             }
-
-            Collections.reverse(values);
 
             toReturn = new Pair<>(values, pomodoroHashMap);
         } else {

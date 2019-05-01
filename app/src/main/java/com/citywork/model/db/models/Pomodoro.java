@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.citywork.RealmListParcelConverter;
 import com.citywork.utils.timer.TimerState;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcel;
 import org.parceler.ParcelPropertyConverter;
 
@@ -20,10 +21,10 @@ import lombok.Setter;
 public class Pomodoro extends io.realm.RealmObject {
 
     public Pomodoro() {
+        this.tasks = new RealmList<>();
     }
 
     public Pomodoro(TimerState timerState) {
-
         this.tasks = new RealmList<>();
         setTimerState(timerState);
     }
@@ -35,7 +36,7 @@ public class Pomodoro extends io.realm.RealmObject {
         setTimerState(timerState);
     }
 
-    public Pomodoro(long starttime, long stoptime, RealmList<Task> tasks, TimerState timerState) {
+    public Pomodoro(long starttime, long stoptime, @NotNull RealmList<Task> tasks, TimerState timerState) {
         this.starttime = starttime;
         setTimerState(timerState);
         this.stoptime = stoptime;

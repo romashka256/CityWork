@@ -26,8 +26,6 @@ import com.citywork.R;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
-import java.util.Collections;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,8 +44,12 @@ public class TasksDialog extends DialogFragment {
     ImageView settingIV;
     @BindView(R.id.tasks_dialog_no_tasks_tv)
     TextView noTasksTV;
+    @BindView(R.id.tasks_dialog_title)
+    TextView titleTV;
 
     public static final String TAG = "TasksDialog";
+
+    private FontUtils fontUtils;
 
     private ITasksDialogViewModel iTasksDialogViewModel;
     private TaskListAdapter taskListAdapter;
@@ -60,6 +62,7 @@ public class TasksDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fontUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         iTasksDialogViewModel = ViewModelProviders.of(this).get(TasksDialogViewModel.class);
@@ -72,6 +75,8 @@ public class TasksDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.tasks_dialog, null, false);
 
         ButterKnife.bind(this, view);
+
+        setFonts();
 
         return view;
     }
@@ -147,5 +152,11 @@ public class TasksDialog extends DialogFragment {
         super.onDismiss(dialog);
 
         iTasksDialogViewModel.onDismiss();
+    }
+
+    private void setFonts(){
+        titleTV.setTypeface(fontUtils.getLight());
+        editText.setTypeface(fontUtils.getRegular());
+        noTasksTV.setTypeface(fontUtils.getLight());
     }
 }

@@ -14,8 +14,6 @@ import com.citywork.utils.TaskValidator;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewModel {

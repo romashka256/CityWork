@@ -54,7 +54,7 @@ public class NotificationUtils {
 
         builder.setContentTitle("Здание построено")
                 .setSubText("Пора отдохнуть")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.small_wh)
                 .setContentText("Нажмите чтобы посмотреть")
                 .setContentIntent(pendIntent);
 
