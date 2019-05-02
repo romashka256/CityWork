@@ -2,22 +2,20 @@ package com.citywork.viewmodels.timerfragment;
 
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
-import lombok.Setter;
+public class RestTimerStrategy implements TimerStrategy {
 
-public class TimerStrategyContext {
-
-    @Setter
-    private TimerStrategy timerStrategy;
-
+    @Override
     public void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onTick(time, timerFragmentViewModel);
+        timerFragmentViewModel.onWorkTimerTick(time);
     }
 
+    @Override
     public void onComplete(ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onComplete(timerFragmentViewModel);
+
     }
 
+    @Override
     public void onCancel(ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onCancel(timerFragmentViewModel);
+
     }
 }

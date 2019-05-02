@@ -3,9 +3,10 @@ package com.citywork.viewmodels.timerfragment;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
 public class WorkTimerStrategy implements TimerStrategy {
-    @Override
-    public void onTick(ITimerFragmentViewModel timerFragmentViewModel) {
 
+    @Override
+    public void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel) {
+        timerFragmentViewModel.onWorkTimerTick(time);
     }
 
     @Override

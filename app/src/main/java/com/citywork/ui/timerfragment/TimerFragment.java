@@ -16,10 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.R;
-import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.ui.MainActivity;
 import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
@@ -27,17 +28,25 @@ import com.citywork.ui.interfaces.ITimerFragment;
 import com.citywork.ui.timerfragment.dialogs.StopDialog;
 import com.citywork.ui.timerfragment.dialogs.SuccessDialogFragment;
 import com.citywork.utils.Calculator;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.commonutils.VectorUtils;
 import com.citywork.viewmodels.SharedViewModel;
-import com.citywork.viewmodels.timerfragment.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
-
-import androidx.navigation.Navigation;
+import com.citywork.viewmodels.timerfragment.TimerFragmentViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
 import timber.log.Timber;
+
+import static com.citywork.utils.timer.TimerState.CANCELED;
+import static com.citywork.utils.timer.TimerState.COMPLETED;
+import static com.citywork.utils.timer.TimerState.NOT_ONGOING;
+import static com.citywork.utils.timer.TimerState.ONGOING;
+import static com.citywork.utils.timer.TimerState.REST;
+import static com.citywork.utils.timer.TimerState.REST_CANCELED;
+import static com.citywork.utils.timer.TimerState.REST_ONGOING;
+import static com.citywork.utils.timer.TimerState.WORK_COMPLETED;
 
 public class TimerFragment extends Fragment implements ITimerFragment {
 
@@ -111,40 +120,40 @@ public class TimerFragment extends Fragment implements ITimerFragment {
             mCityPeopleCountTV.setText(count + " человек");
         });
 
-//        iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
-//            switch (timerState) {
-//                case ONGOING:
-//                    timerongoingView();
-//                    break;
-//                case WORK_COMPLETED:
-//                    Timber.i("WORK_COMPLETED POSTED");
-//                    showSuccessDialog();
-//                    restView();
-//                    break;
-//                case REST:
-//                    Timber.i("REST POSTED");
-//                    restView();
-//                    break;
-//                case NOT_ONGOING:
-//                    notongoingView();
-//                    break;
-//                case REST_ONGOING:
-//                    timerongoingView();
-//                    mRestTV.setVisibility(View.VISIBLE);
-//                    mBuidlingView.setVisibility(View.GONE);
-//                    break;
-//                case CANCELED:
-//                    notongoingView();
-//                    break;
-//                case REST_CANCELED:
-//                    notongoingView();
-//                    break;
-//                case COMPLETED:
-//                    notongoingView();
-//                    circleTimer.disable();
-//                    break;
-//            }
-//        });
+        iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
+            switch (timerState) {
+                case ONGOING:
+                    showTimerongoingView();
+                    break;
+                case WORK_COMPLETED:
+                    Timber.i("WORK_COMPLETED POSTED");
+                    showSuccessDialog();
+                    showRestView();
+                    break;
+                case REST:
+                    Timber.i("REST POSTED");
+                    showRestView();
+                    break;
+                case NOT_ONGOING:
+                    showNotOngoingView();
+                    break;
+                case REST_ONGOING:
+                    showTimerongoingView();
+                    mRestTV.setVisibility(View.VISIBLE);
+                    mBuidlingView.setVisibility(View.GONE);
+                    break;
+                case CANCELED:
+                    showNotOngoingView();
+                    break;
+                case REST_CANCELED:
+                    showNotOngoingView();
+                    break;
+                case COMPLETED:
+                    showNotOngoingView();
+                    circleTimer.disable();
+                    break;
+            }
+        });
 
         iTimerFragmentViewModel.getBuildingChanged().observe(this, iconName -> {
             mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(iconName, "drawable", mainActivity.getPackageName())));

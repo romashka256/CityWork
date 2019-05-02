@@ -1,7 +1,5 @@
 package com.citywork.utils.timer;
 
-import android.annotation.SuppressLint;
-
 import com.citywork.utils.Calculator;
 
 import io.reactivex.disposables.Disposable;
@@ -30,7 +28,8 @@ public class TimerBaseImpl implements TimerBase {
         this.timer = timer;
     }
 
-    public BehaviorSubject<Long> createTimer(long time) {
+    @Override
+    public BehaviorSubject<Long> startTimer(long time) {
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
         timerStateListener.onStart();
@@ -51,11 +50,6 @@ public class TimerBaseImpl implements TimerBase {
         return behaviorSubject;
     }
 
-    @SuppressLint("CheckResult")
-    @Override
-    public BehaviorSubject<Long> startTimer(long time) {
-        return  behaviorSubject;
-    }
 
     public BehaviorSubject<Long> getTimer() {
         timerStateListener.onStart();

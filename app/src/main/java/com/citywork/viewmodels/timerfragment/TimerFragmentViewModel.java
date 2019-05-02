@@ -56,6 +56,8 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private Integer percent;
 
+    private TimerStrategyContext timerStrategyContext;
+
     @Getter
     private long timerValue = Constants.DEFAULT_MIN_TIMER_VALUE;
 
@@ -71,6 +73,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        timerStrategyContext = new TimerStrategyContext();
         //TODO INJECT
         notificationUtils = new NotificationUtils(appContext);
 
@@ -115,7 +118,14 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
             @Override
             public void onStart() {
-                pomodoroManger.prepareBeforeStart();
+                int state = pomodoroManger.prepareBeforeStart();
+
+                if (state == TimerState.ONGOING) {
+                    timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
+                } else {
+                    timerStrategyContext.setTimerStrategy(new RestTimerStrategy());
+                }
+
                 mTimerStateChangedEvent.postValue(TimerState.ONGOING);
             }
         });
@@ -187,24 +197,14 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(time -> {
                     mChangeTimeEvent.postValue(time);
-                    if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-                        percent = Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime()));
-                        mChangeTimeEventInPercent.postValue(percent);
-                        mProgressPeopleCountChangedEvent.postValue(new Pair(pomodoroManger.getBuilding().getPeople_count(), Calculator.calculatePeopleCountByPercent(pomodoroManger.getBuilding().getPeople_count(), percent)));
-                    }
-                }, e -> {
-                    mTimerStateChangedEvent.postValue(TimerState.CANCELED);
-                    pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
-                }, () -> {
-                    //TODO SHOW WIN DIALOG
 
+                    timerStrategyContext.onTick(time, this);
+                }, e -> {
+                    timerStrategyContext.onCancel(this);
+                }, () -> {
                     mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
 
-                    if (pomodoroManger.setComleted() == TimerState.COMPLETED) {
-                        saveBuidlingToDB();
-                        pomodoroManger.createEmptyInstance();
-                        saveBuidlingToDB();
-                    }
+                    timerStrategyContext.onComplete(this);
 
                     mCityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
                     saveBuidlingToDB();
@@ -214,10 +214,31 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     }
 
     @Override
+    public void onWorkTimerTick(long time) {
+        percent = Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime()));
+        mChangeTimeEventInPercent.postValue(percent);
+        mProgressPeopleCountChangedEvent.postValue(new Pair(pomodoroManger.getBuilding().getPeople_count(), Calculator.calculatePeopleCountByPercent(pomodoroManger.getBuilding().getPeople_count(), percent)));
+    }
+
+    @Override
+    public void onWorkTimerComplete() {
+        saveBuidlingToDB();
+        pomodoroManger.createEmptyInstance();
+        saveBuidlingToDB();
+    }
+
+    @Override
+    public void onWorkTImerCancel() {
+        mTimerStateChangedEvent.postValue(TimerState.CANCELED);
+        pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
+    }
+
+    @Override
     public void onStopClicked() {
         mTimerBase.stopTimer();
         mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
         pomodoroManger.setCanceled();
+        timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
         saveBuidlingToDB();
         pomodoroManger.createEmptyInstance();
         saveBuidlingToDB();
