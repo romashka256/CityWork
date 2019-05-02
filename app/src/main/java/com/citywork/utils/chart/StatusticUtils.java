@@ -7,6 +7,7 @@ import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.CityUtils;
+import com.citywork.utils.timer.TimerState;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class StatusticUtils {
 
 
     public void prepareData(List<City> cityList) {
+        List<City> cityList1 = cityList;
+
         this.cities = cityList;
 
         statisticData = new HashMap<>();
@@ -93,6 +96,9 @@ public class StatusticUtils {
 
             for (Building building : city.getBuildings()) {
                 pomodoro = building.getPomodoro();
+                if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                    continue;
+
                 date = new Date(pomodoro.getStarttime());
                 calendar.setTime(date);
 
@@ -140,6 +146,8 @@ public class StatusticUtils {
             week.add(new ArrayList<>());
         }
 
+        Pomodoro pomodoro;
+
         for (int i = 7; i >= 0; i--) {
             calendar.setTime(new Date(System.currentTimeMillis()));
             calendar.add(Calendar.DAY_OF_MONTH, -i);
@@ -147,10 +155,14 @@ public class StatusticUtils {
                 cityCalendar.setTime(city.getDate());
                 if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
                     for (Building building : city.getBuildings()) {
+                        pomodoro = building.getPomodoro();
+                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                            continue;
+
+
                         values.get(i).setXValue(i);
                         values.get(i).setYValue((values.get(i).getYValue() + Calculator.getTime(building.getPomodoro().getStarttime(), building.getPomodoro().getStoptime())));
-                    }
-                    for (Building building : city.getBuildings()) {
+
                         week.get(i).add(building);
                         citiesHashmap.put(i, week.get(i));
                     }
@@ -189,6 +201,9 @@ public class StatusticUtils {
                 for (City city : sevenDays) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
+                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                            continue;
+
                         values.get(index).setXValue(o);
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);
@@ -232,6 +247,8 @@ public class StatusticUtils {
                 for (City city : twomonths) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
+                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                            continue;
                         values.get(index).setXValue(o);
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);

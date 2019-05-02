@@ -72,7 +72,7 @@ public class TasksDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tasks_dialog, null, false);
+        View view = inflater.inflate(R.layout.tasks_dialog, container, true);
 
         ButterKnife.bind(this, view);
 
@@ -154,7 +154,7 @@ public class TasksDialog extends DialogFragment {
         iTasksDialogViewModel.onDismiss();
     }
 
-    private void setFonts(){
+    private void setFonts() {
         titleTV.setTypeface(fontUtils.getLight());
         editText.setTypeface(fontUtils.getRegular());
         noTasksTV.setTypeface(fontUtils.getLight());
