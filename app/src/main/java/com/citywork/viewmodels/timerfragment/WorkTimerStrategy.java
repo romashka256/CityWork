@@ -11,11 +11,11 @@ public class WorkTimerStrategy implements TimerStrategy {
 
     @Override
     public void onComplete(ITimerFragmentViewModel timerFragmentViewModel) {
-
+        timerFragmentViewModel.onWorkTimerComplete();
     }
 
     @Override
     public void onCancel(ITimerFragmentViewModel timerFragmentViewModel) {
-
+        timerFragmentViewModel.onWorkTImerCancel();
     }
 }
