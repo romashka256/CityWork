@@ -24,21 +24,21 @@ public class Pomodoro extends io.realm.RealmObject {
         this.tasks = new RealmList<>();
     }
 
-    public Pomodoro(TimerState timerState) {
+    public Pomodoro(int timerState) {
         this.tasks = new RealmList<>();
-        setTimerState(timerState);
+        this.timerState = timerState;
     }
 
-    public Pomodoro(long starttime, long stoptime, TimerState timerState) {
+    public Pomodoro(long starttime, long stoptime, int timerState) {
         this.starttime = starttime;
         this.stoptime = stoptime;
         this.tasks = new RealmList<>();
-        setTimerState(timerState);
+        this.timerState = timerState;
     }
 
-    public Pomodoro(long starttime, long stoptime, @NotNull RealmList<Task> tasks, TimerState timerState) {
+    public Pomodoro(long starttime, long stoptime, @NotNull RealmList<Task> tasks, int timerState) {
         this.starttime = starttime;
-        setTimerState(timerState);
+        this.timerState = timerState;
         this.stoptime = stoptime;
         this.tasks = tasks;
     }
@@ -70,7 +70,9 @@ public class Pomodoro extends io.realm.RealmObject {
 
     RealmList<Task> tasks;
 
-    String timerState;
+    @Setter
+    @Getter
+    int timerState;
 
     @Getter
     @Setter
@@ -115,11 +117,4 @@ public class Pomodoro extends io.realm.RealmObject {
         return Objects.hash(getId());
     }
 
-    public TimerState getTimerState() {
-        return TimerState.valueOf(timerState);
-    }
-
-    public void setTimerState(TimerState timerState) {
-        this.timerState = timerState.toString();
-    }
 }

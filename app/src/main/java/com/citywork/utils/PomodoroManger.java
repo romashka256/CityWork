@@ -80,8 +80,8 @@ public class PomodoroManger {
         return Calculator.calculatePeopleCount(time);
     }
 
-    public TimerState setComleted() {
-        TimerState toreturn = null;
+    public int setComleted() {
+        int toreturn = 0;
         if (pomodoro.getTimerState() == TimerState.ONGOING) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
             toreturn = TimerState.WORK_COMPLETED;
@@ -103,7 +103,7 @@ public class PomodoroManger {
             pomodoro.setTimerState(TimerState.REST_CANCELED);
     }
 
-    public TimerState prepareBeforeStart() {
+    public int prepareBeforeStart() {
         if (pomodoro.getTimerState() != TimerState.REST && pomodoro.getTimerState() != TimerState.REST_ONGOING) {
             pomodoro.setTimerState(TimerState.ONGOING);
             return TimerState.ONGOING;

@@ -1,5 +1,7 @@
 package com.citywork.model.db;
 
+import android.view.View;
+
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
@@ -16,6 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import timber.log.Timber;
@@ -23,6 +33,25 @@ import timber.log.Timber;
 public class DataBaseHelper implements DBHelper {
 
     public DataBaseHelper() {
+    }
+
+    @Override
+    public Single<List<City>> loadCities() {
+        return Single.create(emitter -> {
+            Realm realm = Realm.getDefaultInstance();
+
+            realm.executeTransaction(realm1 -> {
+                List<City> list = realm1.copyFromRealm(realm1.where(City.class).findAll());
+
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+
+                emitter.onSuccess(list);
+            });
+            realm.close();
+        });
+
     }
 
     @Override
@@ -49,6 +78,7 @@ public class DataBaseHelper implements DBHelper {
             });
 
             realm.close();
+
         } catch (IllegalStateException e) {
             Timber.e(e);
         } catch (NullPointerException e) {
@@ -119,7 +149,7 @@ public class DataBaseHelper implements DBHelper {
 
             RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter)
                     .or()
-                    .equalTo("timerState", TimerState.NOT_ONGOING.toString())
+                    .equalTo("timerState", TimerState.NOT_ONGOING)
                     .findAll();
 
             List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
@@ -152,18 +182,6 @@ public class DataBaseHelper implements DBHelper {
                     .findAll());
 
             onBuildingsLoadedListener.onBuildingsLoaded(realmList);
-        });
-        realm.close();
-    }
-
-    public void loadCities(OnCitiesLoadedListener onCitiesLoadedListener) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-            List<City> list = realm1.copyFromRealm(realm1.where(City.class).findAll());
-            if (list == null) {
-                list = new ArrayList<>();
-            }
-            onCitiesLoadedListener.loadCiities(list);
         });
         realm.close();
     }

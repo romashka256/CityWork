@@ -96,7 +96,7 @@ public class StatusticUtils {
 
             for (Building building : city.getBuildings()) {
                 pomodoro = building.getPomodoro();
-                if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
                     continue;
 
                 date = new Date(pomodoro.getStarttime());
@@ -156,7 +156,7 @@ public class StatusticUtils {
                 if (cityCalendar.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
-                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                        if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
                             continue;
 
 
@@ -201,7 +201,7 @@ public class StatusticUtils {
                 for (City city : sevenDays) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
-                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                        if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
                             continue;
 
                         values.get(index).setXValue(o);
@@ -247,7 +247,7 @@ public class StatusticUtils {
                 for (City city : twomonths) {
                     for (Building building : city.getBuildings()) {
                         pomodoro = building.getPomodoro();
-                        if (pomodoro.getTimerState() != TimerState.COMPLETED || pomodoro.getTimerState() != TimerState.WORK_COMPLETED || pomodoro.getTimerState() != TimerState.REST || pomodoro.getTimerState() != TimerState.REST_ONGOING || pomodoro.getTimerState() != TimerState.REST_CANCELED)
+                        if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
                             continue;
                         values.get(index).setXValue(o);
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));

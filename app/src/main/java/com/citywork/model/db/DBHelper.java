@@ -11,6 +11,10 @@ import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
 import com.citywork.model.interfaces.OnPomodoroLoaded;
 import com.citywork.model.interfaces.OnTasksLoadedListener;
 
+import java.util.List;
+
+import io.reactivex.Single;
+
 public interface DBHelper {
     void savePomodoro(Pomodoro pomodoro);
 
@@ -30,5 +34,5 @@ public interface DBHelper {
 
     void loadLastCity(OnCityLoadedListener onCityLoadedListener);
 
-    void loadCities(OnCitiesLoadedListener onCitiesLoadedListener);
+    Single<List<City>> loadCities();
 }

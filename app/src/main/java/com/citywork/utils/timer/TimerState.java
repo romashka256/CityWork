@@ -1,14 +1,25 @@
 package com.citywork.utils.timer;
 
-public enum TimerState {
-    CANCELED, REST_CANCELED, NOT_ONGOING, ONGOING, WORK_COMPLETED, REST, REST_ONGOING, COMPLETED;
+import lombok.Getter;
+import lombok.Setter;
 
-//    public static final int CANCELED = 1;
-//    public static final int REST_CANCELED = 2;
-//    public static final int NOT_ONGOING = 3;
-//    public static final int ONGOING = 4;
-//    public static final int WORK_COMPLETED = 5;
-//    public static final int REST = 6;
-//    public static final int REST_ONGOING = 7;
-//    public static final int COMPLETED = 8;
+public class TimerState {
+
+    //Pomodoro not started yet
+    public static final int NOT_ONGOING = 1;
+    //Pomodoro ongoing
+    public static final int ONGOING = 2;
+    //Pomodoro was canceled
+    public static final int CANCELED = 3;
+    //Work timer ended
+    public static final int WORK_COMPLETED = 4;
+    //User need to choose rest time and start rest timer
+    public static final int REST = 5;
+    //Rest timer ongoing
+    public static final int REST_ONGOING = 6;
+    //Rest timer was canceled
+    public static final int REST_CANCELED = 7;
+    //Rest completed. FULL
+    public static final int COMPLETED = 8;
+
 }

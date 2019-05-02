@@ -18,10 +18,21 @@ import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
+import com.citywork.utils.commonutils.ListUtils;
 import com.citywork.utils.timer.TimerManager;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
+import java.util.Collections;
+import java.util.List;
+
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import lombok.Getter;
 
 public class MainActivityViewModel extends ViewModel implements IMainActivityViewModel {
@@ -64,33 +75,54 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onCreate() {
-        dataBaseHelper.loadCities(cityList -> {
-            statusticUtils.prepareData(cityUtils.getCityList(cityList));
-            if (!cityList.isEmpty()) {
-                City city = cityList.get(cityList.size() - 1);
+        Disposable disposable = dataBaseHelper.loadCities()
+                .doOnSuccess(cities -> {
+                    statusticUtils.prepareData(cityUtils.getCityList(cities));
+                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cities));
+                })
+                .map(cities -> {
+                    City lastCity = ListUtils.getLastElement(cities);
+                    pomodoroManger.setCity(lastCity);
 
-                if (city != null) {
-                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
+                    return ListUtils.getLastElement(lastCity.getBuildings());
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(building -> {
+                    pomodoroManger.setBuilding(building);
+                    buildingMutableLiveData.postValue(building);
+                }, throwable -> {
 
-                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
-                    pomodoroManger.setCity(city);
-                    if (building == null ||
-                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-                        pomodoroManger.createEmptyInstance();
-                    } else {
-                        pomodoroManger.setBuilding(building);
+                });
 
-                        buildingMutableLiveData.postValue(building);
-                    }
-                }
-            } else {
-                pomodoroManger.createEmptyInstance();
-            }
+        timerManager = App.getsAppComponent().getTimerManager();
 
-            timerManager = App.getsAppComponent().getTimerManager();
-        });
+//        cityList -> {
+//            if (!cityList.isEmpty()) {
+//                City city = cityList.get(cityList.size() - 1);
+//
+//                if (city != null) {
+//                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
+//
+//                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
+//                    pomodoroManger.setCity(city);
+//                    if (building == null ||
+//                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
+//                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
+//                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
+//                        pomodoroManger.createEmptyInstance();
+//                    } else {
+//                        pomodoroManger.setBuilding(building);
+//
+//                        buildingMutableLiveData.postValue(building);
+//                    }
+//                }
+//            } else {
+//                pomodoroManger.createEmptyInstance();
+//            }
+//
+//            timerManager = App.getsAppComponent().getTimerManager();
+//        });
     }
 
     @Override
