@@ -2,7 +2,7 @@ package com.citywork.utils.timer;
 
 import io.reactivex.subjects.BehaviorSubject;
 
-public interface TimerManager {
+public interface TimerBase {
     BehaviorSubject<Long> startTimer(long time);
 
     BehaviorSubject<Long> getTimer();

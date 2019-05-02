@@ -43,7 +43,7 @@ public class Calculator {
 
     public static int calculatePeopleCount(List<City> cityList) {
         int count = 0;
-        TimerState timerState;
+        Integer timerState;
         for (City city : cityList) {
             if (city.getBuildings() != null)
                 for (Building building : city.getBuildings()) {

@@ -14,7 +14,7 @@ import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
-import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
 
 import org.parceler.Parcels;
@@ -31,7 +31,7 @@ public class TimerService extends Service {
     public final static String TIMERSERVICE_BUILDING = "building";
     public final static String TIMERSERVICE_TAG = "timerservice";
 
-    private TimerManager mTimerManager;
+    private TimerBase mTimerBase;
 
     private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationUtils notificationUtils;
@@ -68,7 +68,7 @@ public class TimerService extends Service {
 
         dbHelper = App.getsAppComponent().getDataBaseHelper();
         pomodoroManger = App.getsAppComponent().getPomdoromManager();
-        mTimerManager = App.getsAppComponent().getTimerManager();
+        mTimerBase = App.getsAppComponent().getTimerManager();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
     }
 
@@ -89,7 +89,7 @@ public class TimerService extends Service {
 
             int buildingImageId = getResources().getIdentifier(building.getCityIconName(), "drawable", getPackageName());
 
-            disposable = mTimerManager.getTimer()
+            disposable = mTimerBase.getTimer()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(time -> {

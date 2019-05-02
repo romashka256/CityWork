@@ -1,4 +1,4 @@
-package com.citywork.utils;
+package com.citywork.utils.commonutils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.ui.timerfragment;
 
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
@@ -23,6 +23,8 @@ import androidx.navigation.Navigation;
 
 import com.citywork.App;
 import com.citywork.R;
+import com.citywork.utils.commonutils.FontUtils;
+import com.citywork.ui.TaskListAdapter;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 

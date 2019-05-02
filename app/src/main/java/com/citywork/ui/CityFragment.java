@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.ui.customviews.LineChart;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
 
 import java.util.List;

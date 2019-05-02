@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.ui.timerfragment.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,8 +22,9 @@ import android.widget.TextView;
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Building;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.ui.customviews.BuldingProgressView;
-import com.citywork.utils.VectorUtils;
+import com.citywork.utils.commonutils.VectorUtils;
 
 import org.parceler.Parcels;
 

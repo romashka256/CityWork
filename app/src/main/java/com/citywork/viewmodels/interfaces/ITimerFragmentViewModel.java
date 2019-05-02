@@ -8,6 +8,7 @@ import com.citywork.model.db.models.City;
 import com.citywork.utils.timer.TimerState;
 
 public interface ITimerFragmentViewModel {
+
     void onStartClicked();
 
     void onStopClicked();
@@ -33,11 +34,13 @@ public interface ITimerFragmentViewModel {
     void onTimerValueChanged(long time);
 
     void buildingReceived(Building building);
+
     void cityReceived(City building);
 
     void onServiceConnected(Building building);
 
     int getLongBreakValue();
+
     int getShortBreakValue();
 
     LiveData<Long> getChangeTimeEvent();
@@ -48,11 +51,12 @@ public interface ITimerFragmentViewModel {
 
     LiveData<Integer> getCityPeopleCountChangeEvent();
 
-    LiveData<TimerState> getTimerStateChanged();
+    LiveData<Integer> getTimerStateChanged();
 
     LiveData<Integer> getChangeTimeEventInPercent();
 
     LiveData<String> getBuildingChanged();
 
     LiveData<Pair<Integer, Integer>> getProgressPeopleCountChangedEvent();
+
 }

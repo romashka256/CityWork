@@ -19,7 +19,7 @@ import android.view.View;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.utils.VectorUtils;
+import com.citywork.utils.commonutils.VectorUtils;
 
 public class BuldingProgressView extends View {
 

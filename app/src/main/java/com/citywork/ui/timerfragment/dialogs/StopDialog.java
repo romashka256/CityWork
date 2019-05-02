@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.ui.timerfragment.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,13 +12,10 @@ import androidx.annotation.Nullable;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.utils.DialogUtils;
-
-import org.w3c.dom.Text;
+import com.citywork.utils.commonutils.FontUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class StopDialog extends Dialog {

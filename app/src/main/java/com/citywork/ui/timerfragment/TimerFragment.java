@@ -1,7 +1,5 @@
-package com.citywork.ui;
+package com.citywork.ui.timerfragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -21,16 +19,17 @@ import android.widget.TextView;
 import com.citywork.App;
 import com.citywork.Constants;
 import com.citywork.R;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.ui.MainActivity;
-import com.citywork.ui.StopDialog;
-import com.citywork.ui.SuccessDialogFragment;
-import com.citywork.ui.TasksDialog;
 import com.citywork.ui.customviews.BuldingProgressView;
 import com.citywork.ui.customviews.CircleTimer;
+import com.citywork.ui.interfaces.ITimerFragment;
+import com.citywork.ui.timerfragment.dialogs.StopDialog;
+import com.citywork.ui.timerfragment.dialogs.SuccessDialogFragment;
 import com.citywork.utils.Calculator;
-import com.citywork.utils.VectorUtils;
+import com.citywork.utils.commonutils.VectorUtils;
 import com.citywork.viewmodels.SharedViewModel;
-import com.citywork.viewmodels.TimerFragmentViewModel;
+import com.citywork.viewmodels.timerfragment.TimerFragmentViewModel;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
 
 import androidx.navigation.Navigation;
@@ -40,7 +39,7 @@ import butterknife.ButterKnife;
 import lombok.Getter;
 import timber.log.Timber;
 
-public class TimerFragment extends Fragment {
+public class TimerFragment extends Fragment implements ITimerFragment {
 
     @BindView(R.id.timer_fragment_start_button)
     Button startButton;
@@ -77,6 +76,8 @@ public class TimerFragment extends Fragment {
     private SuccessDialogFragment successDialogFragment;
     private FontUtils fontUtils;
 
+
+
     @Override
     public void onAttach(Context context) {
         this.mainActivity = (MainActivity) context;
@@ -110,60 +111,47 @@ public class TimerFragment extends Fragment {
             mCityPeopleCountTV.setText(count + " человек");
         });
 
-        iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
-            switch (timerState) {
-                case ONGOING:
-                    timerongoingView();
-                    break;
-                case WORK_COMPLETED:
-                    Timber.i("WORK_COMPLETED POSTED");
-                    showSuccessDialog();
-                    restView();
-                    break;
-                case REST:
-                    Timber.i("REST POSTED");
-                    restView();
-                    break;
-                case NOT_ONGOING:
-                    notongoingView();
-                    break;
-                case REST_ONGOING:
-                    timerongoingView();
-                    mRestTV.setVisibility(View.VISIBLE);
-                    mBuidlingView.setVisibility(View.GONE);
-                    break;
-                case CANCELED:
-                    notongoingView();
-                    break;
-                case REST_CANCELED:
-                    notongoingView();
-                    break;
-                case COMPLETED:
-                    notongoingView();
-                    circleTimer.disable();
-                    break;
-            }
-        });
+//        iTimerFragmentViewModel.getTimerStateChanged().observe(this, timerState -> {
+//            switch (timerState) {
+//                case ONGOING:
+//                    timerongoingView();
+//                    break;
+//                case WORK_COMPLETED:
+//                    Timber.i("WORK_COMPLETED POSTED");
+//                    showSuccessDialog();
+//                    restView();
+//                    break;
+//                case REST:
+//                    Timber.i("REST POSTED");
+//                    restView();
+//                    break;
+//                case NOT_ONGOING:
+//                    notongoingView();
+//                    break;
+//                case REST_ONGOING:
+//                    timerongoingView();
+//                    mRestTV.setVisibility(View.VISIBLE);
+//                    mBuidlingView.setVisibility(View.GONE);
+//                    break;
+//                case CANCELED:
+//                    notongoingView();
+//                    break;
+//                case REST_CANCELED:
+//                    notongoingView();
+//                    break;
+//                case COMPLETED:
+//                    notongoingView();
+//                    circleTimer.disable();
+//                    break;
+//            }
+//        });
 
         iTimerFragmentViewModel.getBuildingChanged().observe(this, iconName -> {
             mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(iconName, "drawable", mainActivity.getPackageName())));
         });
     }
 
-    private void showSuccessDialog() {
-        Timber.i("Show Success Diagog");
-        successDialogFragment = SuccessDialogFragment.newInstance(iTimerFragmentViewModel.getBuilding());
 
-        FragmentManager fm = getFragmentManager();
-
-        if (successDialogFragment.getDialog() == null) {
-            successDialogFragment.show(fm, Constants.DIALOG_SUCCESS_TAG);
-
-            fm.executePendingTransactions();
-
-            iTimerFragmentViewModel.onSuccessDialogShowed();
-        }
-    }
 
 
     @Nullable
@@ -249,6 +237,22 @@ public class TimerFragment extends Fragment {
     }
 
     @Override
+    public void showSuccessDialog() {
+        Timber.i("Show Success Diagog");
+        successDialogFragment = SuccessDialogFragment.newInstance(iTimerFragmentViewModel.getBuilding());
+
+        FragmentManager fm = getFragmentManager();
+
+        if (successDialogFragment.getDialog() == null) {
+            successDialogFragment.show(fm, Constants.DIALOG_SUCCESS_TAG);
+
+            fm.executePendingTransactions();
+
+            iTimerFragmentViewModel.onSuccessDialogShowed();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Timber.i("onPause");
@@ -295,17 +299,21 @@ public class TimerFragment extends Fragment {
 
     }
 
-    private void timerongoingView() {
+    @Override
+    public void showNotOngoingView() {
         mRestTV.setVisibility(View.GONE);
-        stopButton.setVisibility(View.VISIBLE);
-        startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
-        mTodoTV.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+        startButton.setVisibility(View.VISIBLE);
+        mTodoTV.setVisibility(View.VISIBLE);
+        circleTimer.disable();
         mBuidlingView.setVisibility(View.VISIBLE);
+        circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
 
-    private void restView() {
+    @Override
+    public void showRestView() {
         Timber.i("Show Rest View");
         mRestTV.setVisibility(View.GONE);
         startButton.setVisibility(View.GONE);
@@ -318,16 +326,15 @@ public class TimerFragment extends Fragment {
         circleTimer.enable();
     }
 
-    private void notongoingView() {
+    @Override
+    public void showTimerongoingView() {
         mRestTV.setVisibility(View.GONE);
+        stopButton.setVisibility(View.VISIBLE);
+        startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
-        m10minRest.setVisibility(View.GONE);
-        stopButton.setVisibility(View.GONE);
-        startButton.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.VISIBLE);
-        circleTimer.disable();
+        m10minRest.setVisibility(View.GONE);
         mBuidlingView.setVisibility(View.VISIBLE);
-        circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
 
     private void setFonts() {

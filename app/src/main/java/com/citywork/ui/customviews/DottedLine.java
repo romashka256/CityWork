@@ -15,7 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.citywork.R;
-import com.citywork.utils.UIUtils;
+import com.citywork.utils.commonutils.UIUtils;
 
 public class DottedLine extends View {
 

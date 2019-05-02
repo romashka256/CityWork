@@ -178,7 +178,7 @@ public class DataBaseHelper implements DBHelper {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             List<Building> realmList = realm1.copyFromRealm(realm1.where(Building.class)
-                    .equalTo("pomodoro.timerState", TimerState.COMPLETED.toString())
+                    .equalTo("pomodoro.timerState", TimerState.COMPLETED)
                     .findAll());
 
             onBuildingsLoadedListener.onBuildingsLoaded(realmList);

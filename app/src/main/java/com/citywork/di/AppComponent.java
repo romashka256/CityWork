@@ -5,12 +5,12 @@ import android.content.Context;
 import com.citywork.di.modules.AppModule;
 import com.citywork.di.modules.TimerManagerModule;
 import com.citywork.model.db.DataBaseHelper;
-import com.citywork.ui.FontUtils;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.timer.Timer;
-import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerBase;
 
 import javax.inject.Singleton;
 
@@ -22,7 +22,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface AppComponent {
     CompositeDisposable getCompositeDisposable();
 
-    TimerManager getTimerManager();
+    TimerBase getTimerManager();
 
     Context getApplicationContext();
 

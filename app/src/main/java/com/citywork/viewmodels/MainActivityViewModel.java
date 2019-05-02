@@ -19,20 +19,13 @@ import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.commonutils.ListUtils;
-import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
-import java.util.Collections;
-import java.util.List;
-
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 import lombok.Getter;
 
 public class MainActivityViewModel extends ViewModel implements IMainActivityViewModel {
@@ -52,7 +45,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
         return buildingMutableLiveData;
     }
 
-    private TimerManager timerManager;
+    private TimerBase timerBase;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private Context context;
     private DBHelper dataBaseHelper;
@@ -95,7 +88,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
                 });
 
-        timerManager = App.getsAppComponent().getTimerManager();
+        timerBase = App.getsAppComponent().getTimerManager();
 
 //        cityList -> {
 //            if (!cityList.isEmpty()) {
@@ -121,7 +114,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 //                pomodoroManger.createEmptyInstance();
 //            }
 //
-//            timerManager = App.getsAppComponent().getTimerManager();
+//            timerBase = App.getsAppComponent().getTimerManager();
 //        });
     }
 
@@ -153,7 +146,7 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public long getTimeToGo() {
-        return timerManager.getRemainingTime();
+        return timerBase.getRemainingTime();
     }
 
     @Override

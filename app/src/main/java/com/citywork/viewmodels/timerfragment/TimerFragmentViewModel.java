@@ -1,4 +1,4 @@
-package com.citywork.viewmodels;
+package com.citywork.viewmodels.timerfragment;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -17,7 +17,7 @@ import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
-import com.citywork.utils.timer.TimerManager;
+import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.utils.timer.TimerStateListener;
 import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
@@ -39,13 +39,13 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     MutableLiveData<Long> mChangeTimeEvent = new MutableLiveData<>();
     MutableLiveData<Building> mCompleteEvent = new MutableLiveData<>();
     MutableLiveData<Integer> mPeopleCountChange = new MutableLiveData<>();
-    MutableLiveData<TimerState> mTimerStateChangedEvent = new MutableLiveData<>();
+    MutableLiveData<Integer> mTimerStateChangedEvent = new MutableLiveData<>();
     MutableLiveData<Integer> mChangeTimeEventInPercent = new MutableLiveData<>();
     MutableLiveData<String> mBuidingChanged = new MutableLiveData<>();
     MutableLiveData<Pair<Integer, Integer>> mProgressPeopleCountChangedEvent = new MutableLiveData<>();
     MutableLiveData<Integer> mCityPeopleCountChangeEvent = new MutableLiveData<>();
 
-    private TimerManager mTimerManager;
+    private TimerBase mTimerBase;
     private AlarmManagerImpl mAlarmManager;
     private DBHelper dataBaseHelper;
     private SharedPrefensecUtils sharedPrefensecUtils;
@@ -64,7 +64,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     private List<String> cityBuildingNames;
 
     public TimerFragmentViewModel() {
-        mTimerManager = App.getsAppComponent().getTimerManager();
+        mTimerBase = App.getsAppComponent().getTimerManager();
         compositeDisposable = App.getsAppComponent().getCompositeDisposable();
         appContext = App.getsAppComponent().getApplicationContext();
         mAlarmManager = new AlarmManagerImpl(appContext);
@@ -102,7 +102,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
             }
         }
 
-        mTimerManager.setTimerListener(new TimerStateListener() {
+        mTimerBase.setTimerListener(new TimerStateListener() {
             @Override
             public void onStop() {
                 mTimerStateChangedEvent.postValue(TimerState.CANCELED);
@@ -164,7 +164,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     private BehaviorSubject<Long> createTimer(long timerTime) {
         Timber.i("createTimer");
-        return mTimerManager.startTimer(timerTime);
+        return mTimerBase.startTimer(timerTime);
     }
 
     @Override
@@ -178,7 +178,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     }
 
     private BehaviorSubject<Long> getTimer() {
-        return mTimerManager.getTimer();
+        return mTimerBase.getTimer();
     }
 
     private void startTimer(BehaviorSubject<Long> behaviorSubject) {
@@ -215,7 +215,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void onStopClicked() {
-        mTimerManager.stopTimer();
+        mTimerBase.stopTimer();
         mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
         pomodoroManger.setCanceled();
         saveBuidlingToDB();
@@ -238,7 +238,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
 
     @Override
     public void onStop() {
-        mTimerManager.pauseTimer();
+        mTimerBase.pauseTimer();
         compositeDisposable.clear();
         saveBuidlingToDB();
     }
@@ -304,7 +304,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     }
 
     @Override
-    public LiveData<TimerState> getTimerStateChanged() {
+    public LiveData<Integer> getTimerStateChanged() {
         return mTimerStateChangedEvent;
     }
 
@@ -363,7 +363,7 @@ TimerFragmentViewModel extends ViewModel implements ITimerFragmentViewModel {
     private void checkAndStartTimer(long stoptime) {
         Timber.i("checkAndStartTimer");
         if (!(stoptime <= 0)) {
-            if (mTimerManager.getTimer() == null) {
+            if (mTimerBase.getTimer() == null) {
                 startTimer(createTimer(Calculator.getRemainingTime(stoptime)));
             } else {
                 startTimer(getTimer());

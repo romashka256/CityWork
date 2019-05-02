@@ -1,4 +1,4 @@
-package com.citywork.ui;
+package com.citywork.utils.commonutils;
 
 import android.content.Context;
 import android.content.res.AssetManager;

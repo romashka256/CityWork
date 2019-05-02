@@ -1,9 +1,9 @@
 package com.citywork.di.modules;
 
 import com.citywork.utils.timer.Timer;
+import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerImpl;
-import com.citywork.utils.timer.TimerManager;
-import com.citywork.utils.timer.TimerManagerImpl;
+import com.citywork.utils.timer.TimerBaseImpl;
 
 import javax.inject.Singleton;
 
@@ -15,8 +15,8 @@ public class TimerManagerModule {
 
     @Provides
     @Singleton
-    public TimerManager provideTimerManager(Timer timer) {
-        return new TimerManagerImpl(timer);
+    public TimerBase provideTimerManager(Timer timer) {
+        return new TimerBaseImpl(timer);
     }
 
     @Provides

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.ui.FontUtils;
+import com.citywork.utils.commonutils.FontUtils;
 
 import java.util.Locale;
 

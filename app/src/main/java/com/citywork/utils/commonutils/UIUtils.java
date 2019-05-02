@@ -1,4 +1,4 @@
-package com.citywork.utils;
+package com.citywork.utils.commonutils;
 
 import android.content.res.Resources;
 import android.graphics.Paint;

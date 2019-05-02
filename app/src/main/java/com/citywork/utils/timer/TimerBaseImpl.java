@@ -2,17 +2,14 @@ package com.citywork.utils.timer;
 
 import android.annotation.SuppressLint;
 
-import com.citywork.App;
 import com.citywork.utils.Calculator;
-import com.citywork.utils.SharedPrefensecUtils;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
-import lombok.Setter;
 import timber.log.Timber;
 
-public class TimerManagerImpl implements TimerManager {
+public class TimerBaseImpl implements TimerBase {
 
     private Timer timer;
     @Getter
@@ -29,21 +26,11 @@ public class TimerManagerImpl implements TimerManager {
         timerStateListener = timerListener;
     }
 
-    @Getter
-    @Setter
-    public SharedPrefensecUtils sharedPrefensecUtils;
-
-    public TimerManagerImpl(Timer timer) {
-        //TODO INJECT
-        sharedPrefensecUtils = new SharedPrefensecUtils(App.getsAppComponent().getApplicationContext());
-
+    public TimerBaseImpl(Timer timer) {
         this.timer = timer;
     }
 
-
-    @SuppressLint("CheckResult")
-    @Override
-    public BehaviorSubject<Long> startTimer(long time) {
+    public BehaviorSubject<Long> createTimer(long time) {
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
         timerStateListener.onStart();
@@ -62,6 +49,12 @@ public class TimerManagerImpl implements TimerManager {
                             Timber.i("onComplete");
                         });
         return behaviorSubject;
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public BehaviorSubject<Long> startTimer(long time) {
+        return  behaviorSubject;
     }
 
     public BehaviorSubject<Long> getTimer() {

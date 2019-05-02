@@ -3,7 +3,7 @@ package com.citywork.di.modules;
 import android.content.Context;
 
 import com.citywork.model.db.DataBaseHelper;
-import com.citywork.ui.FontUtils;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;

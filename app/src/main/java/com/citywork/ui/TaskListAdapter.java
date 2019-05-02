@@ -14,6 +14,7 @@ import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.listeners.OnTaskClickListener;
+import com.citywork.utils.commonutils.FontUtils;
 
 import java.util.List;
 
