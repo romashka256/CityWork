@@ -22,17 +22,11 @@ public interface DBHelper {
 
     void saveTask(Task task);
 
-    void getLastPomodoro(OnPomodoroLoaded onPomodoroLoaded);
+    Single<Building> getLastBuilding();
 
-    void getLastBuilding(OnLastBuildingLoadedListener onLastBuildingLoadedListener);
-
-    void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener);
-
-    void loadAllCompletedBuildings(OnBuildingsLoadedListener onBuildingsLoadedListener);
+    Single<List<Pomodoro>> getTasks(long timeAfter);
 
     void saveCity(City city);
-
-    void loadLastCity(OnCityLoadedListener onCityLoadedListener);
 
     Single<List<City>> loadCities();
 }

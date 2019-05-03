@@ -23,19 +23,23 @@ import androidx.navigation.Navigation;
 
 import com.citywork.App;
 import com.citywork.R;
+import com.citywork.model.db.models.Pomodoro;
+import com.citywork.ui.FixedMaxHeightRecylerView;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.ui.TaskListAdapter;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TasksDialog extends DialogFragment {
+public class TasksDialog extends DialogFragment implements ITaskDialog {
 
     private Context context;
     @BindView(R.id.tasks_dialog_rv)
-    RecyclerView recyclerView;
+    FixedMaxHeightRecylerView recyclerView;
     @BindView(R.id.tasks_dialog_closeiv)
     ImageView closeIV;
     @BindView(R.id.tasks_dialog_edittext)
@@ -95,24 +99,43 @@ public class TasksDialog extends DialogFragment {
     }
 
     @Override
+    public void updateList(List<Pomodoro> pomodoroList) {
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        iTasksDialogViewModel.onStop();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
+         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
 
             taskListAdapter = new TaskListAdapter(context, pomodoros, task -> {
                 iTasksDialogViewModel.onTaskClicked(task);
-
             });
+
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(taskListAdapter);
+        });
+
+        iTasksDialogViewModel.getUpdatePomodoroListEvent().observe(this, pomodoros -> {
             taskListAdapter.notifyDataSetChanged();
         });
 
         iTasksDialogViewModel.getNoTasksEvent().observe(this, empty -> {
-            noTasksTV.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            if (empty) {
+                noTasksTV.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                noTasksTV.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         });
 
         closeIV.setOnClickListener(v -> {

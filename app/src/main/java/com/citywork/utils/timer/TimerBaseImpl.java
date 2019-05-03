@@ -32,6 +32,7 @@ public class TimerBaseImpl implements TimerBase {
     public BehaviorSubject<Long> startTimer(long time) {
         Timber.i("Creating new BehaviourSubject with initial time : %d", time);
         behaviorSubject = BehaviorSubject.createDefault(time);
+
         timerStateListener.onStart();
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {

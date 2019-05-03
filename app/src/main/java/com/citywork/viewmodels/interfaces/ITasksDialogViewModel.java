@@ -10,22 +10,20 @@ import java.util.List;
 
 public interface ITasksDialogViewModel {
     void onCreate();
-
-    void onPositionChanged();
-
     void onAddClicked();
 
-    void onChecked();
 
     void onTaskClicked(Task task);
-
-    void addTask(String text);
 
     SingleLiveEvent<List<Pomodoro>> getPomodoroLoadedEvent();
 
     SingleLiveEvent<Boolean> getNoTasksEvent();
 
+    SingleLiveEvent<List<Pomodoro>> getUpdatePomodoroListEvent();
+
     void onTextChanged(String s);
 
     void onDismiss();
+
+    void onStop();
 }

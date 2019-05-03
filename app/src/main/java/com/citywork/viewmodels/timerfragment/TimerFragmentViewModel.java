@@ -15,7 +15,7 @@ import com.citywork.model.db.models.City;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
-import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
@@ -50,7 +50,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private NotificationUtils notificationUtils;
     private CompositeDisposable compositeDisposable;
 
-    private PomodoroManger pomodoroManger;
+    private CityManager cityManager;
 
     private Integer percent;
 
@@ -70,7 +70,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         mAlarmManager = new AlarmManagerImpl(appContext);
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
-        pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        cityManager = App.getsAppComponent().getPomdoromManager();
         timerStrategyContext = new TimerStrategyContext();
         //TODO INJECT
         notificationUtils = new NotificationUtils(appContext);
@@ -116,11 +116,11 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
             @Override
             public void onStart() {
-                int state = pomodoroManger.prepareBeforeStart();
+                int state = cityManager.prepareBeforeStart();
 
                 if (state == TimerState.ONGOING) {
                     timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
-                } else {
+                } else if (state == TimerState.REST_ONGOING) {
                     timerStrategyContext.setTimerStrategy(new RestTimerStrategy());
                 }
 
@@ -135,21 +135,21 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     private void initAndStartTimer() {
-        pomodoroManger.setTimeToPomodoro(timerValue);
+        cityManager.setTimeToPomodoro(timerValue);
         int index = Calculator.calculateBuidling(timerValue);
-        pomodoroManger.getBuilding().setIconName(buildingNames.get(index));
-        pomodoroManger.getBuilding().setCityIconName(cityBuildingNames.get(index));
+        cityManager.getBuilding().setIconName(buildingNames.get(index));
+        cityManager.getBuilding().setCityIconName(cityBuildingNames.get(index));
+        startTimer(createTimer(timerValue));
         saveBuidlingToDB();
         saveCityToDB();
-        startTimer(createTimer(timerValue));
     }
 
     private void saveBuidlingToDB() {
-        dataBaseHelper.saveBuilding(pomodoroManger.getBuilding());
+        dataBaseHelper.saveBuilding(cityManager.getBuilding());
     }
 
     private void saveCityToDB() {
-        dataBaseHelper.saveCity(pomodoroManger.getLastcity());
+        dataBaseHelper.saveCity(cityManager.getLastcity());
     }
 
     @Override
@@ -161,14 +161,15 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     public void on10MinRestClicked() {
         startRestTimer(sharedPrefensecUtils.getLongBreak());
     }
-     
+
     private void startRestTimer(long time) {
         startTimer(createTimer(time));
-        pomodoroManger.getPomodoro().setStopresttime(System.currentTimeMillis() + (time * 1000));
-        pomodoroManger.getPomodoro().setReststarttime(System.currentTimeMillis());
+        cityManager.getPomodoro().setStopresttime(System.currentTimeMillis() + (time * 1000));
+        cityManager.getPomodoro().setReststarttime(System.currentTimeMillis());
         //TODO SAVE POMODORO INSTEAD BUILDING
         saveBuidlingToDB();
     }
+
     private BehaviorSubject<Long> createTimer(long timerTime) {
         Timber.i("createTimer");
         return mTimerBase.startTimer(timerTime);
@@ -198,42 +199,43 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 }, e -> {
                     timerStrategyContext.onCancel(this);
                 }, () -> {
-                    cityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
+                    cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
                     timerStrategyContext.onComplete(this);
 
                     saveBuidlingToDB();
-                    timerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
+                    timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
                     notificationUtils.closeAlarmNotification();
                 }));
     }
 
     @Override
     public void onWorkTimerTick(long time) {
-        percent = Calculator.calculatePercentOfTime(time, Calculator.getTime(pomodoroManger.getPomodoro().getStarttime(), pomodoroManger.getPomodoro().getStoptime()));
+        percent = Calculator.calculatePercentOfTime(time, Calculator.getTime(cityManager.getPomodoro().getStarttime(), cityManager.getPomodoro().getStoptime()));
         changeTimeEventInPercent.postValue(percent);
-        mProgressPeopleCountChangedEvent.postValue(new Pair(pomodoroManger.getBuilding().getPeople_count(), Calculator.calculatePeopleCountByPercent(pomodoroManger.getBuilding().getPeople_count(), percent)));
+        mProgressPeopleCountChangedEvent.postValue(new Pair(cityManager.getBuilding().getPeople_count(), Calculator.calculatePeopleCountByPercent(cityManager.getBuilding().getPeople_count(), percent)));
     }
 
     @Override
     public void onWorkTimerComplete() {
         saveBuidlingToDB();
-        pomodoroManger.createEmptyInstance();
+        cityManager.createEmptyBuildingInstance();
+        cityManager.setComleted();
     }
 
     @Override
     public void onWorkTImerCancel() {
         timerStateChangedEvent.postValue(TimerState.CANCELED);
-        pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
+        cityManager.getPomodoro().setTimerState(TimerState.CANCELED);
     }
 
     @Override
     public void onStopClicked() {
         mTimerBase.stopTimer();
-        mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
-        pomodoroManger.setCanceled();
+        mAlarmManager.deleteAlarmTask(cityManager.getPomodoro().getId());
+        cityManager.setCanceled();
         timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
         saveBuidlingToDB();
-        pomodoroManger.createEmptyInstance();
+        cityManager.createEmptyBuildingInstance();
         saveBuidlingToDB();
     }
 
@@ -245,8 +247,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void onPause() {
-        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-            mAlarmManager.setAlarmForTime(pomodoroManger.getPomodoro().getStoptime(), pomodoroManger.getPomodoro().getId());
+        if (cityManager.getPomodoroState() == TimerState.ONGOING) {
+            mAlarmManager.setAlarmForTime(cityManager.getPomodoro().getStoptime(), cityManager.getPomodoro().getId());
         }
     }
 
@@ -254,81 +256,83 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     public void onStop() {
         mTimerBase.pauseTimer();
         compositeDisposable.clear();
-        saveBuidlingToDB();
     }
 
     @Override
     public void onResume() {
-        if (pomodoroManger.getPomodoro() != null) {
-            if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-                if (!(Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStoptime()) <= 0)) {
-                    checkAndStartTimer(pomodoroManger.getPomodoro().getStoptime());
+        cityManager.getPeopleCount();
+        if (cityManager.getPomodoro() != null) {
+            if (cityManager.getPomodoro().getTimerState() == TimerState.ONGOING) {
+                if (!(Calculator.getRemainingTime(cityManager.getPomodoro().getStoptime()) <= 0)) {
+                    checkAndStartTimer(cityManager.getPomodoro().getStoptime());
                 } else {
-                    pomodoroManger.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-                    dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+                    cityManager.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+                    dataBaseHelper.savePomodoro(cityManager.getPomodoro());
                     timerStateChangedEvent.postValue(TimerState.WORK_COMPLETED);
                 }
-            } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
-                if (!((Calculator.getRemainingTime(pomodoroManger.getPomodoro().getStopresttime()) <= 0))) {
-                    checkAndStartTimer(pomodoroManger.getPomodoro().getStopresttime());
+            } else if (cityManager.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
+                if (!((Calculator.getRemainingTime(cityManager.getPomodoro().getStopresttime()) <= 0))) {
+                    checkAndStartTimer(cityManager.getPomodoro().getStopresttime());
                 } else {
-                    pomodoroManger.getPomodoro().setTimerState(TimerState.COMPLETED);
-                    dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+                    cityManager.getPomodoro().setTimerState(TimerState.COMPLETED);
+                    dataBaseHelper.savePomodoro(cityManager.getPomodoro());
                     timerStateChangedEvent.postValue(TimerState.COMPLETED);
                 }
             }
 
-            timerStateChangedEvent.postValue(pomodoroManger.getPomodoro().getTimerState());
+            timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
 
-            if (pomodoroManger.getBuilding().getIconName() != null) {
-                buidingChanged.postValue(pomodoroManger.getBuilding().getIconName());
+            if (cityManager.getBuilding().getIconName() != null) {
+                buidingChanged.postValue(cityManager.getBuilding().getIconName());
             } else {
                 buidingChanged.postValue(buildingNames.get(Calculator.calculateBuidling(timerValue)));
             }
 
-            if (pomodoroManger.getPomodoro().getId() != null)
-                mAlarmManager.deleteAlarmTask(pomodoroManger.getPomodoro().getId());
+            if (cityManager.getPomodoro().getId() != null)
+                mAlarmManager.deleteAlarmTask(cityManager.getPomodoro().getId());
 
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
-            cityPeopleCountChangeEvent.postValue(pomodoroManger.getCityPeopleCount());
+            cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
+        } else {
+            Timber.i("cityManager.getPomodoro() == null");
         }
     }
 
     @Override
     public void onSuccessDialogShowed() {
-        pomodoroManger.getPomodoro().setTimerState(TimerState.REST);
+        cityManager.getPomodoro().setTimerState(TimerState.REST);
         timerStateChangedEvent.postValue(TimerState.REST);
-        dataBaseHelper.savePomodoro(pomodoroManger.getPomodoro());
+        dataBaseHelper.savePomodoro(cityManager.getPomodoro());
     }
 
     @Override
     public Building getBuilding() {
-        return pomodoroManger.getBuilding();
+        return cityManager.getBuilding();
     }
 
 
     @Override
     public void onServiceConnected(Building building) {
-        pomodoroManger.setBuilding(building);
-        if (building.getPomodoro().getTimerState() == TimerState.WORK_COMPLETED) {
-            //TODO CHANGE THIS
-            completeEvent.postValue(building);
-        } else {
-            checkAndStartTimer(building.getPomodoro().getStoptime());
-        }
+        Timber.i("onServiceConnected");
+//        cityManager.setBuilding(building);
+//        if (building.getPomodoro().getTimerState() == TimerState.WORK_COMPLETED) {
+//            //TODO CHANGE THIS
+//            completeEvent.postValue(building);
+//        } else {
+//            checkAndStartTimer(building.getPomodoro().getStoptime());
+//        }
     }
 
     @Override
     public void onTimerValueChanged(long time) {
-        int peopleCount = pomodoroManger.calculatePeopleCount(time);
-        if (pomodoroManger.getPeopleCount() != peopleCount) {
-            peopleCountChange.postValue(peopleCount);
-            pomodoroManger.setPeopleCount(peopleCount);
-        }
+        int peopleCount = Calculator.calculatePeopleCount(time);
+
+        peopleCountChange.postValue(peopleCount);
+
         String iconName = buildingNames.get(Calculator.calculateBuidling(time));
-        if (pomodoroManger.getBuilding().getIconName() == null || !pomodoroManger.getBuilding().getIconName().equals(iconName)) {
-            pomodoroManger.getBuilding().setIconName(iconName);
+        if (cityManager.getBuilding().getIconName() == null || !cityManager.getBuilding().getIconName().equals(iconName)) {
+            cityManager.getBuilding().setIconName(iconName);
             buidingChanged.postValue(iconName);
         }
 
@@ -337,14 +341,11 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void buildingReceived(Building building) {
-        if (pomodoroManger.getBuilding() != null) {
-            if (building.getPomodoro().getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-            } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-                building.getPomodoro().setTimerState(TimerState.COMPLETED);
-            }
+        Timber.i("buildingReceived");
+        if (building != null) {
 
-            pomodoroManger.setBuilding(building);
+            cityManager.setComleted();
+
             peopleCountChange.postValue(building.getPeople_count());
 
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
@@ -352,6 +353,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
                 checkAndStartTimer(building.getPomodoro().getStopresttime());
             }
+
         }
     }
 

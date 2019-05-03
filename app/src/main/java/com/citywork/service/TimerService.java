@@ -12,7 +12,7 @@ import com.citywork.model.db.models.Building;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.NotificationUtils;
-import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
@@ -36,7 +36,7 @@ public class TimerService extends Service {
     private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationUtils notificationUtils;
     private AlarmManagerImpl alarmManager;
-    private PomodoroManger pomodoroManger;
+    private CityManager cityManager;
     private DBHelper dbHelper;
 
     private Building building;
@@ -67,7 +67,7 @@ public class TimerService extends Service {
         alarmManager = new AlarmManagerImpl(App.getsAppComponent().getApplicationContext());
 
         dbHelper = App.getsAppComponent().getDataBaseHelper();
-        pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        cityManager = App.getsAppComponent().getPomdoromManager();
         mTimerBase = App.getsAppComponent().getTimerManager();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
     }
@@ -97,19 +97,11 @@ public class TimerService extends Service {
 
                         notificationUtils.updateTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(time), percent, buildingImageId);
                     }, e -> {
-                        if (pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
-                            pomodoroManger.getPomodoro().setTimerState(TimerState.CANCELED);
-                        } else if (pomodoroManger.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
-                            pomodoroManger.getPomodoro().setTimerState(TimerState.REST_CANCELED);
-                        }
+                        cityManager.setCanceled();
                     }, () -> {
                         notificationUtils.showAlarmNotification();
-                        if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
-                            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-                        } else if (building.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
-                            building.getPomodoro().setTimerState(TimerState.REST_CANCELED);
-                        }
-                        dbHelper.saveBuilding(pomodoroManger.getBuilding());
+                        cityManager.setComleted();
+                        dbHelper.saveBuilding(cityManager.getBuilding());
                         stopForeground(true);
                     });
         }

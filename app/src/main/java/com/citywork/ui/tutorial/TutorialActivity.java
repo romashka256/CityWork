@@ -1,5 +1,6 @@
 package com.citywork.ui.tutorial;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.citywork.R;
+import com.citywork.ui.MainActivity;
+import com.citywork.utils.SharedPrefensecUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,10 +22,21 @@ public class TutorialActivity extends AppCompatActivity {
     @BindView(R.id.tutorial_activity_tablayout)
     TabLayout tabLayout;
 
+    private SharedPrefensecUtils sharedPrefensecUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tutorial_activity);
+
+        sharedPrefensecUtils = new SharedPrefensecUtils(this);
+
+        if (!sharedPrefensecUtils.isFirstRun()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+            finish();
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();

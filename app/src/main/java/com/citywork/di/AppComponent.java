@@ -6,7 +6,7 @@ import com.citywork.di.modules.AppModule;
 import com.citywork.di.modules.TimerManagerModule;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.utils.commonutils.FontUtils;
-import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.timer.Timer;
@@ -30,7 +30,7 @@ public interface AppComponent {
 
     SharedPrefensecUtils getSharedPrefs();
 
-    PomodoroManger getPomdoromManager();
+    CityManager getPomdoromManager();
 
     StatusticUtils getStatisticsUtils();
 

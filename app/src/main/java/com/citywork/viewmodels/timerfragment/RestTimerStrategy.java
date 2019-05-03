@@ -6,7 +6,7 @@ public class RestTimerStrategy implements TimerStrategy {
 
     @Override
     public void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel) {
-        timerFragmentViewModel.onWorkTimerTick(time);
+
     }
 
     @Override

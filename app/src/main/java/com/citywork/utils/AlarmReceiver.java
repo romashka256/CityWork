@@ -9,6 +9,12 @@ import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.utils.timer.TimerState;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -19,7 +25,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     private NotificationUtils notificationUtils;
     private SharedPrefensecUtils sharedPrefensecUtils;
     private DBHelper dataBaseHelper;
-    private Building building;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,16 +43,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             Timber.i("showAlarmNotification");
             if (sharedPrefensecUtils.getInNotifBar())
                 notificationUtils.showAlarmNotification();
-            dataBaseHelper.getLastBuilding(building -> {
-                this.building = building;
-            });
 
-            building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
-            dataBaseHelper.saveBuilding(building);
-            //TODO SET POMODORO COMPLETED
+            disposables.add(dataBaseHelper.getLastBuilding()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(building -> {
+                        building.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
+                        dataBaseHelper.saveBuilding(building);
+                    }, throwable -> {
+
+                    }));
         }
 
-//        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-//        vibrator.vibrate(1000);
+        disposables.clear();
     }
 }

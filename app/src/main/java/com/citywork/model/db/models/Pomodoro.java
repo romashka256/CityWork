@@ -20,6 +20,29 @@ import lombok.Setter;
 @Parcel(implementations = {com_citywork_model_db_models_PomodoroRealmProxy.class}, value = Parcel.Serialization.BEAN, analyze = {Pomodoro.class})
 public class Pomodoro extends io.realm.RealmObject {
 
+    @PrimaryKey
+    @Getter
+    @Setter
+    Long id;
+    @Getter
+    @Setter
+    long starttime;
+    @Getter
+    @Setter
+    long stoptime;
+
+    RealmList<Task> tasks;
+
+    @Setter
+    @Getter
+    int timerState;
+    @Getter
+    @Setter
+    long reststarttime;
+    @Getter
+    @Setter
+    long stopresttime;
+
     public Pomodoro() {
         this.tasks = new RealmList<>();
     }
@@ -43,52 +66,11 @@ public class Pomodoro extends io.realm.RealmObject {
         this.tasks = tasks;
     }
 
-    @PrimaryKey
-    @Getter
-    @Setter
-    Long id;
-
-    long starttime;
-
-    long stoptime;
-
-    public long getStarttime() {
-        return starttime;
-    }
-
-    public void setStarttime(long starttime) {
-        this.starttime = starttime;
-    }
-
-    public Long getStoptime() {
-        return stoptime;
-    }
-
-    public void setStoptime(Long stoptime) {
-        this.stoptime = stoptime;
-    }
-
-    RealmList<Task> tasks;
-
-    @Setter
-    @Getter
-    int timerState;
-
-    @Getter
-    @Setter
-    long reststarttime;
-    @Getter
-    @Setter
-    long stopresttime;
 
     @Nullable
     @ParcelPropertyConverter(RealmListParcelConverter.class)
     public RealmList<Task> getTasks() {
         return tasks;
-    }
-
-    public void setTasks(@Nullable RealmList<Task> tasks) {
-        this.tasks = tasks;
     }
 
     @Override

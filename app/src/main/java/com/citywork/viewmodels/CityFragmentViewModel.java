@@ -6,28 +6,22 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
 import com.citywork.App;
-import com.citywork.R;
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
-import com.citywork.ui.customviews.LineChart;
 import com.citywork.utils.Calculator;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.chart.BarModeState;
 import com.citywork.utils.chart.ChartBar;
 import com.citywork.utils.CityUtils;
-import com.citywork.utils.PomodoroManger;
 import com.citywork.utils.chart.CustomChartUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.viewmodels.interfaces.ICityFragmentViewModel;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +44,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     private List<Building> buildingList;
     private CityUtils cityUtils;
-    private PomodoroManger pomodoroManger;
+    private CityManager cityManager;
     private CustomChartUtils customChartUtils;
     private Context context;
     private StatusticUtils statusticUtils;
@@ -69,7 +63,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     public CityFragmentViewModel() {
         this.barModeState = BarModeState.DAY;
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
-        pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        cityManager = App.getsAppComponent().getPomdoromManager();
         statusticUtils = App.getsAppComponent().getStatisticsUtils();
         context = App.getsAppComponent().getApplicationContext();
 
@@ -88,7 +82,7 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
         citiesCreatedEvent.postValue(statusticUtils.getCities());
 
 
-        mCityPeopleCountChangeEvent.setValue(pomodoroManger.getCityPeopleCount());
+        mCityPeopleCountChangeEvent.setValue(cityManager.getCityPeopleCount());
     }
 
     @Override

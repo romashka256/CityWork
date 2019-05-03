@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.citywork.model.db.DataBaseHelper;
 import com.citywork.utils.commonutils.FontUtils;
-import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 
@@ -49,8 +49,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public PomodoroManger provideModoroManager() {
-        return new PomodoroManger();
+    public CityManager provideModoroManager() {
+        return new CityManager();
     }
 
     @Singleton

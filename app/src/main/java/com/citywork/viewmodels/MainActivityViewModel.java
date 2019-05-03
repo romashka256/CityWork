@@ -15,7 +15,7 @@ import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.CityUtils;
 import com.citywork.utils.NotificationUtils;
-import com.citywork.utils.PomodoroManger;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.commonutils.ListUtils;
@@ -24,9 +24,10 @@ import com.citywork.utils.timer.TimerState;
 import com.citywork.viewmodels.interfaces.IMainActivityViewModel;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import lombok.Getter;
+import timber.log.Timber;
 
 public class MainActivityViewModel extends ViewModel implements IMainActivityViewModel {
 
@@ -49,16 +50,17 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     private SharedPrefensecUtils sharedPrefensecUtils;
     private Context context;
     private DBHelper dataBaseHelper;
-    private PomodoroManger pomodoroManger;
+    private CityManager cityManager;
     private StatusticUtils statusticUtils;
     private NotificationUtils notificationUtils;
     private CityUtils cityUtils;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public MainActivityViewModel() {
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         context = App.getsAppComponent().getApplicationContext();
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
-        pomodoroManger = App.getsAppComponent().getPomdoromManager();
+        cityManager = App.getsAppComponent().getPomdoromManager();
         statusticUtils = App.getsAppComponent().getStatisticsUtils();
 
         //TODO INJECT
@@ -68,54 +70,29 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
 
     @Override
     public void onCreate() {
-        Disposable disposable = dataBaseHelper.loadCities()
+        compositeDisposable.add(dataBaseHelper.loadCities()
                 .doOnSuccess(cities -> {
                     statusticUtils.prepareData(cityUtils.getCityList(cities));
-                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cities));
+                    cityManager.setCityPeopleCount(Calculator.calculatePeopleCount(cities));
                 })
                 .map(cities -> {
                     City lastCity = ListUtils.getLastElement(cities);
-                    pomodoroManger.setCity(lastCity);
 
-                    return ListUtils.getLastElement(lastCity.getBuildings());
+                    if (lastCity != null)
+                        ListUtils.getLastElement(lastCity.getBuildings());
+                    else
+                        cityManager.createEmptyBuildingInstance();
+
+                    cityManager.setCity(lastCity);
+                    return cityManager.getBuilding();
                 })
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(building -> {
-                    pomodoroManger.setBuilding(building);
                     buildingMutableLiveData.postValue(building);
-                }, throwable -> {
-
-                });
+                }, Timber::e));
 
         timerBase = App.getsAppComponent().getTimerManager();
-
-//        cityList -> {
-//            if (!cityList.isEmpty()) {
-//                City city = cityList.get(cityList.size() - 1);
-//
-//                if (city != null) {
-//                    Building building = city.getBuildings().get(city.getBuildings().size() - 1);
-//
-//                    pomodoroManger.setCityPeopleCount(Calculator.calculatePeopleCount(cityList));
-//                    pomodoroManger.setCity(city);
-//                    if (building == null ||
-//                            (building.getPomodoro().getTimerState() == TimerState.CANCELED ||
-//                                    building.getPomodoro().getTimerState() == TimerState.REST_CANCELED ||
-//                                    building.getPomodoro().getTimerState() == TimerState.COMPLETED)) {
-//                        pomodoroManger.createEmptyInstance();
-//                    } else {
-//                        pomodoroManger.setBuilding(building);
-//
-//                        buildingMutableLiveData.postValue(building);
-//                    }
-//                }
-//            } else {
-//                pomodoroManger.createEmptyInstance();
-//            }
-//
-//            timerBase = App.getsAppComponent().getTimerManager();
-//        });
     }
 
     @Override
@@ -127,16 +104,19 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     @Override
     public void onStop() {
         if (sharedPrefensecUtils.getInNotifBar()) {
-            if (pomodoroManger.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
-                    pomodoroManger.getPomodoro() != null &&
-                    pomodoroManger.getPomodoro().getTimerState() == TimerState.ONGOING) {
+            Timber.i(cityManager.getPomodoro().toString());
+            if (cityManager.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
+                    cityManager.getPomodoro() != null &&
+                    cityManager.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+                    context.startForegroundService(TimerService.getIntent(context, cityManager.getBuilding()));
                 } else {
-                    context.startService(TimerService.getIntent(context, pomodoroManger.getBuilding()));
+                    context.startService(TimerService.getIntent(context, cityManager.getBuilding()));
                 }
             }
         }
+
+        compositeDisposable.clear();
     }
 
     @Override

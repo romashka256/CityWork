@@ -16,6 +16,7 @@ import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.listeners.OnTaskClickListener;
 import com.citywork.utils.commonutils.FontUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +51,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         taskListVH.taskTextV.setText("#" + (i + 1) + " POMO");
         taskListVH.taskTextV.setTypeface(fontUtils.getMedium());
+
         if (i != pomodoros.size() - 1)
             taskListVH.listView.setAlpha(0.6f);
 
@@ -63,8 +65,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         }
 
         taskListVH.listView.setAdapter(new PomoTaskListAdapter(context, pomodoro.getTasks(), onTaskClickListener));
-  //      setListViewHeightBasedOnChildren(taskListVH.listView);
-
+        setListViewHeightBasedOnChildren(taskListVH.listView);
     }
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -93,6 +94,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         listView.requestLayout();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return pomodoros.get(position).hashCode();
+    }
 
     @Override
     public int getItemCount() {

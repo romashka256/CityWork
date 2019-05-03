@@ -90,11 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         fontUtils = App.getsAppComponent().getFontUtils();
 
-        if (iMainActivityViewModel.isFirstRun()) {
-            Intent intent = new Intent(this, TutorialActivity.class);
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-        }
+
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().setValue(building);

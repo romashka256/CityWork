@@ -1,5 +1,6 @@
 package com.citywork.model.db;
 
+import android.os.Build;
 import android.view.View;
 
 import com.citywork.model.db.models.Building;
@@ -114,96 +115,62 @@ public class DataBaseHelper implements DBHelper {
         realm.close();
     }
 
-    @Override
-    public void getLastPomodoro(OnPomodoroLoaded onPomodoroLoaded) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-            Pomodoro pomodoro = realm1.where(Pomodoro.class).findAll().last();
-            onPomodoroLoaded.onLoaded(pomodoro);
-            Timber.i("Last pomodoro loaded : %s", pomodoro.toString());
-        });
-        realm.close();
-    }
+
+
 
     @Override
-    public void getLastBuilding(OnLastBuildingLoadedListener onLastBuildingLoadedListener) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
+    public Single<Building> getLastBuilding() {
+        return Single.create(emitter -> {
+            Realm realm = Realm.getDefaultInstance();
+            realm.executeTransaction(realm1 -> {
 
-            RealmResults<Building> realmResults = realm1.where(Building.class).findAll();
-            if (realmResults.isEmpty()) {
-                onLastBuildingLoadedListener.OnLastBuildingLoaded(null);
-            } else {
-                Building building = realm1.copyFromRealm(realmResults.last());
-                Timber.i("Last building loaded : %s \n with Pomodoro : %s", building.toString(), building.getPomodoro().toString());
-                onLastBuildingLoadedListener.OnLastBuildingLoaded(building);
-            }
-        });
-        realm.close();
-    }
-
-    @Override
-    public void getTasks(long timeAfter, OnTasksLoadedListener onTasksLoadedListener) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-
-            RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter)
-                    .or()
-                    .equalTo("timerState", TimerState.NOT_ONGOING)
-                    .findAll();
-
-            List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
-            Pomodoro last;
-            try {
-                last = realm1.where(Pomodoro.class).findAll().last();
-            } catch (IndexOutOfBoundsException e) {
-                last = null;
-            }
-
-            if (last != null && pomodoroList.isEmpty()) {
-                last = realm1.copyFromRealm(last);
-                pomodoroList.add(last);
-            }
-
-            if (realmResults != null)
-                onTasksLoadedListener.onTasksLoaded(pomodoroList);
-            else
-                onTasksLoadedListener.onTasksLoaded(new ArrayList<>());
-        });
-        realm.close();
-    }
-
-    @Override
-    public void loadAllCompletedBuildings(OnBuildingsLoadedListener onBuildingsLoadedListener) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-            List<Building> realmList = realm1.copyFromRealm(realm1.where(Building.class)
-                    .equalTo("pomodoro.timerState", TimerState.COMPLETED)
-                    .findAll());
-
-            onBuildingsLoadedListener.onBuildingsLoaded(realmList);
-        });
-        realm.close();
-    }
-
-    @Override
-    public void loadLastCity(OnCityLoadedListener onCityLoadedListener) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-            if (!realm1.where(City.class).findAll().isEmpty()) {
-                City city = realm1.where(City.class).findAll().last();
-                if (city != null) {
-                    city = realm1.copyFromRealm(city);
-                    onCityLoadedListener.onLoadedListener(city);
+                RealmResults<Building> realmResults = realm1.where(Building.class).findAll();
+                if (realmResults.isEmpty()) {
+                    emitter.onSuccess(null);
                 } else {
-                    onCityLoadedListener.onLoadedListener(null);
+                    Building building = realm1.copyFromRealm(realmResults.last());
+                    Timber.i("Last building loaded : %s \n with Pomodoro : %s", building.toString(), building.getPomodoro().toString());
+                    emitter.onSuccess(building);
                 }
-            } else {
-                onCityLoadedListener.onLoadedListener(null);
-            }
+            });
+            realm.close();
         });
-        realm.close();
     }
+
+    @Override
+    public Single<List<Pomodoro>> getTasks(long timeAfter) {
+        return Single.create(emitter -> {
+            Realm realm = Realm.getDefaultInstance();
+            realm.executeTransaction(realm1 -> {
+
+                RealmResults<Pomodoro> realmResults = realm1.where(Pomodoro.class).greaterThan("stoptime", timeAfter)
+                        .or()
+                        .equalTo("timerState", TimerState.NOT_ONGOING)
+                        .findAll();
+
+                List<Pomodoro> pomodoroList = realm1.copyFromRealm(realmResults);
+                Pomodoro last;
+                try {
+                    last = realm1.where(Pomodoro.class).findAll().last();
+                } catch (IndexOutOfBoundsException e) {
+                    last = null;
+                }
+
+                if (last != null && pomodoroList.isEmpty()) {
+                    last = realm1.copyFromRealm(last);
+                    pomodoroList.add(last);
+                }
+
+                if (realmResults != null)
+                    emitter.onSuccess(pomodoroList);
+                else
+                    emitter.onSuccess(new ArrayList<>());
+
+            });
+            realm.close();
+        });
+    }
+
 
     @Override
     public void saveCity(City city) {
@@ -216,4 +183,5 @@ public class DataBaseHelper implements DBHelper {
             realm1.copyToRealmOrUpdate(city);
         });
     }
+
 }
