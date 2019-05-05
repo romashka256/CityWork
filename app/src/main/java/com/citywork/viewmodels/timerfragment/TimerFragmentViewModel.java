@@ -14,8 +14,8 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.utils.AlarmManagerImpl;
 import com.citywork.utils.Calculator;
-import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.CityManager;
+import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
@@ -67,14 +67,14 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         mTimerBase = App.getsAppComponent().getTimerManager();
         compositeDisposable = App.getsAppComponent().getCompositeDisposable();
         appContext = App.getsAppComponent().getApplicationContext();
-        mAlarmManager = new AlarmManagerImpl(appContext);
         dataBaseHelper = App.getsAppComponent().getDataBaseHelper();
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         cityManager = App.getsAppComponent().getPomdoromManager();
-        timerStrategyContext = new TimerStrategyContext();
-        //TODO INJECT
-        notificationUtils = new NotificationUtils(appContext);
 
+        //TODO INJECT
+        timerStrategyContext = new TimerStrategyContext();
+        notificationUtils = new NotificationUtils(appContext);
+        mAlarmManager = new AlarmManagerImpl(appContext);
         buildingNames = new ArrayList<>();
         cityBuildingNames = new ArrayList<>();
 
@@ -117,16 +117,21 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             @Override
             public void onStart() {
                 int state = cityManager.prepareBeforeStart();
+                Timber.i("onStart with building : %s", cityManager.getBuilding().toString());
 
                 if (state == TimerState.ONGOING) {
+                    Timber.i("set work strategy");
                     timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
                 } else if (state == TimerState.REST_ONGOING) {
+                    Timber.i("set rest strategy");
                     timerStrategyContext.setTimerStrategy(new RestTimerStrategy());
                 }
 
                 timerStateChangedEvent.postValue(TimerState.ONGOING);
             }
         });
+
+
     }
 
     @Override
@@ -137,8 +142,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private void initAndStartTimer() {
         cityManager.setTimeToPomodoro(timerValue);
         int index = Calculator.calculateBuidling(timerValue);
-        cityManager.getBuilding().setIconName(buildingNames.get(index));
-        cityManager.getBuilding().setCityIconName(cityBuildingNames.get(index));
+        cityManager.setIconsForBuilding(buildingNames.get(index), cityBuildingNames.get(index));
         startTimer(createTimer(timerValue));
         saveBuidlingToDB();
         saveCityToDB();
@@ -199,13 +203,16 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 }, e -> {
                     timerStrategyContext.onCancel(this);
                 }, () -> {
-                    cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
                     timerStrategyContext.onComplete(this);
-
-                    saveBuidlingToDB();
-                    timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
-                    notificationUtils.closeAlarmNotification();
                 }));
+    }
+
+    private void baseOnCompleteAct() {
+        cityManager.setComleted();
+        saveBuidlingToDB();
+
+        timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
+        notificationUtils.closeAlarmNotification();
     }
 
     @Override
@@ -217,26 +224,52 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void onWorkTimerComplete() {
-        saveBuidlingToDB();
-        cityManager.createEmptyBuildingInstance();
-        cityManager.setComleted();
+        Timber.i("onWorkTimerComplete : %s", cityManager.getBuilding().toString());
+        baseOnCompleteAct();
+
+        cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
     }
 
     @Override
     public void onWorkTImerCancel() {
-        timerStateChangedEvent.postValue(TimerState.CANCELED);
-        cityManager.getPomodoro().setTimerState(TimerState.CANCELED);
+        Timber.i("onWorkTImerCancel : %s", cityManager.getBuilding().toString());
+        cityManager.setCanceled();
+        saveBuidlingToDB();
+        createNewInstance();
+    }
+
+    @Override
+    public void onRestTimerTick(long time) {
+
+    }
+
+    @Override
+    public void onRestTimerComplete() {
+        Timber.i("onRestTimerComplete : %s", cityManager.getBuilding().toString());
+        baseOnCompleteAct();
+        createNewInstance();
+    }
+
+    @Override
+    public void onRestTImerCancel() {
+        Timber.i("onRestTimerCancel : %s", cityManager.getBuilding().toString());
+        cityManager.setCanceled();
+        saveBuidlingToDB();
+        createNewInstance();
+    }
+
+    private void createNewInstance() {
+        cityManager.createEmptyBuildingInstance();
+        cityManager.getLastcity().getBuildings().add(cityManager.getBuilding());
+        saveBuidlingToDB();
+        saveCityToDB();
     }
 
     @Override
     public void onStopClicked() {
         mTimerBase.stopTimer();
         mAlarmManager.deleteAlarmTask(cityManager.getPomodoro().getId());
-        cityManager.setCanceled();
-        timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
-        saveBuidlingToDB();
-        cityManager.createEmptyBuildingInstance();
-        saveBuidlingToDB();
+        timerStrategyContext.onCancel(this);
     }
 
     @Override
@@ -311,7 +344,6 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         return cityManager.getBuilding();
     }
 
-
     @Override
     public void onServiceConnected(Building building) {
         Timber.i("onServiceConnected");
@@ -330,10 +362,10 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
         peopleCountChange.postValue(peopleCount);
 
-        String iconName = buildingNames.get(Calculator.calculateBuidling(time));
-        if (cityManager.getBuilding().getIconName() == null || !cityManager.getBuilding().getIconName().equals(iconName)) {
-            cityManager.getBuilding().setIconName(iconName);
-            buidingChanged.postValue(iconName);
+        int index = Calculator.calculateBuidling(time);
+        if (cityManager.getBuilding().getIconName() == null || !cityManager.getBuilding().getIconName().equals(buildingNames.get(index))) {
+            cityManager.setIconsForBuilding(buildingNames.get(index), cityBuildingNames.get(index));
+            buidingChanged.postValue(buildingNames.get(index));
         }
 
         timerValue = time;
@@ -344,9 +376,19 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         Timber.i("buildingReceived");
         if (building != null) {
 
-            cityManager.setComleted();
+            if (cityManager.setComleted() == TimerState.COMPLETED) {
+                saveBuidlingToDB();
+                createNewInstance();
+            }
 
-            peopleCountChange.postValue(building.getPeople_count());
+            if (building.getIconName() == null) {
+                int index = Calculator.calculateBuidling(timerValue);
+                cityManager.setIconsForBuilding(buildingNames.get(index), cityBuildingNames.get(index));
+            }
+
+            buidingChanged.setValue(building.getIconName());
+
+            peopleCountChange.setValue(building.getPeople_count());
 
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 checkAndStartTimer(building.getPomodoro().getStoptime());

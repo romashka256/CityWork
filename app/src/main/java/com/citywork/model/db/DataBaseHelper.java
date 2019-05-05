@@ -1,32 +1,17 @@
 package com.citywork.model.db;
 
-import android.os.Build;
-import android.view.View;
-
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
-import com.citywork.model.interfaces.OnBuildingsLoadedListener;
-import com.citywork.model.interfaces.OnCitiesLoadedListener;
-import com.citywork.model.interfaces.OnCityLoadedListener;
-import com.citywork.model.interfaces.OnLastBuildingLoadedListener;
-import com.citywork.model.interfaces.OnPomodoroLoaded;
-import com.citywork.model.interfaces.OnTasksLoadedListener;
 import com.citywork.utils.timer.TimerState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import timber.log.Timber;
@@ -59,21 +44,9 @@ public class DataBaseHelper implements DBHelper {
     public void savePomodoro(Pomodoro pomodoro) {
         try {
             Realm realm = Realm.getDefaultInstance();
-            realm.executeTransaction(realm1 -> {
-                Task task;
-                Number currentIdNum = realm.where(Task.class).max("id");
-                Integer nextId = null;
-                for (int i = 0; i < pomodoro.getTasks().size(); i++) {
-                    task = pomodoro.getTasks().get(i);
-                    if (task.getId() == null) {
-                        if (currentIdNum == null && nextId == null) {
-                            nextId = 1;
-                            currentIdNum = 0;
-                        } else {
-                            nextId = currentIdNum.intValue() + 1;
-                        }
-                        task.setId(nextId);
-                    }
+            realm.executeTransactionAsync(realm1 -> {
+                if (pomodoro.getId() == null) {
+                    pomodoro.setId(UUID.randomUUID().toString());
                 }
                 realm1.copyToRealmOrUpdate(pomodoro);
             });
@@ -92,7 +65,7 @@ public class DataBaseHelper implements DBHelper {
     @Override
     public void saveTask(Task task) {
         Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
+        realm.executeTransactionAsync(realm1 -> {
             realm1.copyToRealmOrUpdate(task);
         });
         realm.close();
@@ -100,23 +73,22 @@ public class DataBaseHelper implements DBHelper {
 
     @Override
     public void saveBuilding(Building building) {
+
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             if (building.getId() == null) {
-                building.setId(new Random().nextLong());
+                building.setId(UUID.randomUUID().toString());
             }
 
             if (building.getPomodoro().getId() == null) {
-                building.getPomodoro().setId(new Random().nextLong());
+                building.getPomodoro().setId(UUID.randomUUID().toString());
             }
 
+            Timber.i("saving Building : %s", building.toString());
             realm1.copyToRealmOrUpdate(building);
         });
         realm.close();
     }
-
-
-
 
     @Override
     public Single<Building> getLastBuilding() {
@@ -180,6 +152,7 @@ public class DataBaseHelper implements DBHelper {
                 city.setId(new Random().nextLong());
             }
 
+            Timber.i("save city : %s", city.toString());
             realm1.copyToRealmOrUpdate(city);
         });
     }

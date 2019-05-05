@@ -1,21 +1,19 @@
 package com.citywork.viewmodels.timerfragment;
 
-import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
-
 public class RestTimerStrategy implements TimerStrategy {
 
     @Override
-    public void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel) {
-
+    public void onTick(long time, TimerCallbacks timerCallbacks) {
+        timerCallbacks.onRestTimerTick(time);
     }
 
     @Override
-    public void onComplete(ITimerFragmentViewModel timerFragmentViewModel) {
-
+    public void onComplete(TimerCallbacks timerCallbacks) {
+        timerCallbacks.onRestTimerComplete();
     }
 
     @Override
-    public void onCancel(ITimerFragmentViewModel timerFragmentViewModel) {
-
+    public void onCancel(TimerCallbacks timerCallbacks) {
+        timerCallbacks.onRestTImerCancel();
     }
 }

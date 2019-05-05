@@ -5,8 +5,9 @@ import android.util.Pair;
 
 import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
+import com.citywork.viewmodels.timerfragment.TimerCallbacks;
 
-public interface ITimerFragmentViewModel {
+public interface ITimerFragmentViewModel extends TimerCallbacks {
 
     void onStartClicked();
 
@@ -19,12 +20,6 @@ public interface ITimerFragmentViewModel {
     void onSuccessDialogShowed();
 
     void onDebugBtnClicked();
-
-    void onWorkTimerTick(long time);
-
-    void onWorkTimerComplete();
-
-    void onWorkTImerCancel();
 
     void onPause();
 

@@ -13,9 +13,9 @@ import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.service.TimerService;
 import com.citywork.utils.Calculator;
+import com.citywork.utils.CityManager;
 import com.citywork.utils.CityUtils;
 import com.citywork.utils.NotificationUtils;
-import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.commonutils.ListUtils;
@@ -72,18 +72,16 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     public void onCreate() {
         compositeDisposable.add(dataBaseHelper.loadCities()
                 .doOnSuccess(cities -> {
+                    Timber.i("onSuccess city list : %s", cities);
                     statusticUtils.prepareData(cityUtils.getCityList(cities));
                     cityManager.setCityPeopleCount(Calculator.calculatePeopleCount(cities));
                 })
                 .map(cities -> {
                     City lastCity = ListUtils.getLastElement(cities);
-
-                    if (lastCity != null)
-                        ListUtils.getLastElement(lastCity.getBuildings());
-                    else
-                        cityManager.createEmptyBuildingInstance();
-
                     cityManager.setCity(lastCity);
+
+                    cityManager.setBuilding(ListUtils.getLastElement(cityManager.getLastcity().getBuildings()));
+
                     return cityManager.getBuilding();
                 })
                 .subscribeOn(Schedulers.io())
@@ -106,7 +104,6 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
         if (sharedPrefensecUtils.getInNotifBar()) {
             Timber.i(cityManager.getPomodoro().toString());
             if (cityManager.getPomodoro().getTimerState() != TimerState.REST_ONGOING &&
-                    cityManager.getPomodoro() != null &&
                     cityManager.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(TimerService.getIntent(context, cityManager.getBuilding()));

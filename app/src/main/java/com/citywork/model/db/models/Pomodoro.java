@@ -3,7 +3,6 @@ package com.citywork.model.db.models;
 import android.support.annotation.Nullable;
 
 import com.citywork.RealmListParcelConverter;
-import com.citywork.utils.timer.TimerState;
 
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcel;
@@ -23,7 +22,7 @@ public class Pomodoro extends io.realm.RealmObject {
     @PrimaryKey
     @Getter
     @Setter
-    Long id;
+    String id;
     @Getter
     @Setter
     long starttime;

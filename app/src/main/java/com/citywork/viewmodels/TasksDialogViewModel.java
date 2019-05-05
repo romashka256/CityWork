@@ -56,15 +56,12 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
         disposables.add(dataBaseHelper.getTasks(timeTerm)
                 .doOnSuccess(list -> {
                     this.pomodoros = list;
-
                     isEmpty = createPomodoroList();
-
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
                     newPomodorosEvent.postValue(pomodoros);
-
                     if (isEmpty)
                         noTasksEvent.postValue(true);
                 }, Timber::e));
@@ -77,7 +74,7 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
         for (int i = 0; i < pomodoros.size(); i++) {
             Pomodoro pom = pomodoros.get(i);
-            if (pom.getId().equals(cityManager.getPomodoro().getId())) {
+            if (pom.getId() != null && pom.getId().equals(cityManager.getPomodoro().getId())) {
                 pomodoros.set(i, cityManager.getPomodoro());
                 added = true;
             }

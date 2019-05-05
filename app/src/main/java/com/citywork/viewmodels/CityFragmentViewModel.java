@@ -34,7 +34,6 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
 
     private MutableLiveData<List<City>> citiesCreatedEvent = new MutableLiveData<>();
 
-
     private MutableLiveData<Integer> mCityPeopleCountChangeEvent = new MutableLiveData<>();
 
     @Getter

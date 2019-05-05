@@ -18,7 +18,7 @@ public class AlarmManagerImpl {
         this.context = context;
     }
 
-    private PendingIntent getPendingIntent(long id) {
+    private PendingIntent getPendingIntent(String id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(AlarmReceiver.INTENT_MESSAGE_KEY, AlarmReceiver.INTENT_MESSAGE);
         intent.putExtra(AlarmReceiver.INTENT_POMODORO_ID_KEY, id);
@@ -27,12 +27,12 @@ public class AlarmManagerImpl {
         return pendingIntent;
     }
 
-    public void setAlarmForTime(long time, long id) {
+    public void setAlarmForTime(long time, String id) {
         Timber.i("alarm time set : %d", time);
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, getPendingIntent(id));
     }
 
-    public void deleteAlarmTask(long id) {
+    public void deleteAlarmTask(String id) {
         Timber.i("Canceling Alarm");
         alarmManager.cancel(getPendingIntent(id));
     }

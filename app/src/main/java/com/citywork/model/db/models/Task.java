@@ -2,6 +2,8 @@ package com.citywork.model.db.models;
 
 import org.parceler.Parcel;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.com_citywork_model_db_models_TaskRealmProxy;
@@ -15,13 +17,14 @@ public class Task extends RealmObject {
     }
 
     public Task(String text) {
+        this.id = UUID.randomUUID().toString();
         this.text = text;
     }
 
     @PrimaryKey
     @Getter
     @Setter
-    private Integer id;
+    private String id;
     @Getter
     @Setter
     private String text;

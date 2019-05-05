@@ -1,7 +1,5 @@
 package com.citywork.viewmodels.timerfragment;
 
-import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
-
 import lombok.Setter;
 
 public class TimerStrategyContext {
@@ -9,15 +7,15 @@ public class TimerStrategyContext {
     @Setter
     private TimerStrategy timerStrategy;
 
-    public void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onTick(time, timerFragmentViewModel);
+    public void onTick(long time, TimerCallbacks timerCallbacks) {
+        timerStrategy.onTick(time, timerCallbacks);
     }
 
-    public void onComplete(ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onComplete(timerFragmentViewModel);
+    public void onComplete(TimerCallbacks timerCallbacks) {
+        timerStrategy.onComplete(timerCallbacks);
     }
 
-    public void onCancel(ITimerFragmentViewModel timerFragmentViewModel) {
-        timerStrategy.onCancel(timerFragmentViewModel);
+    public void onCancel(TimerCallbacks timerCallbacks) {
+        timerStrategy.onCancel(timerCallbacks);
     }
 }

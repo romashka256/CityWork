@@ -4,14 +4,10 @@ import com.citywork.model.db.models.Building;
 import com.citywork.model.db.models.City;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.model.db.models.Task;
-import com.citywork.utils.commonutils.ListUtils;
 import com.citywork.utils.timer.TimerState;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +24,7 @@ public class CityManager {
     private City lastcity;
     @Getter
     @Setter
-    private int cityPeopleCount;
+    private int cityPeopleCount = 0;
 
     //set todays city. or create new if first run.
     public void setCity(City city) {
@@ -36,11 +32,9 @@ public class CityManager {
         if (lastcity == null) {
             createNewCity(null);
         }
-
-        setBuilding(ListUtils.getLastElement(lastcity.getBuildings()));
     }
 
-    private void setBuilding(Building building) {
+    public void setBuilding(Building building) {
         if (building != null) {
             this.building = building;
             this.pomodoro = building.getPomodoro();
@@ -101,7 +95,8 @@ public class CityManager {
             createNewCity(new Date(System.currentTimeMillis()));
         }
 
-        lastcity.getBuildings().add(building);
+        if (!lastcity.getBuildings().contains(building))
+            lastcity.getBuildings().add(building);
     }
 
 
@@ -113,13 +108,12 @@ public class CityManager {
         int toreturn = 0;
         if (pomodoro.getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
+            cityPeopleCount += building.getPeople_count();
             toreturn = TimerState.WORK_COMPLETED;
-        } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING  && Calculator.getRemainingTime(building.getPomodoro().getStopresttime()) <= 0) {
+        } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStopresttime()) <= 0) {
             pomodoro.setTimerState(TimerState.COMPLETED);
             toreturn = TimerState.COMPLETED;
         }
-
-        cityPeopleCount += building.getPeople_count();
 
         return toreturn;
     }
@@ -158,5 +152,10 @@ public class CityManager {
         }
 
         return result;
+    }
+
+    public void setIconsForBuilding(String icon, String cityIcon) {
+        building.setIconName(icon);
+        building.setCityIconName(cityIcon);
     }
 }

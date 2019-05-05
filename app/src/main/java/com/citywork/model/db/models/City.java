@@ -7,15 +7,15 @@ import com.citywork.RealmListParcelConverter;
 import org.parceler.Parcel;
 import org.parceler.ParcelPropertyConverter;
 
+import java.util.Date;
+import java.util.Objects;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.com_citywork_model_db_models_CityRealmProxy;
-import io.realm.com_citywork_model_db_models_PomodoroRealmProxy;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Parcel(implementations = {com_citywork_model_db_models_CityRealmProxy.class}, value = Parcel.Serialization.BEAN, analyze = {Pomodoro.class})
 public class City extends RealmObject {
@@ -44,5 +44,33 @@ public class City extends RealmObject {
     @ParcelPropertyConverter(RealmListParcelConverter.class)
     public RealmList<Building> getBuildings() {
         return buildings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(getId(), city.getId()) &&
+                Objects.equals(getBuildings(), city.getBuildings()) &&
+                Objects.equals(getDate(), city.getDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getBuildings(), getDate());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder("City{" +
+                "id=" + id + "\n Buildings : \n");
+        for (Building building : buildings) {
+            s.append(building.toString()).append("\n");
+        }
+
+        s.append(", date=").append(date).append('}');
+
+        return s.toString();
     }
 }

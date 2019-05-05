@@ -1,11 +1,9 @@
 package com.citywork.viewmodels.timerfragment;
 
-import com.citywork.viewmodels.interfaces.ITimerFragmentViewModel;
-
 public interface TimerStrategy {
-    void onTick(long time, ITimerFragmentViewModel timerFragmentViewModel);
+    void onTick(long time, TimerCallbacks timerCallbacks);
 
-    void onComplete(ITimerFragmentViewModel timerFragmentViewModel);
+    void onComplete(TimerCallbacks timerCallbacks);
 
-    void onCancel(ITimerFragmentViewModel timerFragmentViewModel);
+    void onCancel(TimerCallbacks timerCallbacks);
 }

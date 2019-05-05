@@ -48,7 +48,7 @@ public class Calculator {
             if (city.getBuildings() != null)
                 for (Building building : city.getBuildings()) {
                     timerState = building.getPomodoro().getTimerState();
-                    if (timerState != TimerState.CANCELED && timerState != TimerState.ONGOING && timerState != TimerState.NOT_ONGOING)
+                    if (timerState >= TimerState.WORK_COMPLETED)
                         count += building.getPeople_count();
                 }
         }
