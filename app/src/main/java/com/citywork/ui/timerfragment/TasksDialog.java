@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,8 +25,8 @@ import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.FixedMaxHeightRecylerView;
-import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.ui.TaskListAdapter;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
 
@@ -113,7 +112,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onViewCreated(view, savedInstanceState);
-         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {
 
@@ -123,6 +122,8 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setAdapter(taskListAdapter);
+            recyclerView.getLayoutManager().scrollToPosition(taskListAdapter.getPomodoros().size() - 1);
+
         });
 
         iTasksDialogViewModel.getUpdatePomodoroListEvent().observe(this, position -> {
@@ -151,7 +152,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()== 0) {
+                if (s.length() == 0) {
                     editText.setTypeface(fontUtils.getLight());
                 }
                 iTasksDialogViewModel.onTextChanged(s.toString());
@@ -166,6 +167,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
         sendIV.setOnClickListener(v -> {
             iTasksDialogViewModel.onAddClicked();
             taskListAdapter.notifyItemChanged(0);
+            recyclerView.getLayoutManager().scrollToPosition(taskListAdapter.getPomodoros().size() - 1);
             editText.setText("");
         });
 

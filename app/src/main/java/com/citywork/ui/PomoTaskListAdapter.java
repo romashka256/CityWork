@@ -14,6 +14,7 @@ import com.citywork.model.db.models.Task;
 import com.citywork.ui.listeners.OnTaskClickListener;
 import com.citywork.utils.commonutils.FontUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PomoTaskListAdapter extends BaseAdapter {
@@ -24,9 +25,11 @@ public class PomoTaskListAdapter extends BaseAdapter {
 
     public PomoTaskListAdapter(Context context, List<Task> tasks, OnTaskClickListener onTaskClickListener) {
         this.tasks = tasks;
+        Collections.reverse(tasks);
         this.onTaskClickListener = onTaskClickListener;
         fontUtils = App.getsAppComponent().getFontUtils();
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @Override

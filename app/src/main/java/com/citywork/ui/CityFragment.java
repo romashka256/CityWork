@@ -1,6 +1,5 @@
 package com.citywork.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +22,6 @@ import androidx.navigation.Navigation;
 
 import com.citywork.App;
 import com.citywork.R;
-import com.citywork.model.db.models.City;
 import com.citywork.ui.customviews.LineChart;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
@@ -141,7 +139,7 @@ public class CityFragment extends Fragment {
         TabLayout.Tab taby = tabLayout.newTab();
         taby.setText(getResources().getString(R.string.year));
 
-        tabLayout.addTab(tab);
+        tabLayout.addTab(tab, true);
         tabLayout.addTab(tabw);
         tabLayout.addTab(tabm);
         tabLayout.addTab(taby);

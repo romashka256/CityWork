@@ -16,16 +16,17 @@ import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.listeners.OnTaskClickListener;
 import com.citywork.utils.commonutils.FontUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListVH> {
 
     private Context context;
     private OnTaskClickListener onTaskClickListener;
+    @Getter
     private List<Pomodoro> pomodoros;
     private FontUtils fontUtils;
 

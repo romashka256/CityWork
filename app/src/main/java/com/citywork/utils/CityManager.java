@@ -91,7 +91,7 @@ public class CityManager {
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 
-        pomodoro.setStarttime(startTime);
+        pomodoro.setStarttime(startTime);    
         pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
 

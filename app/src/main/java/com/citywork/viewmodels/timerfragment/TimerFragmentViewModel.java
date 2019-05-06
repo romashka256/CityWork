@@ -204,7 +204,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                     changeTimeEvent.postValue(time);
                     timerStrategyContext.onTick(time, this);
                 }, e -> {
-                     timerStrategyContext.onCancel(this);
+                    timerStrategyContext.onCancel(this);
                 }, () -> {
                     timerStrategyContext.onComplete(this);
                 }));
@@ -329,10 +329,10 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
-            cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
         } else {
             Timber.i("cityManager.getPomodoro() == null");
         }
+        cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
     }
 
     @Override
