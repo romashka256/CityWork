@@ -27,7 +27,7 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
     private SingleLiveEvent<List<Pomodoro>> newPomodorosEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> noTasksEvent = new SingleLiveEvent<>();
-    private SingleLiveEvent<List<Pomodoro>> updatePomodoroListEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Integer> updatePomodoroListEvent = new SingleLiveEvent<>();
 
     private List<Pomodoro> pomodoros;
     private TaskValidator taskValidator;
@@ -111,10 +111,9 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
             cityManager.addTask(task);
 
             dataBaseHelper.saveBuilding(cityManager.getBuilding());
-
-            newPomodorosEvent.postValue(pomodoros);
+            int index = pomodoros.size() - 1;
+            updatePomodoroListEvent.setValue(index);
             noTasksEvent.postValue(false);
-
         }
     }
 
@@ -134,7 +133,7 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
     }
 
     @Override
-    public SingleLiveEvent<List<Pomodoro>> getUpdatePomodoroListEvent() {
+    public SingleLiveEvent<Integer> getUpdatePomodoroListEvent() {
         return updatePomodoroListEvent;
     }
 

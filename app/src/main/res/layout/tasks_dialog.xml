@@ -76,33 +76,45 @@
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="21dp"
         android:background="@drawable/statistics_divider_hor"
-        app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_edittext" />
+        app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_inout_block" />
 
-    <EditText
-        android:id="@+id/tasks_dialog_edittext"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/tasks_dialog_inout_block"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="19dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:hint="@string/task_dialog_edittext_hint"
-        android:inputType="textMultiLine"
-        android:textColor="@color/black"
-        android:textColorHint="@color/transoarent50_black"
+        android:paddingBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tasks_dialog_sendiv"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/tasks_dialog_sendiv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tasks_dialog_edittext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tasks_dialog_edittext"
-        app:srcCompat="@drawable/send_icon" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/tasks_dialog_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:fitsSystemWindows="true"
+            android:hint="@string/task_dialog_edittext_hint"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+            android:textColorHint="@color/transoarent50_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tasks_dialog_sendiv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/tasks_dialog_sendiv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tasks_dialog_edittext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tasks_dialog_edittext"
+            app:srcCompat="@drawable/send_icon" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

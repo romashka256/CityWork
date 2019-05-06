@@ -21,7 +21,7 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navigation_height"
-        android:background="@color/white"
+        android:background="@color/totalwhite"
         android:elevation="8dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,9 +39,10 @@
             app:bt_padding="12dp"
             app:bt_leftPadding="24dp"
             app:bt_rightPadding="24dp"
+            app:bt_badgeTextSize="12sp"
             app:bt_shape="@drawable/transitions_navigation_bg"
             app:bt_title="@string/timer"
-            app:bt_titlePadding="7dp" />
+            app:bt_titlePadding="8dp" />
 
         <com.citywork.ui.customviews.bottomnav.BubbleToggleView
             android:id="@+id/bottom_bar_city"
@@ -53,10 +54,11 @@
             app:bt_icon="@drawable/ic_city_icon_focused"
             app:bt_padding="12dp"
             app:bt_leftPadding="24dp"
+            app:bt_badgeTextSize="12sp"
             app:bt_rightPadding="24dp"
             app:bt_shape="@drawable/transitions_navigation_bg"
             app:bt_title="@string/city"
-            app:bt_titlePadding="7dp" />
+            app:bt_titlePadding="8dp" />
 
         <!-- Add more child items here - max upto 5 -->
 

@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -79,7 +80,6 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_dialog, container, true);
-
         ButterKnife.bind(this, view);
 
         setFonts();
@@ -111,6 +111,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onViewCreated(view, savedInstanceState);
          recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
@@ -124,8 +125,8 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
             recyclerView.setAdapter(taskListAdapter);
         });
 
-        iTasksDialogViewModel.getUpdatePomodoroListEvent().observe(this, pomodoros -> {
-            taskListAdapter.notifyDataSetChanged();
+        iTasksDialogViewModel.getUpdatePomodoroListEvent().observe(this, position -> {
+            taskListAdapter.notifyItemChanged(position);
         });
 
         iTasksDialogViewModel.getNoTasksEvent().observe(this, empty -> {
@@ -164,7 +165,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
         sendIV.setOnClickListener(v -> {
             iTasksDialogViewModel.onAddClicked();
-            taskListAdapter.notifyDataSetChanged();
+            taskListAdapter.notifyItemChanged(0);
             editText.setText("");
         });
 

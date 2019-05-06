@@ -86,7 +86,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                     break;
                 case 1:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
-                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
                     break;
                 case 2:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0_white));

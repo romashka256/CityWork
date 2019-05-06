@@ -80,7 +80,6 @@ public class CityFragmentViewModel extends ViewModel implements ICityFragmentVie
     public void onCreate() {
         citiesCreatedEvent.postValue(statusticUtils.getCities());
 
-
         mCityPeopleCountChangeEvent.setValue(cityManager.getCityPeopleCount());
     }
 

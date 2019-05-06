@@ -1,5 +1,6 @@
 package com.citywork.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import androidx.navigation.Navigation;
 
 import com.citywork.App;
 import com.citywork.R;
+import com.citywork.model.db.models.City;
 import com.citywork.ui.customviews.LineChart;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.CityFragmentViewModel;
@@ -31,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
+import timber.log.Timber;
 
 public class CityFragment extends Fragment {
 
@@ -80,6 +83,7 @@ public class CityFragment extends Fragment {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("onCreate");
 
         fontUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
@@ -87,23 +91,22 @@ public class CityFragment extends Fragment {
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
 
         cityFragmentViewModel.onCreate();
-
-        cityFragmentViewModel.getCitiesLoaded();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Timber.i("onCreateView");
         View view = inflater.inflate(R.layout.city_fragment, container, false);
 
         ButterKnife.bind(this, view);
-
 
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Timber.i("onViewCreated");
         super.onViewCreated(view, savedInstanceState);
 
         pomoCountTV = pomoStat.findViewById(R.id.text_stat_item_number);
@@ -231,5 +234,11 @@ public class CityFragment extends Fragment {
     private void setFonts() {
         mPeopleCountTV.setTypeface(fontUtils.getBold());
         mPeopleCountTextTV.setTypeface(fontUtils.getLight());
+    }
+
+    @Override
+    public void onResume() {
+        Timber.i("onResume");
+        super.onResume();
     }
 }

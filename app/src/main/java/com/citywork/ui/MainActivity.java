@@ -1,5 +1,6 @@
 package com.citywork.ui;
 
+import android.app.FragmentTransaction;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;

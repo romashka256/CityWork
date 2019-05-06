@@ -71,26 +71,46 @@ public class CityView extends ViewGroup {
         buildingBitmaps.clear();
         this.removeAllViews();
 
-        for (String viewName : viewIconNames) {
+//        new Thread(() -> {
+//            for (String viewName : viewIconNames) {
+//                try {
+//                    Bitmap bitmap;
+//                    int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
+//
+//                    Drawable drawable = getResources().getDrawable(id);
+//                    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//
+//                    Canvas canvas = new Canvas(bitmap);
+//                    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                    drawable.draw(canvas);
+//                    buildingBitmaps.add(bitmap);
+//                } catch (OutOfMemoryError e) {
+//                    Timber.e(e);
+//                }
+//            }
+//
+//            postInvalidate();
+//        }).start();
 
-            try {
-                Bitmap bitmap;
-                int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
+            for (String viewName : viewIconNames) {
+                try {
+                    Bitmap bitmap;
+                    int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
 
-                Drawable drawable = getResources().getDrawable(id);
-                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                    Drawable drawable = getResources().getDrawable(id);
+                    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 
-                Canvas canvas = new Canvas(bitmap);
-                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                drawable.draw(canvas);
-                buildingBitmaps.add(bitmap);
-            } catch (OutOfMemoryError e) {
-
-                Timber.e(e);
+                    Canvas canvas = new Canvas(bitmap);
+                    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                    drawable.draw(canvas);
+                    buildingBitmaps.add(bitmap);
+                } catch (OutOfMemoryError e) {
+                    Timber.e(e);
+                }
             }
-        }
 
-        invalidate();
+            invalidate();
+
     }
 
     @Override

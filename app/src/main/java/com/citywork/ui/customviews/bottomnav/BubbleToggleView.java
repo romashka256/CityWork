@@ -209,9 +209,6 @@ public class BubbleToggleView extends RelativeLayout {
         //create the nav icon
         iconView = new ImageView(context);
         iconView.setId(ViewCompat.generateViewId());
-        LayoutParams lpIcon = new LayoutParams((int) bubbleToggleItem.getIconWidth(), (int) bubbleToggleItem.getIconHeight());
-        lpIcon.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        iconView.setLayoutParams(lpIcon);
         iconView.setImageDrawable(bubbleToggleItem.getIcon());
 
         //create the nav title
@@ -353,10 +350,6 @@ public class BubbleToggleView extends RelativeLayout {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
                 titleView.setWidth((int) (measuredTitleWidth * value));
-                //end of animation
-                if (value >= 1.0f) {
-                    //do something
-                }
             }
         });
         animator.start();

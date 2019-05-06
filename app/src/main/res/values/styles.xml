@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:listViewStyle">@style/ListViewStyle</item>
         <item name="android:scrollViewStyle">@style/ScrollViewStyle</item>
     </style>
@@ -47,5 +48,8 @@
 
     <style name="ScrollViewStyle" parent="android:Widget.ScrollView">
         <item name="android:overScrollMode">never</item>
+    </style>
+
+    <style name="TasksDialogStyle" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen">
     </style>
 </resources>

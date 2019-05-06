@@ -52,16 +52,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         taskListVH.taskTextV.setText("#" + (i + 1) + " POMO");
         taskListVH.taskTextV.setTypeface(fontUtils.getMedium());
 
-        if (i != pomodoros.size() - 1)
-            taskListVH.listView.setAlpha(0.6f);
-
-        if (i == pomodoros.size() - 1) {
-            taskListVH.taskTextV.setVisibility(View.GONE);
-        }
-
         if (pomodoro.getTasks() != null && pomodoro.getTasks().isEmpty()) {
             taskListVH.listView.setVisibility(View.GONE);
             taskListVH.taskTextV.setVisibility(View.GONE);
+        }else{
+            taskListVH.listView.setVisibility(View.VISIBLE);
+            taskListVH.taskTextV.setVisibility(View.VISIBLE);
+        }
+
+        if (i == pomodoros.size() - 1) {
+            taskListVH.taskTextV.setVisibility(View.GONE);
+        }else{
+            taskListVH.listView.setAlpha(0.6f);
         }
 
         taskListVH.listView.setAdapter(new PomoTaskListAdapter(context, pomodoro.getTasks(), onTaskClickListener));

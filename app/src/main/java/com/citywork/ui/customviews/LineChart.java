@@ -136,20 +136,26 @@ public class LineChart extends View {
         gridLinePaint.setStrokeWidth(gridWidth);
         gridLinePaint.setColor(getResources().getColor(R.color.barcolor));
         gridLinePaint.setPathEffect(new DashPathEffect(new float[]{dpToPx(10), dpToPx(10)}, 0f));
-
-
     }
 
     public void setValues(List<ChartBar> values, List<String> labels) {
         selected = false;
         this.chartBars = values;
         this.xLabels = labels;
+
+        new Thread(() -> {
+            calclateHeight();
+            postInvalidate();
+        }).start();
+    }
+
+    private void calclateHeight() {
         this.labelCount = xLabels.size();
         this.labelFontHeight = (int) getFontHeight(labelPaint);
-        this.labelFontWidth = (int) getFontWidth(labelPaint, labels.get(0));
+        this.labelFontWidth = (int) getFontWidth(labelPaint, xLabels.get(0));
         this.spaceBetweenLabel = ((width - (barsLeftMargin * 2)) / (labelCount - 1) - (labelFontWidth * 4));
 
-        Pair<Integer, Integer> sizes = customChartUtils.calculateBarAndSpace(width - (barsLeftMargin + barsLeftMargin), values.size());
+        Pair<Integer, Integer> sizes = customChartUtils.calculateBarAndSpace(width - (barsLeftMargin + barsLeftMargin), chartBars.size());
 
         barWidth = sizes.first;
         spaceBetweenBars = sizes.second;
@@ -167,7 +173,6 @@ public class LineChart extends View {
             bars.add(rectF);
         }
 
-        invalidate();
     }
 
     @Override
