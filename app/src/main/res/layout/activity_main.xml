@@ -17,96 +17,49 @@
         app:navGraph="@navigation/navigation"
         tools:layout_editor_absoluteX="0dp" />
 
-    <android.support.constraint.ConstraintLayout
-        android:elevation="8dp"
+    <com.citywork.ui.customviews.bottomnav.BubbleNavigationLinearView
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/totalwhite"
-        android:padding="10dp"
+        android:layout_height="@dimen/bottom_navigation_height"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/home_action"
+        <com.citywork.ui.customviews.bottomnav.BubbleToggleView
+            android:id="@+id/bottom_bar_timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tabbg"
-            android:backgroundTint="@color/nav_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/likes_action"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:bt_active="true"
+            app:bt_colorActive="@color/nav_icon_color"
+            app:bt_colorInactive="@color/nav_icon_color"
+            app:bt_icon="@drawable/ic_timer_icon_focused"
+            app:bt_padding="12dp"
+            app:bt_leftPadding="24dp"
+            app:bt_rightPadding="24dp"
+            app:bt_shape="@drawable/transitions_navigation_bg"
+            app:bt_title="@string/timer"
+            app:bt_titlePadding="7dp" />
 
-            <ImageView
-                android:id="@+id/home_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:tint="@color/totalwhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/home_icon_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_timer_icon_focused" />
-
-            <TextView
-                android:id="@+id/home_icon_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timer"
-                android:textColor="@color/totalwhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/home_icon"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/likes_action"
+        <com.citywork.ui.customviews.bottomnav.BubbleToggleView
+            android:id="@+id/bottom_bar_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/tabbg"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/home_action"
-            app:layout_constraintTop_toTopOf="parent">
+            app:bt_active="true"
+            app:bt_colorActive="@color/nav_icon_color"
+            app:bt_colorInactive="@color/nav_icon_color"
+            app:bt_icon="@drawable/ic_city_icon_focused"
+            app:bt_padding="12dp"
+            app:bt_leftPadding="24dp"
+            app:bt_rightPadding="24dp"
+            app:bt_shape="@drawable/transitions_navigation_bg"
+            app:bt_title="@string/city"
+            app:bt_titlePadding="7dp" />
 
-            <ImageView
-                android:id="@+id/likes_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:tint="@color/nav_bg"
-                app:layout_constraintEnd_toStartOf="@+id/likes_icon_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_city_icon_focused" />
+        <!-- Add more child items here - max upto 5 -->
 
-            <TextView
-                android:id="@+id/likes_icon_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/city"
-                android:textColor="@color/totalwhite"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/likes_icon"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+    </com.citywork.ui.customviews.bottomnav.BubbleNavigationLinearView>
 
 </android.support.constraint.ConstraintLayout>

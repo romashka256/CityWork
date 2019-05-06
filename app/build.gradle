@@ -105,6 +105,4 @@ dependencies {
     //ViewPager bottom indicator
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
-    //Bottom navigation
-    implementation 'com.gauravk.bubblenavigation:bubblenavigation:1.0.7'
 }

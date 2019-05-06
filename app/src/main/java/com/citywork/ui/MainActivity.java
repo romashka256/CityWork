@@ -26,6 +26,8 @@ import androidx.navigation.Navigation;
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.service.TimerService;
+import com.citywork.ui.customviews.bottomnav.BubbleNavigationLinearView;
+import com.citywork.ui.customviews.bottomnav.BubbleToggleView;
 import com.citywork.ui.timerfragment.TimerFragment;
 import com.citywork.ui.tutorial.TutorialActivity;
 import com.citywork.utils.SharedPrefensecUtils;
@@ -51,21 +53,21 @@ public class MainActivity extends AppCompatActivity {
 //    @BindView(R.id.bottom_navigation_city_btn)
 //    BottomNavigationItemView cityTabBtn;
 
-    @BindView(R.id.home_action)
-    ConstraintLayout homeAction;
-    @BindView(R.id.likes_action)
-    ConstraintLayout likesAction;
+    @BindView(R.id.bottom_bar_city)
+    BubbleToggleView cityBtn;
+    @BindView(R.id.bottom_bar_timer)
+    BubbleToggleView timerBtn;
     @BindView(R.id.bottom_bar)
-    ConstraintLayout bottomBar;
+    BubbleNavigationLinearView bottomBar;
 
-    @BindView(R.id.likes_icon_text)
-    TextView likesIconText;
-    @BindView(R.id.home_icon_text)
-    TextView homeIconText;
-    @BindView(R.id.home_icon)
-    ImageView homeIcon;
-    @BindView(R.id.likes_icon)
-    ImageView likesIcon;
+//    @BindView(R.id.likes_icon_text)
+//    TextView likesIconText;
+//    @BindView(R.id.home_icon_text)
+//    TextView homeIconText;
+//    @BindView(R.id.home_icon)
+//    ImageView homeIcon;
+//    @BindView(R.id.likes_icon)
+//    ImageView likesIcon;
 
     private int currentFragment;
 
@@ -104,25 +106,31 @@ public class MainActivity extends AppCompatActivity {
             ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().setValue(city);
             Timber.i("Last city posted");
         });
+        MainActivity mainActivity = this;
 
-        homeAction.setOnClickListener(v -> {
-            if (currentFragment != TimerFragment.fragmnetIndex) {
-                currentFragment = TimerFragment.fragmnetIndex;
-                select(homeAction.getId());
-                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+        bottomBar.setNavigationChangeListener((view, position) -> {
+            switch (position) {
+                case 1:
+                    Navigation.findNavController(mainActivity, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+                    break;
+                case 0:
+                    Navigation.findNavController(mainActivity, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+                    break;
             }
         });
 
-        likesAction.setOnClickListener(v -> {
-            if (currentFragment != CityFragment.fragmnetIndex) {
-                currentFragment = CityFragment.fragmnetIndex;
-                select(likesAction.getId());
-                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
-            }
-        });
+        bottomBar.setTypeface(fontUtils.getRegular());
 
-        likesIconText.setTypeface(fontUtils.getRegular());
-        homeIconText.setTypeface(fontUtils.getRegular());
+//        cityBtn.setOnClickListener(v -> {
+//                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+//        });
+//
+//        timerBtn.setOnClickListener(v -> {
+//                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+//        });
+//
+//        likesIconText.setTypeface(fontUtils.getRegular());
+//        homeIconText.setTypeface(fontUtils.getRegular());
 
         iMainActivityViewModel.onCreate();
 
@@ -131,41 +139,6 @@ public class MainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
-    }
-
-    public void select(int id) {
-        final ChangeBounds transition = new ChangeBounds();
-
-        transition.setDuration(600); // Sets a duration of 600 milliseconds
-        TransitionManager.beginDelayedTransition(bottomBar, transition);
-        ConstraintSet cs = new ConstraintSet();
-        cs.clone(homeAction);
-
-        if (id == R.id.home_action) {
-            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, R.color.nav_bg));
-            DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
-            cs.setVisibility(homeIconText.getId(), ConstraintSet.VISIBLE);
-        } else {
-            DrawableCompat.setTint(homeIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
-            cs.setVisibility(homeIconText.getId(), ConstraintSet.GONE);
-            DrawableCompat.setTint(homeAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
-        }
-        cs.applyTo(homeAction);
-
-        cs.clone(likesAction);
-        if (id == R.id.likes_action) {
-            cs.setVisibility(likesIconText.getId(), ConstraintSet.VISIBLE);
-            DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.totalwhite));
-            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, R.color.nav_bg));
-
-        } else {
-            DrawableCompat.setTint(likesIcon.getDrawable(), ContextCompat.getColor(this, R.color.black));
-            cs.setVisibility(likesIconText.getId(), ConstraintSet.GONE);
-            DrawableCompat.setTint(likesAction.getBackground(), ContextCompat.getColor(this, android.R.color.transparent));
-        }
-
-        cs.applyTo(likesAction);
 
     }
 

@@ -23,5 +23,15 @@
     <color name="divider_color">#80C4C4C4</color>
     <color name="gray35_color">#59C4C4C4</color>
     <color name="barcolor">#DCDCDC</color>
-    <color name="nav_bg">#2C2C2C</color>
+    <color name="nav_icon_color">#CC1E9EFA</color>
+    <color name="nav_bg">#331E9EFA</color>
+    <color name="nav_text_color">#CC1E9EFA</color>
+
+
+
+    <color name="default_inactive_shape_color">#e5e5e5</color>
+    <color name="default_inactive_color">#212121</color>
+    <color name="default_shape_inactive_color">#888888</color>
+    <color name="default_badge_background_color">#f44336</color>
+    <color name="default_badge_text_color">#ffffff</color>
 </resources>
