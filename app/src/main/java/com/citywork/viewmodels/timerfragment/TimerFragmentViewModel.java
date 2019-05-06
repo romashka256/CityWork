@@ -140,6 +140,9 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     }
 
     private void initAndStartTimer() {
+        if (cityManager.deleteBuildingFromOldCity()) {
+            saveCityToDB();
+        }
         cityManager.setTimeToPomodoro(timerValue);
         int index = Calculator.calculateBuidling(timerValue);
         cityManager.setIconsForBuilding(buildingNames.get(index), cityBuildingNames.get(index));

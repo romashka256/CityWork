@@ -78,6 +78,15 @@ public class CityManager {
         building = new Building(pomodoro);
     }
 
+    public boolean deleteBuildingFromOldCity() {
+        long startTime = System.currentTimeMillis();
+        if (changeCity(startTime)) {
+            lastcity.getBuildings().remove(building);
+            return true;
+        }
+        return false;
+    }
+
     public void setTimeToPomodoro(long timerValue) {
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
