@@ -48,8 +48,8 @@
 
     <ImageView
         android:id="@+id/tasks_dialog_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/tasks_dialog_title"
@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="21dp"
         android:background="@drawable/statistics_divider_hor"
         app:layout_constraintBottom_toTopOf="@+id/tasks_dialog_edittext" />
 
@@ -82,9 +82,9 @@
         android:id="@+id/tasks_dialog_edittext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="19dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/task_dialog_edittext_hint"
@@ -99,7 +99,7 @@
         android:id="@+id/tasks_dialog_sendiv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="@+id/tasks_dialog_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tasks_dialog_edittext"

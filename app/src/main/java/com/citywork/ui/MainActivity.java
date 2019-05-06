@@ -28,6 +28,7 @@ import com.citywork.R;
 import com.citywork.service.TimerService;
 import com.citywork.ui.timerfragment.TimerFragment;
 import com.citywork.ui.tutorial.TutorialActivity;
+import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.MainActivityViewModel;
 import com.citywork.viewmodels.SharedViewModel;
@@ -72,9 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
     private FontUtils fontUtils;
 
+    private SharedPrefensecUtils sharedPrefensecUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -89,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
         fontUtils = App.getsAppComponent().getFontUtils();
-
-
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().setValue(building);
@@ -122,12 +125,19 @@ public class MainActivity extends AppCompatActivity {
         homeIconText.setTypeface(fontUtils.getRegular());
 
         iMainActivityViewModel.onCreate();
+
+        if (sharedPrefensecUtils.isFirstRun()) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+
     }
 
     public void select(int id) {
         final ChangeBounds transition = new ChangeBounds();
 
-        transition.setDuration(180L); // Sets a duration of 600 milliseconds
+        transition.setDuration(600); // Sets a duration of 600 milliseconds
         TransitionManager.beginDelayedTransition(bottomBar, transition);
         ConstraintSet cs = new ConstraintSet();
         cs.clone(homeAction);
@@ -182,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Timber.i("onStop");
+        unbindService(serviceConnection);
         iMainActivityViewModel.onStop();
     }
 

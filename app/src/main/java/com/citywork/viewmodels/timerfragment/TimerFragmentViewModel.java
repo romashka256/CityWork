@@ -81,20 +81,20 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         for (int i = 0; i < 4; i++) {
             switch (i) {
                 case 0:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3_white));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
+                    break;
+                case 1:
+                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
+                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
+                    break;
+                case 2:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building0));
                     break;
-                case 1:
+                case 3:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1_white));
                     cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building1));
-                    break;
-                case 2:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2_white));
-                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building2));
-                    break;
-                case 3:
-                    buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3_white));
-                    cityBuildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building3));
                     break;
                 case 4:
                     buildingNames.add(appContext.getResources().getResourceEntryName(R.drawable.icon_building4_white));
@@ -204,7 +204,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                     changeTimeEvent.postValue(time);
                     timerStrategyContext.onTick(time, this);
                 }, e -> {
-                    timerStrategyContext.onCancel(this);
+                     timerStrategyContext.onCancel(this);
                 }, () -> {
                     timerStrategyContext.onComplete(this);
                 }));

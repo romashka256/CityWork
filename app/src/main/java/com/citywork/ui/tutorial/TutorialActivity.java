@@ -31,12 +31,12 @@ public class TutorialActivity extends AppCompatActivity {
 
         sharedPrefensecUtils = new SharedPrefensecUtils(this);
 
-        if (!sharedPrefensecUtils.isFirstRun()) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-            finish();
-        }
+//        if (!sharedPrefensecUtils.isFirstRun()) {
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+//            startActivity(intent);
+//            finish();
+//        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();

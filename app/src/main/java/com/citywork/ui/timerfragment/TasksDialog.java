@@ -150,6 +150,9 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()== 0) {
+                    editText.setTypeface(fontUtils.getLight());
+                }
                 iTasksDialogViewModel.onTextChanged(s.toString());
             }
 
@@ -181,7 +184,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
     private void setFonts() {
         titleTV.setTypeface(fontUtils.getLight());
-        editText.setTypeface(fontUtils.getRegular());
+        editText.setTypeface(fontUtils.getLight());
         noTasksTV.setTypeface(fontUtils.getLight());
     }
 }
