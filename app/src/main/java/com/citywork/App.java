@@ -35,8 +35,6 @@ public class App extends Application {
                 .appModule(new AppModule(getApplicationContext()))
                 .build();
 
-        Crashlytics.getInstance().crash();
-
     }
 
     public static AppComponent getsAppComponent() {
