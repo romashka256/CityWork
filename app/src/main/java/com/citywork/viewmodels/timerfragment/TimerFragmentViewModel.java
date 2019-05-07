@@ -122,12 +122,14 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 if (state == TimerState.ONGOING) {
                     Timber.i("set work strategy");
                     timerStrategyContext.setTimerStrategy(new WorkTimerStrategy());
+                    timerStateChangedEvent.postValue(TimerState.ONGOING);
                 } else if (state == TimerState.REST_ONGOING) {
                     Timber.i("set rest strategy");
                     timerStrategyContext.setTimerStrategy(new RestTimerStrategy());
+                    timerStateChangedEvent.postValue(TimerState.REST_ONGOING);
                 }
 
-                timerStateChangedEvent.postValue(TimerState.ONGOING);
+
             }
         });
 
@@ -392,6 +394,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             buidingChanged.setValue(building.getIconName());
 
             peopleCountChange.setValue(building.getPeople_count());
+
+            timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
 
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 checkAndStartTimer(building.getPomodoro().getStoptime());

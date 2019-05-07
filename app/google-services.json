@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "76858462263",
+    "firebase_url": "https://producticity.firebaseio.com",
+    "project_id": "producticity",
+    "storage_bucket": "producticity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76858462263:android:aaf0f7c449155319",
+        "android_client_info": {
+          "package_name": "com.citywork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76858462263-7vn2jc7qrujbotfe3ln3ioljmkbdgm8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAciAjKFrckczbkpdmIYCkKnrg9v2eWTJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76858462263-7vn2jc7qrujbotfe3ln3ioljmkbdgm8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

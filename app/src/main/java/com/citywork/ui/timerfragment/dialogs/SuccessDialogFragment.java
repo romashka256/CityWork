@@ -19,6 +19,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+
 import com.citywork.App;
 import com.citywork.R;
 import com.citywork.model.db.models.Building;
@@ -36,9 +39,9 @@ public class SuccessDialogFragment extends DialogFragment {
     private Context context;
 
     @BindView(R.id.success_dialog_close_iv)
-    ImageView vCloseIV;
+    ImageView mCloseIV;
     @BindView(R.id.success_dialog_to_city_btn)
-    Button vToCityBtn;
+    Button mToCityBtn;
     @BindView(R.id.success_dialog_buidling_view)
     BuldingProgressView mBuidlingView;
     @BindView(R.id.success_dialog_congrats_tv)
@@ -79,12 +82,14 @@ public class SuccessDialogFragment extends DialogFragment {
 
         ButterKnife.bind(this, view);
 
-        vCloseIV.setOnClickListener(v -> dismiss());
+        mCloseIV.setOnClickListener(v -> dismiss());
 
         mBuidlingView.setPeopleProgress(building.getPeople_count(), building.getPeople_count());
         mBuidlingView.setImage(VectorUtils.getBitmapFromVectorDrawable(App.getsAppComponent().getApplicationContext(), getResources().getIdentifier(building.getIconName(), "drawable", context.getPackageName())));
 
         mBuidlingView.setProgress(100);
+
+       // mToCityBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_cityFragment));
 
         setFonts();
 
@@ -108,13 +113,19 @@ public class SuccessDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
     }
 
     private void setFonts() {
-        vToCityBtn.setTypeface(fontUtils.getRegular());
+        mToCityBtn.setTypeface(fontUtils.getRegular());
         mCongrats1TV.setTypeface(fontUtils.getRegular());
         mCongratsTV.setTypeface(fontUtils.getRegular());
     }

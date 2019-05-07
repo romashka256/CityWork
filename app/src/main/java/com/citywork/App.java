@@ -4,6 +4,9 @@ import android.app.Application;
 import com.citywork.di.AppComponent;
 import com.citywork.di.DaggerAppComponent;
 import com.citywork.di.modules.AppModule;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
@@ -15,6 +18,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Timber.plant(new TimberDebugTree());
 
@@ -30,6 +34,8 @@ public class App extends Application {
         sAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(getApplicationContext()))
                 .build();
+
+        Crashlytics.getInstance().crash();
 
     }
 

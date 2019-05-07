@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/tasksDialog"
-        android:name="com.citywork.ui.timerfragment.TasksDialog"
+        android:name="com.citywork.ui.timerfragment.dialogs.TasksDialog"
         android:label="tasks_dialog"
         tools:layout="@layout/tasks_dialog">
         <action

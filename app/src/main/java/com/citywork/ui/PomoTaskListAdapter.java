@@ -25,11 +25,9 @@ public class PomoTaskListAdapter extends BaseAdapter {
 
     public PomoTaskListAdapter(Context context, List<Task> tasks, OnTaskClickListener onTaskClickListener) {
         this.tasks = tasks;
-        Collections.reverse(tasks);
         this.onTaskClickListener = onTaskClickListener;
         fontUtils = App.getsAppComponent().getFontUtils();
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     @Override

@@ -55,12 +55,13 @@ public class TasksDialogViewModel extends ViewModel implements ITasksDialogViewM
 
         disposables.add(dataBaseHelper.getTasks(timeTerm)
                 .doOnSuccess(list -> {
-                    this.pomodoros = list;
-                    isEmpty = createPomodoroList();
+
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
+                    this.pomodoros = list;
+                    isEmpty = createPomodoroList();
                     newPomodorosEvent.postValue(pomodoros);
                     if (isEmpty)
                         noTasksEvent.postValue(true);

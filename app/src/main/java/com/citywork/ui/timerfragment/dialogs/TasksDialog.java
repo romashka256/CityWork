@@ -1,4 +1,4 @@
-package com.citywork.ui.timerfragment;
+package com.citywork.ui.timerfragment.dialogs;
 
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import com.citywork.R;
 import com.citywork.model.db.models.Pomodoro;
 import com.citywork.ui.FixedMaxHeightRecylerView;
 import com.citywork.ui.TaskListAdapter;
+import com.citywork.ui.timerfragment.ITaskDialog;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.viewmodels.TasksDialogViewModel;
 import com.citywork.viewmodels.interfaces.ITasksDialogViewModel;
@@ -111,7 +113,10 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         super.onViewCreated(view, savedInstanceState);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
 
         iTasksDialogViewModel.getPomodoroLoadedEvent().observe(this, pomodoros -> {

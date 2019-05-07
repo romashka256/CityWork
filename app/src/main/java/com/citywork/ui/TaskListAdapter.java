@@ -1,11 +1,14 @@
 package com.citywork.ui;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,11 +33,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     private List<Pomodoro> pomodoros;
     private FontUtils fontUtils;
 
+    int screenHeight;
+
     public TaskListAdapter(Context context, List<Pomodoro> pomodoros, OnTaskClickListener onTaskClickListener) {
         this.context = context;
         fontUtils = App.getsAppComponent().getFontUtils();
         this.pomodoros = pomodoros;
         this.onTaskClickListener = onTaskClickListener;
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenHeight = size.y;
     }
 
     @NonNull
@@ -69,6 +80,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
 
         taskListVH.listView.setAdapter(new PomoTaskListAdapter(context, pomodoro.getTasks(), onTaskClickListener));
         setListViewHeightBasedOnChildren(taskListVH.listView);
+
+
     }
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {

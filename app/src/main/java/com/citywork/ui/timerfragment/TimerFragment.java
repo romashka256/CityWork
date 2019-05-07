@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import com.citywork.ui.customviews.CircleTimer;
 import com.citywork.ui.interfaces.ITimerFragment;
 import com.citywork.ui.timerfragment.dialogs.StopDialog;
 import com.citywork.ui.timerfragment.dialogs.SuccessDialogFragment;
+import com.citywork.ui.timerfragment.dialogs.TasksDialog;
 import com.citywork.utils.Calculator;
 import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.commonutils.VectorUtils;
@@ -76,6 +79,10 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     TextView mCityPeopleCountTV;
     @BindView(R.id.toolbar_city_people_count_text)
     TextView mCityPeopleCountTextTV;
+    @BindView(R.id.timer_fragment_contraint)
+    ConstraintLayout constraintLayout;
+    @BindView(R.id.timer_fragment_resttopblock)
+    LinearLayout restTimerBlock;
 
     @Getter
     public final static int fragmnetIndex = 0;
@@ -84,7 +91,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     private MainActivity mainActivity;
     private SuccessDialogFragment successDialogFragment;
     private FontUtils fontUtils;
-
 
 
     @Override
@@ -133,14 +139,16 @@ public class TimerFragment extends Fragment implements ITimerFragment {
                 case REST:
                     Timber.i("REST POSTED");
                     showRestView();
+                    mRestTV.setText("Выберите время отдыха");
                     break;
                 case NOT_ONGOING:
                     showNotOngoingView();
                     break;
                 case REST_ONGOING:
                     showTimerongoingView();
-                    mRestTV.setVisibility(View.VISIBLE);
-                    mBuidlingView.setVisibility(View.GONE);
+                    restTimerBlock.setVisibility(View.VISIBLE);
+                    mBuidlingView.setVisibility(View.INVISIBLE);
+                    mRestTV.setText("Отдыхайте...");
                     break;
                 case CANCELED:
                     showNotOngoingView();
@@ -307,7 +315,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
 
     @Override
     public void showNotOngoingView() {
-        mRestTV.setVisibility(View.GONE);
+        restTimerBlock.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
         m10minRest.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
@@ -321,20 +329,20 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     @Override
     public void showRestView() {
         Timber.i("Show Rest View");
-        mRestTV.setVisibility(View.GONE);
+        restTimerBlock.setVisibility(View.VISIBLE);
         startButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.GONE);
-        mBuidlingView.setVisibility(View.VISIBLE);
+        mBuidlingView.setVisibility(View.INVISIBLE);
         circleTimer.setTime(0);
         circleTimer.enable();
     }
 
     @Override
     public void showTimerongoingView() {
-        mRestTV.setVisibility(View.GONE);
+        restTimerBlock.setVisibility(View.GONE);
         stopButton.setVisibility(View.VISIBLE);
         startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
@@ -343,9 +351,18 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         mBuidlingView.setVisibility(View.VISIBLE);
     }
 
+    private void changeTimerConstraint() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.circle_timer, ConstraintSet.TOP, R.id.timer_fragment_resttv, ConstraintSet.BOTTOM, 0);
+        // constraintSet.connect(R.id.imageView,ConstraintSet.TOP,R.id.check_answer1,ConstraintSet.TOP,0);
+        constraintSet.applyTo(constraintLayout);
+    }
+
     private void setFonts() {
         mTodoTV.setTypeface(fontUtils.getLight());
         startButton.setTypeface(fontUtils.getRegular());
+        mRestTV.setTypeface(fontUtils.getLight());
         mCityPeopleCountTV.setTypeface(fontUtils.getBold());
         mCityPeopleCountTextTV.setTypeface(fontUtils.getLight());
         circleTimer.setTimerTypeface(fontUtils.getRegular());

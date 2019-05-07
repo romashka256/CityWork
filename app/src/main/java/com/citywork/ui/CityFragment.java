@@ -129,6 +129,7 @@ public class CityFragment extends Fragment {
 
         TabLayout.Tab tab = tabLayout.newTab();
         tab.setText(getResources().getString(R.string.day));
+        tab.select();
 
         TabLayout.Tab tabw = tabLayout.newTab();
         tabw.setText(getResources().getString(R.string.week));
@@ -230,6 +231,15 @@ public class CityFragment extends Fragment {
     }
 
     private void setFonts() {
+        pomoCountTV.setTypeface(fontUtils.getMedium());
+        minCountTV.setTypeface(fontUtils.getMedium());
+        pplCountTV.setTypeface(fontUtils.getMedium());
+        pomoNameTV.setTypeface(fontUtils.getRegular());
+        minNameTV.setTypeface(fontUtils.getRegular());
+        pplNameTV.setTypeface(fontUtils.getRegular());
+        pomoVerbTV.setTypeface(fontUtils.getBold());
+        minVerbTV.setTypeface(fontUtils.getBold());
+        pplVerbTV.setTypeface(fontUtils.getBold());
         mPeopleCountTV.setTypeface(fontUtils.getBold());
         mPeopleCountTextTV.setTypeface(fontUtils.getLight());
     }

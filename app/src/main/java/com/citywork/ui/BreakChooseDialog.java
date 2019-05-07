@@ -98,9 +98,8 @@ public class BreakChooseDialog extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onViewCreated(view, savedInstanceState);
-
-
 
         Window window = getDialog().getWindow();
         window.setGravity(Gravity.BOTTOM);
