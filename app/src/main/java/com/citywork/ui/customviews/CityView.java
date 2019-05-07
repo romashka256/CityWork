@@ -71,24 +71,28 @@ public class CityView extends ViewGroup {
         buildingBitmaps.clear();
         this.removeAllViews();
 
-            for (String viewName : viewIconNames) {
-                try {
-                    Bitmap bitmap;
-                    int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
+        for (String viewName : viewIconNames) {
+            try {
+                Bitmap bitmap;
 
-                    Drawable drawable = getResources().getDrawable(id);
-                    bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                int id = context.getResources().getIdentifier(viewName, "drawable", context.getPackageName());
 
-                    Canvas canvas = new Canvas(bitmap);
-                    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                    drawable.draw(canvas);
-                    buildingBitmaps.add(bitmap);
-                } catch (OutOfMemoryError e) {
-                    Timber.e(e);
-                }
+                Drawable drawable = getResources().getDrawable(id);
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawable.draw(canvas);
+                buildingBitmaps.add(bitmap);
+            } catch (OutOfMemoryError e) {
+                Timber.e(e);
+            } catch (NullPointerException e) {
+                Timber.e(e);
+                continue;
             }
+        }
 
-            invalidate();
+        invalidate();
 
     }
 

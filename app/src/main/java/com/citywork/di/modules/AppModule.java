@@ -3,16 +3,17 @@ package com.citywork.di.modules;
 import android.content.Context;
 
 import com.citywork.model.db.DataBaseHelper;
-import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
+import com.citywork.utils.commonutils.FontUtils;
+import com.citywork.viewmodels.timerfragment.TimerStrategyContext;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
-
-import javax.inject.Singleton;
 
 @Module
 public class AppModule {
@@ -63,5 +64,11 @@ public class AppModule {
     @Provides
     public FontUtils provideFontUtils() {
         return new FontUtils(context);
+    }
+
+    @Singleton
+    @Provides
+    public TimerStrategyContext provideTimerStrategyContext(){
+        return new TimerStrategyContext();
     }
 }

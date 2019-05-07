@@ -5,12 +5,13 @@ import android.content.Context;
 import com.citywork.di.modules.AppModule;
 import com.citywork.di.modules.TimerManagerModule;
 import com.citywork.model.db.DataBaseHelper;
-import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.CityManager;
 import com.citywork.utils.SharedPrefensecUtils;
 import com.citywork.utils.chart.StatusticUtils;
+import com.citywork.utils.commonutils.FontUtils;
 import com.citywork.utils.timer.Timer;
 import com.citywork.utils.timer.TimerBase;
+import com.citywork.viewmodels.timerfragment.TimerStrategyContext;
 
 import javax.inject.Singleton;
 
@@ -37,4 +38,6 @@ public interface AppComponent {
     Timer getTimer();
 
     FontUtils getFontUtils();
+
+    TimerStrategyContext getTimerStrategyContext();
 }

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
 import timber.log.Timber;
 
 public class AlarmManagerImpl {
@@ -23,7 +24,7 @@ public class AlarmManagerImpl {
         intent.putExtra(AlarmReceiver.INTENT_MESSAGE_KEY, AlarmReceiver.INTENT_MESSAGE);
         intent.putExtra(AlarmReceiver.INTENT_POMODORO_ID_KEY, id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, UNIQUE_REQUEST_CODE,
-                intent,0);
+                intent, 0);
         return pendingIntent;
     }
 
@@ -33,7 +34,7 @@ public class AlarmManagerImpl {
     }
 
     public void deleteAlarmTask(String id) {
-        Timber.i("Canceling Alarm");
+        Timber.i("deleteAlarmTask with id : %s", id);
         alarmManager.cancel(getPendingIntent(id));
     }
 

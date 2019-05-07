@@ -1,6 +1,7 @@
 package com.citywork;
 
 import android.app.Application;
+
 import com.citywork.di.AppComponent;
 import com.citywork.di.DaggerAppComponent;
 import com.citywork.di.modules.AppModule;
@@ -18,9 +19,14 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         Fabric.with(this, new Crashlytics());
 
-        Timber.plant(new TimberDebugTree());
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new TimberDebugTree());
+        } else {
+            Timber.plant(new CrashReportingTree());
+        }
 
         Realm.init(getApplicationContext());
 

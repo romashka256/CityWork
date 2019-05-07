@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.citywork.App;
 import com.citywork.model.db.DBHelper;
@@ -89,6 +90,9 @@ public class TimerService extends Service implements TimerCallbacks {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("onStartCommand");
+
+        alarmManager.deleteAlarmTask(cityManager.getBuilding().getPomodoro().getId());
+
         if (intent != null) {
             building = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_BUILDING));
 
@@ -117,7 +121,7 @@ public class TimerService extends Service implements TimerCallbacks {
                         stopForeground(true);
                     });
         }
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
 
     private void baseOnCompleteAct() {
@@ -136,6 +140,7 @@ public class TimerService extends Service implements TimerCallbacks {
         Timber.i("onWorkTimerComplete : %s", cityManager.getBuilding().toString());
         baseOnCompleteAct();
         notificationUtils.showAlarmNotification();
+
     }
 
     @Override
@@ -183,13 +188,26 @@ public class TimerService extends Service implements TimerCallbacks {
     }
 
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-        Timber.i("onTaskRemoved");
+    public void onTrimMemory(int level) {
+        Timber.i("onTrimMemory");
+        super.onTrimMemory(level);
+    }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        //Timber.i("onTaskRemoved");
+        Log.e("ClearFromRecentService", "END");
         notificationUtils.closeTimerNotification();
 
+        alarmManager.setAlarmForTime(cityManager.getPomodoro().getStoptime(), cityManager.getPomodoro().getId());
+
         disposable.dispose();
+    }
+
+    @Override
+    public void onLowMemory() {
+        Timber.i("onLowMemory");
+        super.onLowMemory();
     }
 
     @Override
@@ -197,7 +215,6 @@ public class TimerService extends Service implements TimerCallbacks {
         Timber.i("onDestroy");
         if (!disposable.isDisposed())
             disposable.dispose();
-
         super.onDestroy();
     }
 }

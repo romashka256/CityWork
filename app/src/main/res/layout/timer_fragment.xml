@@ -128,9 +128,9 @@
     <LinearLayout
         android:id="@+id/timer_fragment_resttopblock"
         android:layout_width="wrap_content"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/circle_timer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -140,9 +140,8 @@
             android:id="@+id/imageView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/rest_picture" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/timer_fragment_resttv"
