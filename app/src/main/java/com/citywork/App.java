@@ -23,7 +23,7 @@ public class App extends Application {
         Fabric.with(this, new Crashlytics());
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(new TimberDebugTree());
+            Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }

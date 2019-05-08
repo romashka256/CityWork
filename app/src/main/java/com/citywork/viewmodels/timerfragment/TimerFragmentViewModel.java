@@ -58,8 +58,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     private TimerStrategyContext timerStrategyContext;
 
-    @Getter
-    private long timerValue = Constants.DEFAULT_MIN_TIMER_VALUE;
+    private long timerValue;
 
     private Context appContext;
     private List<String> buildingNames;
@@ -121,10 +120,16 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             public void onStart() {
                 int state = cityManager.prepareBeforeStart();
                 Timber.i("onStart with building : %s", cityManager.getBuilding().toString());
-
                 setTimerStrategy(state);
             }
         });
+
+        timerValue = sharedPrefensecUtils.getPrefredTimer();
+    }
+
+    @Override
+    public long getTimerValue() {
+        return sharedPrefensecUtils.getPrefredTimer();
     }
 
     private void setTimerStrategy(int state) {
@@ -141,6 +146,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void onStartClicked() {
+        sharedPrefensecUtils.setPrefredTimer(timerValue);
         initAndStartTimer();
     }
 
@@ -220,7 +226,6 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         cityManager.setComleted();
         saveBuidlingToDB();
 
-        Timber.i("HERE 2");
         timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
         notificationUtils.closeAlarmNotification();
     }
@@ -248,6 +253,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         cityManager.setCanceled();
         saveBuidlingToDB();
         createNewInstance();
+        changeTimeEvent.setValue(sharedPrefensecUtils.getPrefredTimer());
     }
 
     @Override
@@ -260,6 +266,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         Timber.i("onRestTimerComplete : %s", cityManager.getBuilding().toString());
         baseOnCompleteAct();
         createNewInstance();
+        changeTimeEvent.setValue(sharedPrefensecUtils.getPrefredTimer());
         statusticUtils.updateData(cityManager.getLastcity());
     }
 
@@ -267,6 +274,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     public void onRestTImerCancel() {
         Timber.i("onRestTimerCancel : %s", cityManager.getBuilding().toString());
         cityManager.setCanceled();
+        changeTimeEvent.setValue(sharedPrefensecUtils.getPrefredTimer());
         saveBuidlingToDB();
         createNewInstance();
     }
@@ -313,7 +321,6 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 } else {
                     cityManager.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
                     dataBaseHelper.savePomodoro(cityManager.getPomodoro());
-                    Timber.i("HERE");
                     timerStateChangedEvent.postValue(TimerState.WORK_COMPLETED);
                 }
             } else if (cityManager.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
@@ -389,7 +396,6 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void buildingReceived(Building building) {
-        Timber.i("buildingReceived : %s", building.toString());
         if (building != null) {
 
             if (cityManager.setComleted() == TimerState.COMPLETED) {
@@ -406,7 +412,6 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
             peopleCountChange.setValue(building.getPeople_count());
             int state = cityManager.getPomodoro().getTimerState();
-            Timber.i("buildingReceived state : %d", state);
             timerStateChangedEvent.postValue(state);
 
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {

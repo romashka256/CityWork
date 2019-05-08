@@ -18,6 +18,11 @@ public class Constants {
     public final static int DEFAULT_SHORT_BREAK_VALUE = 300;
     public final static int DEFAULT_LONG_BREAK_VALUE = 600;
 
+
+    public final static int DEFAULT_MIN_TIME = 600;
+    public final static int DEFAULT_MAX_TIME = 3600;
+
+
     public final static boolean DEFAULT_IN_NOTIF_BAR = true;
     public final static boolean DEFAULT_START_END_SOUND = false;
     public final static boolean DEFAULT_WIN_NOTIF = false;

@@ -104,7 +104,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tutorial_fragment_next_btn_tv"
                 app:layout_constraintStart_toEndOf="@+id/tutorial_fragment_next_btn_tv"
                 app:layout_constraintTop_toTopOf="@+id/tutorial_fragment_next_btn_tv"
-                app:srcCompat="@drawable/arrow_right" />
+                app:srcCompat="@drawable/arrow_right2" />
 
 
         </android.support.constraint.ConstraintLayout>

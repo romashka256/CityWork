@@ -3,6 +3,7 @@ package com.citywork.ui.timerfragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +11,11 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -175,6 +178,13 @@ public class TimerFragment extends Fragment implements ITimerFragment {
 
         ButterKnife.bind(this, view);
 
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        circleTimer.setCircleRadius((int) (width * 0.3f));
+
         return view;
     }
 
@@ -322,6 +332,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         startButton.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.VISIBLE);
         circleTimer.disable();
+        //  refreshBuildingView();
         mBuidlingView.setVisibility(View.VISIBLE);
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
@@ -340,6 +351,11 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         circleTimer.enable();
     }
 
+    private void refreshBuildingView() {
+        mBuidlingView.setProgress(0);
+        mBuidlingView.setPeopleProgress(0, 0);
+    }
+
     @Override
     public void showTimerongoingView() {
         restTimerBlock.setVisibility(View.GONE);
@@ -349,14 +365,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         mTodoTV.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.GONE);
         mBuidlingView.setVisibility(View.VISIBLE);
-    }
-
-    private void changeTimerConstraint() {
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.circle_timer, ConstraintSet.TOP, R.id.timer_fragment_resttv, ConstraintSet.BOTTOM, 0);
-        // constraintSet.connect(R.id.imageView,ConstraintSet.TOP,R.id.check_answer1,ConstraintSet.TOP,0);
-        constraintSet.applyTo(constraintLayout);
     }
 
     private void setFonts() {

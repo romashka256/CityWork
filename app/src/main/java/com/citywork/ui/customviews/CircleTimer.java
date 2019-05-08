@@ -3,23 +3,30 @@ package com.citywork.ui.customviews;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.citywork.utils.Calculator;
+
+import timber.log.Timber;
+
+import static com.citywork.Constants.DEFAULT_MAX_TIME;
+import static com.citywork.Constants.DEFAULT_MIN_TIME;
 
 public class CircleTimer extends View {
 
     //Params
     private float mCx;
     private float mCy;
-    private float mRadius;
+    private int mRadius;
     private float mCurrentRadian;
     private float mPreRadian;
 
@@ -92,9 +99,6 @@ public class CircleTimer extends View {
     private int maxTime;
     private float minRadian;
 
-    private final int DEFAULT_MIN_TIME = 600;
-    private final int DEFAULT_MAX_TIME = 3600;
-
     private CircleTimerListener circleTimerListener;
 
     public CircleTimer(Context context) {
@@ -116,6 +120,11 @@ public class CircleTimer extends View {
     public CircleTimer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
+    }
+
+    public void setCircleRadius(int radius) {
+        this.mRadius = radius;
+        invalidate();
     }
 
     private void init() {
@@ -192,17 +201,14 @@ public class CircleTimer extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int length = (int) (mRadius + mCircleButtonRadius) * 2;
 
-        this.mCx = width / 2;
-        this.mCy = width / 2;
-        mRadius = width / 2 - mCircleLineWidth / 2 - (mCircleButtonRadius - mCircleLineWidth / 2);
+        this.mCx = length / 2f;
+        this.mCy = length / 2f;
 
         mProgressArc.set(mCx - mRadius, mCy - mRadius, mCx + mRadius, mCy + mRadius);
 
-
-        setMeasuredDimension(width, width);
+        setMeasuredDimension(length, length);
     }
 
     @Override
@@ -269,7 +275,6 @@ public class CircleTimer extends View {
         canvas.drawText(Calculator.getMinutesAndSecondsFromSeconds(mCurrentTime), mCx, mCy + getFontHeight(mTimeNumberPaint) / 2, mTimeNumberPaint);
         canvas.restore();
 
-
         super.onDraw(canvas);
     }
 
@@ -279,18 +284,20 @@ public class CircleTimer extends View {
             case MotionEvent.ACTION_DOWN:
                 if (mInCircleButton(event.getX(), event.getY())) {
                     mInCircleButton = true;
-                    mPreRadian = getRadian(event.getX(), event.getY());
+                    mPreRadian = convertTo60(getRadian(event.getX(), event.getY()));
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mInCircleButton && !isEnabled) {
-                    float temp = getRadian(event.getX(), event.getY());
+
+                    float temp = convertTo60(getRadian(event.getX(), event.getY()));
                     if (mPreRadian > Math.toRadians(270) && temp < Math.toRadians(90)) {
                         mPreRadian -= 2 * Math.PI;
                     } else if (mPreRadian < Math.toRadians(90) && temp > Math.toRadians(270)) {
                         mPreRadian = (float) (temp + (temp - 2 * Math.PI) - mPreRadian);
                     }
                     mCurrentRadian += (temp - mPreRadian);
+
                     mPreRadian = temp;
                     if (mCurrentRadian > 2 * Math.PI) {
                         mCurrentRadian = (float) (2 * Math.PI);
@@ -315,6 +322,18 @@ public class CircleTimer extends View {
                 break;
         }
         return true;
+    }
+
+    private float convertTo60(float number) {
+        Timber.i("input = " + number);
+        float max = 6.28319f;
+
+        int corresponding = (int) ((number * 60) / max);
+        Timber.i("corresponding = " + corresponding);
+        float fitted = (corresponding * max) / 60;
+
+        Timber.i("output = " + fitted);
+        return fitted;
     }
 
 
@@ -355,6 +374,7 @@ public class CircleTimer extends View {
     }
 
     public void setProgress(long currentTime) {
+        Timber.i("setProgress : %d", currentTime);
         this.isEnabled = true;
         this.mCurrentTime = currentTime;
         mCurrentRadian = calculateRadianByTime(mCurrentTime);
@@ -386,6 +406,7 @@ public class CircleTimer extends View {
     }
 
     public void setTime(long time) {
+        Timber.i("setTime : %d", time);
         this.mCurrentTime = time;
         mCurrentRadian = calculateRadianByTime(time);
         invalidate();

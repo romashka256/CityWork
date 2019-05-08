@@ -89,7 +89,7 @@ public class SuccessDialogFragment extends DialogFragment {
 
         mBuidlingView.setProgress(100);
 
-       // mToCityBtn.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_cityFragment));
+        mToCityBtn.setOnClickListener(v -> dismiss());
 
         setFonts();
 

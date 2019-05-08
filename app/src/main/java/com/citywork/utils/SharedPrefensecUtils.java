@@ -15,6 +15,7 @@ public class SharedPrefensecUtils {
     public final static String SETTINGS_STARTEND_TIMER = "settings_startend_timer";
     public final static String SETTINGS_WINNOTIF = "settings_winnotif";
     public final static String SETTINGS_24HDELETE = "settings_24hdelete";
+    public final static String SETTINGS_PREFERED_TIMER = "prefered_timer";
 
     private Context context;
     private SharedPreferences sharedPreferences;
@@ -77,5 +78,13 @@ public class SharedPrefensecUtils {
 
     public void set24hDelete(boolean value) {
         sharedPreferences.edit().putBoolean(SETTINGS_24HDELETE, value).apply();
+    }
+
+    public void setPrefredTimer(long inSeconds) {
+        sharedPreferences.edit().putLong(SETTINGS_PREFERED_TIMER, inSeconds).apply();
+    }
+
+    public long getPrefredTimer() {
+        return sharedPreferences.getLong(SETTINGS_PREFERED_TIMER, Constants.DEFAULT_MIN_TIMER_VALUE);
     }
 }
