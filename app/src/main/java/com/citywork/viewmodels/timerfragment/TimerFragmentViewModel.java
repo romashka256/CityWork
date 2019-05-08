@@ -17,6 +17,7 @@ import com.citywork.utils.Calculator;
 import com.citywork.utils.CityManager;
 import com.citywork.utils.NotificationUtils;
 import com.citywork.utils.SharedPrefensecUtils;
+import com.citywork.utils.chart.StatusticUtils;
 import com.citywork.utils.timer.TimerBase;
 import com.citywork.utils.timer.TimerState;
 import com.citywork.utils.timer.TimerStateListener;
@@ -49,6 +50,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
     private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationUtils notificationUtils;
     private CompositeDisposable compositeDisposable;
+    private StatusticUtils statusticUtils;
 
     private CityManager cityManager;
 
@@ -71,6 +73,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
         cityManager = App.getsAppComponent().getPomdoromManager();
         timerStrategyContext = App.getsAppComponent().getTimerStrategyContext();
+        statusticUtils = App.getsAppComponent().getStatisticsUtils();
 
         //TODO INJECT
         notificationUtils = new NotificationUtils(appContext);
@@ -204,6 +207,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(time -> {
                     changeTimeEvent.postValue(time);
+                    Timber.i("ticktime %d", time);
                     timerStrategyContext.onTick(time, this);
                 }, e -> {
                     timerStrategyContext.onCancel(this);
@@ -216,6 +220,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         cityManager.setComleted();
         saveBuidlingToDB();
 
+        Timber.i("HERE 2");
         timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
         notificationUtils.closeAlarmNotification();
     }
@@ -233,6 +238,8 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         baseOnCompleteAct();
 
         cityPeopleCountChangeEvent.postValue(cityManager.getCityPeopleCount());
+
+        statusticUtils.updateData(cityManager.getLastcity());
     }
 
     @Override
@@ -253,6 +260,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
         Timber.i("onRestTimerComplete : %s", cityManager.getBuilding().toString());
         baseOnCompleteAct();
         createNewInstance();
+        statusticUtils.updateData(cityManager.getLastcity());
     }
 
     @Override
@@ -305,6 +313,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
                 } else {
                     cityManager.getPomodoro().setTimerState(TimerState.WORK_COMPLETED);
                     dataBaseHelper.savePomodoro(cityManager.getPomodoro());
+                    Timber.i("HERE");
                     timerStateChangedEvent.postValue(TimerState.WORK_COMPLETED);
                 }
             } else if (cityManager.getPomodoro().getTimerState() == TimerState.REST_ONGOING) {
@@ -318,6 +327,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             }
 
             int state = cityManager.getPomodoro().getTimerState();
+            Timber.i("STATE = %d", state);
             timerStateChangedEvent.postValue(state);
             setTimerStrategy(state);
 
@@ -328,7 +338,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             }
 
             if (cityManager.getPomodoro().getId() != null)
-                mAlarmManager. deleteAlarmTask(cityManager.getPomodoro().getId());
+                mAlarmManager.deleteAlarmTask(cityManager.getPomodoro().getId());
 
             notificationUtils.closeTimerNotification();
             notificationUtils.closeAlarmNotification();
@@ -379,7 +389,7 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
 
     @Override
     public void buildingReceived(Building building) {
-        Timber.i("buildingReceived");
+        Timber.i("buildingReceived : %s", building.toString());
         if (building != null) {
 
             if (cityManager.setComleted() == TimerState.COMPLETED) {
@@ -395,8 +405,9 @@ public class TimerFragmentViewModel extends ViewModel implements ITimerFragmentV
             buidingChanged.setValue(building.getIconName());
 
             peopleCountChange.setValue(building.getPeople_count());
-
-            timerStateChangedEvent.postValue(cityManager.getPomodoro().getTimerState());
+            int state = cityManager.getPomodoro().getTimerState();
+            Timber.i("buildingReceived state : %d", state);
+            timerStateChangedEvent.postValue(state);
 
             if (building.getPomodoro().getTimerState() == TimerState.ONGOING) {
                 checkAndStartTimer(building.getPomodoro().getStoptime());

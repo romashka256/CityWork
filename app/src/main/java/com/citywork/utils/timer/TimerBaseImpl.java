@@ -36,7 +36,7 @@ public class TimerBaseImpl implements TimerBase {
         timerStateListener.onStart();
         disposable = timer.startTimer(time)
                 .subscribe(ticktime -> {
-                            Timber.i("ticktime %d", ticktime);
+                    //        Timber.i("ticktime %d", ticktime);
                             remainingTime = time - ticktime;
 
                             behaviorSubject.onNext(remainingTime);

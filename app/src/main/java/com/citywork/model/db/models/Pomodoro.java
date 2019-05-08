@@ -32,9 +32,13 @@ public class Pomodoro extends io.realm.RealmObject {
 
     RealmList<Task> tasks;
 
-    @Setter
     @Getter
     int timerState;
+
+    public void setTimerState(int timerState) {
+        this.timerState = timerState;
+    }
+
     @Getter
     @Setter
     long reststarttime;

@@ -90,9 +90,6 @@ public class TimerService extends Service implements TimerCallbacks {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("onStartCommand");
-
-        alarmManager.deleteAlarmTask(cityManager.getBuilding().getPomodoro().getId());
-
         if (intent != null) {
             building = Parcels.unwrap(intent.getParcelableExtra(TIMERSERVICE_BUILDING));
 
@@ -113,6 +110,7 @@ public class TimerService extends Service implements TimerCallbacks {
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(time -> {
+                        Timber.i("ticktime %d", time);
                         timerStrategyContext.onTick(time, this);
                     }, e -> {
                         timerStrategyContext.onCancel(this);
@@ -188,26 +186,13 @@ public class TimerService extends Service implements TimerCallbacks {
     }
 
     @Override
-    public void onTrimMemory(int level) {
-        Timber.i("onTrimMemory");
-        super.onTrimMemory(level);
-    }
-
-    @Override
     public void onTaskRemoved(Intent rootIntent) {
-        //Timber.i("onTaskRemoved");
-        Log.e("ClearFromRecentService", "END");
+        super.onTaskRemoved(rootIntent);
+        Timber.i("onTaskRemoved");
+
         notificationUtils.closeTimerNotification();
 
-        alarmManager.setAlarmForTime(cityManager.getPomodoro().getStoptime(), cityManager.getPomodoro().getId());
-
         disposable.dispose();
-    }
-
-    @Override
-    public void onLowMemory() {
-        Timber.i("onLowMemory");
-        super.onLowMemory();
     }
 
     @Override
@@ -215,6 +200,7 @@ public class TimerService extends Service implements TimerCallbacks {
         Timber.i("onDestroy");
         if (!disposable.isDisposed())
             disposable.dispose();
+
         super.onDestroy();
     }
 }

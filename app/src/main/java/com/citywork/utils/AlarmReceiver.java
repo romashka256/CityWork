@@ -1,5 +1,6 @@
 package com.citywork.utils;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import com.citywork.App;
 import com.citywork.model.db.DBHelper;
 import com.citywork.model.db.models.Building;
+import com.citywork.service.TimerService;
 import com.citywork.utils.timer.TimerState;
 
 import io.reactivex.Scheduler;
@@ -41,7 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (message.equals(INTENT_MESSAGE)) {
             Timber.i("showAlarmNotification");
-            if (sharedPrefensecUtils.getInNotifBar())
+            if (sharedPrefensecUtils.getInNotifBar() && !isTimerServiceRunning(context))
                 notificationUtils.showAlarmNotification();
 
             disposables.add(dataBaseHelper.getLastBuilding()
@@ -56,5 +58,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         disposables.clear();
+    }
+
+    private boolean isTimerServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (TimerService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

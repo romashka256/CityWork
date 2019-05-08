@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import timber.log.Timber;
 
 public class StatusticUtils {
 
@@ -30,8 +32,6 @@ public class StatusticUtils {
     @Getter
     private List<City> cities;
 
-    private CityUtils cityUtils;
-
     @Getter
     @Setter
     private Pair<ArrayList<ChartBar>, HashMap<Integer, List<Building>>> toReturn;
@@ -40,10 +40,24 @@ public class StatusticUtils {
     private final int monthDivider = 7;
     private final int yearDivider = 91;
 
+    public void updateData(City city) {
+        Timber.i("updateData");
+        new Thread(() -> {
+            List<City> newList = cities.subList(0, cities.size() - 2);
+            newList.add(city);
+
+            createStatisticsData(newList);
+        }).start();
+    }
+
 
     public void prepareData(List<City> cityList) {
-        List<City> cityList1 = cityList;
+        new Thread(() -> {
+            createStatisticsData(cityList);
+        }).start();
+    }
 
+    private void createStatisticsData(List<City> cityList) {
         this.cities = cityList;
 
         statisticData = new HashMap<>();
@@ -52,8 +66,6 @@ public class StatusticUtils {
         getDataForWeek(cities);
         getDataForMonth(cities);
         getDataForYear(cities);
-
-        //Collections.reverse(cityList);
     }
 
     private City getTodayCity() {
@@ -208,7 +220,6 @@ public class StatusticUtils {
                         values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
                         pomodoroList.get(index).add(building);
                         pomodoroHashMap.put(o, pomodoroList.get(index));
-
                     }
                 }
                 index++;
@@ -240,22 +251,27 @@ public class StatusticUtils {
             Pomodoro pomodoro;
 
             int lastIndex = 0;
-            for (int o = yearDivider; o <= cities.size(); o += yearDivider) {
-                List<City> twomonths = cities.subList(lastIndex, lastIndex + yearDivider);
+            try {
+                for (int o = yearDivider; o <= cities.size(); o += yearDivider) {
+                    List<City> twomonths = cities.subList(lastIndex, lastIndex + yearDivider);
 
-                lastIndex += yearDivider;
-                for (City city : twomonths) {
-                    for (Building building : city.getBuildings()) {
-                        pomodoro = building.getPomodoro();
-                        if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
-                            continue;
-                        values.get(index).setXValue(o);
-                        values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
-                        pomodoroList.get(index).add(building);
-                        pomodoroHashMap.put(o, pomodoroList.get(index));
+                    lastIndex += yearDivider;
+                    for (City city : twomonths) {
+                        for (Building building : city.getBuildings()) {
+                            pomodoro = building.getPomodoro();
+                            if (pomodoro.getTimerState() < TimerState.WORK_COMPLETED)
+                                continue;
+                            values.get(index).setXValue(o);
+                            values.get(index).setYValue(values.get(index).getYValue() + Calculator.getTime(pomodoro.getStarttime(), pomodoro.getStoptime()));
+                            pomodoroList.get(index).add(building);
+                            pomodoroHashMap.put(o, pomodoroList.get(index));
+                        }
                     }
+                    index++;
                 }
-                index++;
+
+            } catch (ConcurrentModificationException e) {
+                Timber.e(e);
             }
 
             Collections.reverse(values);

@@ -21,6 +21,8 @@ import com.citywork.App;
 import com.citywork.R;
 import com.citywork.utils.commonutils.VectorUtils;
 
+import timber.log.Timber;
+
 public class BuldingProgressView extends View {
 
     private Path path;
@@ -243,7 +245,7 @@ public class BuldingProgressView extends View {
     }
 
     private void calculateStep(int height) {
-        progressStep = (height - bottomLineHeight) / 99.5f;
+        progressStep = (height - bottomLineHeight) / 96f;
     }
 
     public float spToPx(float px) {

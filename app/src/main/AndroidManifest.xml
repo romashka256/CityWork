@@ -50,7 +50,6 @@
         <service
             android:name=".service.TimerService"
             android:stopWithTask="false" />
-
         <receiver android:name=".utils.AlarmReceiver"></receiver>
     </application>
 </manifest>

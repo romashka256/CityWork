@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().setValue(city);
             Timber.i("Last city posted");
         });
+
         MainActivity mainActivity = this;
 
         bottomBar.setNavigationChangeListener((view, position) -> {
@@ -121,17 +122,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomBar.setTypeface(fontUtils.getRegular());
-
-//        cityBtn.setOnClickListener(v -> {
-//                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
-//        });
-//
-//        timerBtn.setOnClickListener(v -> {
-//                Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
-//        });
-//
-//        likesIconText.setTypeface(fontUtils.getRegular());
-//        homeIconText.setTypeface(fontUtils.getRegular());
 
         iMainActivityViewModel.onCreate();
 
@@ -186,13 +176,13 @@ public class MainActivity extends AppCompatActivity {
             TimerService.TimerServiceBinder timerServiceBinder = (TimerService.TimerServiceBinder) service;
             timerService = timerServiceBinder.getService();
 
-            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+          //  if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 Timber.i("Stop Timer");
 
                 timerService.stopForeground(true);
                 timerService.stopSelf();
                 timerService.cancelTimer();
-            }
+           // }
         }
 
         @Override
