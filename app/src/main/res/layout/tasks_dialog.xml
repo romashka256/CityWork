@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.citywork.ui.FixedMaxHeightRecylerView
+    <com.producticity.ui.FixedMaxHeightRecylerView
         android:id="@+id/tasks_dialog_rv"
 
         android:layout_width="match_parent"

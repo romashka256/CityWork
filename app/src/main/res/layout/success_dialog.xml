@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close_black_24dp" />
 
-    <com.citywork.ui.customviews.BuldingProgressView
+    <com.producticity.ui.customviews.BuldingProgressView
         android:id="@+id/success_dialog_buidling_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

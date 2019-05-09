@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76858462263:android:aaf0f7c449155319",
+        "mobilesdk_app_id": "1:76858462263:android:98fcc88f45f8040a",
         "android_client_info": {
-          "package_name": "com.citywork"
+          "package_name": "com.producticity"
         }
       },
       "oauth_client": [

@@ -1,4 +1,4 @@
-package com.citywork
+package com.producticity
 
 import org.junit.Test
 

@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/firstTutorialFragment"
-        android:name="com.citywork.ui.tutorial.FirstTutorialFragment"
+        android:name="com.producticity.ui.tutorial.FirstTutorialFragment"
         android:label="FirstTutorialFragment" >
         <action
             android:id="@+id/action_firstTutorialFragment_to_secondTutorialFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/secondTutorialFragment"
-        android:name="com.citywork.ui.tutorial.SecondTutorialFragment"
+        android:name="com.producticity.ui.tutorial.SecondTutorialFragment"
         android:label="SecondTutorialFragment" >
         <action
             android:id="@+id/action_secondTutorialFragment_to_thirdTutorialFragment"
@@ -25,6 +25,6 @@
     </fragment>
     <fragment
         android:id="@+id/thirdTutorialFragment"
-        android:name="com.citywork.ui.tutorial.ThirdTutorialFragment"
+        android:name="com.producticity.ui.tutorial.ThirdTutorialFragment"
         android:label="ThirdTutorialFragment" />
 </navigation>

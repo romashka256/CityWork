@@ -112,7 +112,7 @@
                 app:tabSelectedTextColor="@color/black"/>
 
 
-            <com.citywork.ui.customviews.LineChart
+            <com.producticity.ui.customviews.LineChart
                 android:id="@+id/city_fragment_statistics_block_chart"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
