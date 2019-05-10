@@ -17,7 +17,7 @@ import com.producticity.App;
 import com.producticity.R;
 import com.producticity.model.db.models.Pomodoro;
 import com.producticity.ui.listeners.OnTaskClickListener;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 
 import java.util.List;
 
@@ -31,13 +31,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     private OnTaskClickListener onTaskClickListener;
     @Getter
     private List<Pomodoro> pomodoros;
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     int screenHeight;
 
     public TaskListAdapter(Context context, List<Pomodoro> pomodoros, OnTaskClickListener onTaskClickListener) {
         this.context = context;
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
         this.pomodoros = pomodoros;
         this.onTaskClickListener = onTaskClickListener;
 
@@ -62,7 +62,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         Pomodoro pomodoro = pomodoros.get(i);
 
         taskListVH.taskTextV.setText("#" + (i + 1) + " POMO");
-        taskListVH.taskTextV.setTypeface(fontUtils.getMedium());
+        taskListVH.taskTextV.setTypeface(UIUtils.getMedium());
 
         if (pomodoro.getTasks() != null && pomodoro.getTasks().isEmpty()) {
             taskListVH.listView.setVisibility(View.GONE);

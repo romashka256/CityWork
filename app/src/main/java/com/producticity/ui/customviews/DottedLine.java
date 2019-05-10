@@ -15,7 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.producticity.R;
-import com.producticity.utils.commonutils.UIUtils;
+import com.producticity.utils.commonutils.ViewUtils;
 
 public class DottedLine extends View {
 
@@ -48,8 +48,8 @@ public class DottedLine extends View {
         mPaint = new Paint();
 
         mPaint.setColor(res.getColor(R.color.totalwhite));
-        int size = UIUtils.dpToPx(getResources(), 5);
-        int gap = UIUtils.dpToPx(getResources(), 20);
+        int size = ViewUtils.dpToPx(getResources(), 5);
+        int gap = ViewUtils.dpToPx(getResources(), 20);
         mPaint.setStyle(Paint.Style.FILL);
 
         // To get actually round dots, we define a circle...

@@ -1,23 +1,51 @@
 package com.producticity.utils.commonutils;
 
-import android.content.res.Resources;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Point;
+import android.graphics.Typeface;
+
+import java.util.Locale;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class UIUtils {
-    public static int spToPx(Resources resources, float px) {
-        return (int) (px * resources.getDisplayMetrics().scaledDensity);
+
+    private AssetManager assetManager;
+    private Context context;
+
+    @Getter
+    private Typeface light;
+    @Getter
+    private Typeface regular;
+    @Getter
+    private Typeface bold;
+    @Getter
+    private Typeface medium;
+
+    @Setter
+    private Point screenSize;
+
+    public UIUtils(Context context) {
+        assetManager = context.getApplicationContext().getAssets();
+
+        light = getFont("Roboto-Light.ttf");
+        bold = getFont("Roboto-Bold.ttf");
+        regular = getFont("Roboto-Regular.ttf");
+        medium = getFont("Roboto-Medium.ttf");
     }
 
-    public static int dpToPx(Resources resources, float dp) {
-        return (int) (dp * resources.getDisplayMetrics().density);
+    public Typeface getFont(String name) {
+        return Typeface.createFromAsset(assetManager,
+                String.format(Locale.US, "fonts/%s", name));
     }
 
-    public static float getFontHeight(Paint paint) {
-        // FontMetrics sF = paint.getFontMetrics();
-        // return sF.descent - sF.ascent;
-        Rect rect = new Rect();
-        paint.getTextBounds("1", 0, 1, rect);
-        return rect.height();
+
+    public Point getScreenSize() {
+        if (screenSize != null)
+            return screenSize;
+        else
+            return new Point();
     }
 }

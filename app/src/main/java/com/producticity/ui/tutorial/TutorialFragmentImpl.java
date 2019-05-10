@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.producticity.App;
 import com.producticity.R;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 
 import java.util.Locale;
 
@@ -41,7 +41,7 @@ public class TutorialFragmentImpl extends Fragment implements TutorialFragment {
     private String subTitleText;
     private int imageId;
 
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     public static Bundle getInstance(String titleText, String subTitleText, int imageId) {
         Bundle bundle = new Bundle();
@@ -59,7 +59,7 @@ public class TutorialFragmentImpl extends Fragment implements TutorialFragment {
 
         ButterKnife.bind(this, view);
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
 
         return view;
     }
@@ -88,10 +88,10 @@ public class TutorialFragmentImpl extends Fragment implements TutorialFragment {
 
         mSkipTV.setOnClickListener(this::onSkilClick);
 
-        mSkipTV.setTypeface(fontUtils.getLight());
-        mNextBtnTV.setTypeface(fontUtils.getMedium());
-        mSubTitleTV.setTypeface(fontUtils.getLight());
-        mTitleTV.setTypeface(fontUtils.getBold());
+        mSkipTV.setTypeface(UIUtils.getLight());
+        mNextBtnTV.setTypeface(UIUtils.getMedium());
+        mSubTitleTV.setTypeface(UIUtils.getLight());
+        mTitleTV.setTypeface(UIUtils.getBold());
 
     }
 

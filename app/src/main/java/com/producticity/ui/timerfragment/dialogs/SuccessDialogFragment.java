@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.producticity.App;
 import com.producticity.R;
 import com.producticity.model.db.models.Building;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 import com.producticity.ui.customviews.BuldingProgressView;
 import com.producticity.utils.commonutils.VectorUtils;
 
@@ -46,7 +46,7 @@ public class SuccessDialogFragment extends DialogFragment {
     @BindView(R.id.success_dialog_congrats1_tv)
     TextView mCongrats1TV;
 
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     private Building building;
     private static final String BUILDING = "buidling";
@@ -66,7 +66,7 @@ public class SuccessDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         building = Parcels.unwrap((Parcelable) getArguments().get(BUILDING));
@@ -96,10 +96,6 @@ public class SuccessDialogFragment extends DialogFragment {
     @Override
     public void onResume() {
         Window window = getDialog().getWindow();
-        Point size = new Point();
-
-        Display display = window.getWindowManager().getDefaultDisplay();
-        display.getSize(size);
 
         window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -122,8 +118,8 @@ public class SuccessDialogFragment extends DialogFragment {
     }
 
     private void setFonts() {
-        mToCityBtn.setTypeface(fontUtils.getRegular());
-        mCongrats1TV.setTypeface(fontUtils.getRegular());
-        mCongratsTV.setTypeface(fontUtils.getRegular());
+        mToCityBtn.setTypeface(UIUtils.getRegular());
+        mCongrats1TV.setTypeface(UIUtils.getRegular());
+        mCongratsTV.setTypeface(UIUtils.getRegular());
     }
 }

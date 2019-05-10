@@ -8,7 +8,7 @@ import com.producticity.model.db.DataBaseHelper;
 import com.producticity.utils.CityManager;
 import com.producticity.utils.SharedPrefensecUtils;
 import com.producticity.utils.chart.StatusticUtils;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 import com.producticity.utils.timer.Timer;
 import com.producticity.utils.timer.TimerBase;
 import com.producticity.viewmodels.timerfragment.TimerStrategyContext;
@@ -37,7 +37,7 @@ public interface AppComponent {
 
     Timer getTimer();
 
-    FontUtils getFontUtils();
+    UIUtils getFontUtils();
 
     TimerStrategyContext getTimerStrategyContext();
 }

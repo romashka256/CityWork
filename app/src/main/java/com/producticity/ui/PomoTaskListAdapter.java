@@ -12,7 +12,7 @@ import com.producticity.App;
 import com.producticity.R;
 import com.producticity.model.db.models.Task;
 import com.producticity.ui.listeners.OnTaskClickListener;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ public class PomoTaskListAdapter extends BaseAdapter {
     private List<Task> tasks;
     private LayoutInflater layoutInflater;
     private OnTaskClickListener onTaskClickListener;
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     public PomoTaskListAdapter(Context context, List<Task> tasks, OnTaskClickListener onTaskClickListener) {
         this.tasks = tasks;
         this.onTaskClickListener = onTaskClickListener;
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -56,7 +56,7 @@ public class PomoTaskListAdapter extends BaseAdapter {
 
         TextView taskText = view.findViewById(R.id.task_item_tasktext);
         taskText.setText(task.getText());
-        taskText.setTypeface(fontUtils.getRegular());
+        taskText.setTypeface(UIUtils.getRegular());
         CheckBox checkBox = view.findViewById(R.id.task_item_checkbox);
         checkBox.setChecked(task.isDone());
 

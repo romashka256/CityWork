@@ -32,7 +32,7 @@ import com.producticity.ui.timerfragment.dialogs.StopDialog;
 import com.producticity.ui.timerfragment.dialogs.SuccessDialogFragment;
 import com.producticity.ui.timerfragment.dialogs.TasksDialog;
 import com.producticity.utils.Calculator;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 import com.producticity.utils.commonutils.VectorUtils;
 import com.producticity.viewmodels.SharedViewModel;
 import com.producticity.viewmodels.interfaces.ITimerFragmentViewModel;
@@ -91,7 +91,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     ITimerFragmentViewModel iTimerFragmentViewModel;
     private MainActivity mainActivity;
     private SuccessDialogFragment successDialogFragment;
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
 
     @Override
@@ -105,7 +105,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         super.onCreate(savedInstanceState);
         Timber.i("onCreate");
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
 
         iTimerFragmentViewModel = ViewModelProviders.of(this).get(TimerFragmentViewModel.class);
         iTimerFragmentViewModel.getChangeTimeEventInPercent().observe(this, percent -> mBuidlingView.setProgress(percent));
@@ -176,10 +176,8 @@ public class TimerFragment extends Fragment implements ITimerFragment {
 
         ButterKnife.bind(this, view);
 
-        Display display = mainActivity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
+
+        int width = UIUtils.getScreenSize().x;
 
         circleTimer.setCircleRadius((int) (width * 0.3f));
 
@@ -365,15 +363,15 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     }
 
     private void setFonts() {
-        mTodoTV.setTypeface(fontUtils.getLight());
-        startButton.setTypeface(fontUtils.getRegular());
-        mRestTV.setTypeface(fontUtils.getLight());
-        mCityPeopleCountTV.setTypeface(fontUtils.getBold());
-        mCityPeopleCountTextTV.setTypeface(fontUtils.getLight());
-        circleTimer.setTimerTypeface(fontUtils.getRegular());
-        circleTimer.setSubtitleTypeface(fontUtils.getLight());
-        circleTimer.setNumbersTypeface(fontUtils.getRegular());
-        mBuidlingView.setTextTypeface(fontUtils.getRegular());
-        stopButton.setTypeface(fontUtils.getRegular());
+        mTodoTV.setTypeface(UIUtils.getLight());
+        startButton.setTypeface(UIUtils.getRegular());
+        mRestTV.setTypeface(UIUtils.getLight());
+        mCityPeopleCountTV.setTypeface(UIUtils.getBold());
+        mCityPeopleCountTextTV.setTypeface(UIUtils.getLight());
+        circleTimer.setTimerTypeface(UIUtils.getRegular());
+        circleTimer.setSubtitleTypeface(UIUtils.getLight());
+        circleTimer.setNumbersTypeface(UIUtils.getRegular());
+        mBuidlingView.setTextTypeface(UIUtils.getRegular());
+        stopButton.setTypeface(UIUtils.getRegular());
     }
 }

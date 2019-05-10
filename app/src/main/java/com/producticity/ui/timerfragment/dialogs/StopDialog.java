@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.producticity.App;
 import com.producticity.R;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +30,7 @@ public class StopDialog extends Dialog {
     TextView mMessageTV;
     private View.OnClickListener onClickListener;
 
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     public StopDialog(@NonNull Context context, View.OnClickListener onClickListener) {
         super(context);
@@ -53,7 +53,7 @@ public class StopDialog extends Dialog {
 
         setContentView(R.layout.stop_dialog);
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
 
         ButterKnife.bind(this);
 
@@ -62,9 +62,9 @@ public class StopDialog extends Dialog {
             dismiss();
         });
 
-        cancelBtn.setTypeface(fontUtils.getMedium());
-        stopBtn.setTypeface(fontUtils.getMedium());
-        mMessageTV.setTypeface(fontUtils.getRegular());
+        cancelBtn.setTypeface(UIUtils.getMedium());
+        stopBtn.setTypeface(UIUtils.getMedium());
+        mMessageTV.setTypeface(UIUtils.getRegular());
 
         cancelBtn.setOnClickListener(v -> dismiss());
 

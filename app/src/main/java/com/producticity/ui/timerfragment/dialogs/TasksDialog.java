@@ -28,7 +28,7 @@ import com.producticity.model.db.models.Pomodoro;
 import com.producticity.ui.FixedMaxHeightRecylerView;
 import com.producticity.ui.TaskListAdapter;
 import com.producticity.ui.timerfragment.ITaskDialog;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 import com.producticity.viewmodels.TasksDialogViewModel;
 import com.producticity.viewmodels.interfaces.ITasksDialogViewModel;
 
@@ -57,7 +57,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
 
     public static final String TAG = "TasksDialog";
 
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     private ITasksDialogViewModel iTasksDialogViewModel;
     private TaskListAdapter taskListAdapter;
@@ -70,7 +70,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
         context = App.getsAppComponent().getApplicationContext();
 
         iTasksDialogViewModel = ViewModelProviders.of(this).get(TasksDialogViewModel.class);
@@ -158,7 +158,7 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    editText.setTypeface(fontUtils.getLight());
+                    editText.setTypeface(UIUtils.getLight());
                 }
                 iTasksDialogViewModel.onTextChanged(s.toString());
             }
@@ -191,8 +191,8 @@ public class TasksDialog extends DialogFragment implements ITaskDialog {
     }
 
     private void setFonts() {
-        titleTV.setTypeface(fontUtils.getLight());
-        editText.setTypeface(fontUtils.getLight());
-        noTasksTV.setTypeface(fontUtils.getLight());
+        titleTV.setTypeface(UIUtils.getLight());
+        editText.setTypeface(UIUtils.getLight());
+        noTasksTV.setTypeface(UIUtils.getLight());
     }
 }

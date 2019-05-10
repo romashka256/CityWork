@@ -4,12 +4,14 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 
@@ -22,7 +24,7 @@ import com.producticity.ui.customviews.bottomnav.BubbleNavigationLinearView;
 import com.producticity.ui.customviews.bottomnav.BubbleToggleView;
 import com.producticity.ui.tutorial.TutorialActivity;
 import com.producticity.utils.SharedPrefensecUtils;
-import com.producticity.utils.commonutils.FontUtils;
+import com.producticity.utils.commonutils.UIUtils;
 import com.producticity.viewmodels.MainActivityViewModel;
 import com.producticity.viewmodels.SharedViewModel;
 import com.producticity.viewmodels.interfaces.IMainActivityViewModel;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private IMainActivityViewModel iMainActivityViewModel;
 
-    private FontUtils fontUtils;
+    private UIUtils UIUtils;
 
     private SharedPrefensecUtils sharedPrefensecUtils;
 
@@ -86,7 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        fontUtils = App.getsAppComponent().getFontUtils();
+        UIUtils = App.getsAppComponent().getFontUtils();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        UIUtils.setScreenSize(size);
 
         iMainActivityViewModel.getBuildingLiveData().observe(this, building -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getBuildingMutableLiveData().setValue(building);
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bottomBar.setTypeface(fontUtils.getRegular());
+        bottomBar.setTypeface(UIUtils.getRegular());
 
         iMainActivityViewModel.onCreate();
 
@@ -166,13 +173,13 @@ public class MainActivity extends AppCompatActivity {
             TimerService.TimerServiceBinder timerServiceBinder = (TimerService.TimerServiceBinder) service;
             timerService = timerServiceBinder.getService();
 
-          //  if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                Timber.i("Stop Timer");
+            //  if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            Timber.i("Stop Timer");
 
-                timerService.stopForeground(true);
-                timerService.stopSelf();
-                timerService.cancelTimer();
-           // }
+            timerService.stopForeground(true);
+            timerService.stopSelf();
+            timerService.cancelTimer();
+            // }
         }
 
         @Override
