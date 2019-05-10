@@ -20,15 +20,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="9e114ed4700fdeee15021d34821011a4cfa28a58"
-            />
+            android:value="9e114ed4700fdeee15021d34821011a4cfa28a58" />
 
         <activity
             android:name="com.producticity.ui.SettingsActivity"
@@ -44,6 +43,16 @@
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.producticity.ui.SplashScreen"
+            android:theme="@style/SplashTheme"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

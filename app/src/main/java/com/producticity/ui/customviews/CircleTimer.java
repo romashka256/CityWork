@@ -2,6 +2,7 @@ package com.producticity.ui.customviews;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -43,6 +44,8 @@ public class CircleTimer extends View {
     private float mGapBetweenTimerNumberAndText;
     private float mGapBetweenCircleAndLine;
     private float lineLength;
+    private float mCirleBtnLineWidth;
+    private float mCirleBtnLineHalfLength;
 
     //Paint
     private Paint mCirclePaint;
@@ -50,6 +53,7 @@ public class CircleTimer extends View {
     private Paint mProgressCirclePaintMoving;
     private Paint mTimeNumberPaint;
     private Paint mTimeNumbersPaint;
+    private Paint mCircleLineBtnPaint;
     private Paint mTimeTextPaint;
     private Paint mCircleButtonPaint;
     private Paint mLinePaint;
@@ -61,6 +65,8 @@ public class CircleTimer extends View {
     private static final float DEFAULT_LINE_LENGTH = 8;
     private static final float DEFAULT_LONGER_LINE_LENGTH = 15;
     private static final float DEFAULT_LINE_WIDTH = 1f;
+    private static final float DEFAULT_CIRCLE_BTN_LINE_WIDTH = 1.2f;
+    private static final float DEFAULT_CIRCLE_BTN_LINE_HALFLENGTH = 5f;
     private static final float DEFAULT_LONGER_LINE_WIDTH = 3f;
     private static final float DEFAULT_CIRCLE_BUTTON_RADIUS = 12;
     private static final float DEFAULT_CIRCLE_WIDTH = 3f;
@@ -76,7 +82,7 @@ public class CircleTimer extends View {
     private final int DEFAULT_TIMER_NUMBERS_COLOR = 0x5C000000;
     private final int DEFAULT_TIMER_TEXT_COLOR = 0x80FFFFFF;
     private final int DEFAULT_TIMER_MINUTES_COLOR = 0x59000000;
-    private final int DEFAULT_CIRCLE_BUTTON_LINES_COLOR = 0xC4C4C4;
+    private final int DEFAULT_CIRCLE_BUTTON_LINES_COLOR = 0xFFC4C4C4;
 
     //Colors
     private int mCircleColor;
@@ -146,6 +152,8 @@ public class CircleTimer extends View {
         mCircleLineWidth = dpToPx(DEFAULT_CIRCLE_WIDTH);
         mGapBetweenCircleAndLine = dpToPx(DEFAULT_GAP_BETWEEN_CIRCLE_AND_LINE);
         mTimerTextSize = dpToPx(DEFAULT_TIMER_TEXT_SIZE);
+        mCirleBtnLineWidth = dpToPx(DEFAULT_CIRCLE_BTN_LINE_WIDTH);
+        mCirleBtnLineHalfLength = dpToPx(DEFAULT_CIRCLE_BTN_LINE_HALFLENGTH);
 
         mCurrentTime = DEFAULT_MIN_TIME;
         minTime = DEFAULT_MIN_TIME;
@@ -159,6 +167,10 @@ public class CircleTimer extends View {
         mTimeNumberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTimeTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mProgressCirclePaintMoving = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCircleLineBtnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        mCircleLineBtnPaint.setColor(mCircleButtonLinesColor);
+        mCircleLineBtnPaint.setStrokeWidth(mCirleBtnLineWidth);
 
         mTimeTextPaint.setColor(mTimerTextColor);
         mTimeTextPaint.setTextSize(mTimerTextSize);
@@ -258,9 +270,16 @@ public class CircleTimer extends View {
 
             // Circle button
             canvas.rotate((float) Math.toDegrees(mCurrentRadian), mCx, mCy);
+            float circleCenter = mCy - mRadius;
+            canvas.drawCircle(mCx, circleCenter, mCircleButtonRadius, mCircleButtonPaint);
 
-            canvas.drawCircle(mCx, mCy - mRadius, mCircleButtonRadius, mCircleButtonPaint);
+            canvas.rotate((float) -Math.toDegrees(mCurrentRadian), mCx, circleCenter);
+            canvas.drawLine(mCx - mCirleBtnLineHalfLength, circleCenter + mCircleButtonRadius / 3, mCx + mCirleBtnLineHalfLength, circleCenter + mCircleButtonRadius / 3, mCircleLineBtnPaint);
+            canvas.drawLine(mCx - mCirleBtnLineHalfLength, circleCenter, mCx + mCirleBtnLineHalfLength, circleCenter, mCircleLineBtnPaint);
+            canvas.drawLine(mCx - mCirleBtnLineHalfLength, circleCenter - mCircleButtonRadius / 3, mCx + mCirleBtnLineHalfLength, circleCenter - mCircleButtonRadius / 3, mCircleLineBtnPaint);
+
             canvas.restore();
+
             // Timer Text
             canvas.save();
             canvas.drawText(HINT_TEXT, mCx, mCy + getFontHeight(mTimeNumberPaint) / 2 + mGapBetweenTimerNumberAndText + getFontHeight
