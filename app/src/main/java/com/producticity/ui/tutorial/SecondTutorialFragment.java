@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import androidx.navigation.Navigation;
-
 import com.producticity.R;
 
 public class SecondTutorialFragment extends TutorialFragmentImpl {
@@ -28,8 +26,8 @@ public class SecondTutorialFragment extends TutorialFragmentImpl {
     @Override
     public void onNextClick(View view) {
         super.onNextClick(view);
-        Navigation.findNavController(view).navigate(R.id.action_secondTutorialFragment_to_thirdTutorialFragment);
-        ((TutorialActivity) getActivity()).setSelectedTab(2);
+
+        getTutorialActivity().viewPager.setCurrentItem(2,true);
     }
 
     @Override

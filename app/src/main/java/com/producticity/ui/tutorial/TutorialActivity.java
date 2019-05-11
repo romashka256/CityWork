@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -19,6 +20,8 @@ public class TutorialActivity extends AppCompatActivity {
 
     @BindView(R.id.tutorial_activity_tablayout)
     TabLayout tabLayout;
+    @BindView(R.id.tutorial_viewpager)
+    ViewPager viewPager;
 
     private SharedPrefensecUtils sharedPrefensecUtils;
 
@@ -29,13 +32,6 @@ public class TutorialActivity extends AppCompatActivity {
 
         sharedPrefensecUtils = new SharedPrefensecUtils(this);
 
-//        if (!sharedPrefensecUtils.isFirstRun()) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-//            startActivity(intent);
-//            finish();
-//        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue));
@@ -43,17 +39,21 @@ public class TutorialActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        TutorialAdapter tutorialAdapter = new TutorialAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tutorialAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+
         tabLayout.setEnabled(false);
 
-        tabLayout.addTab(tabLayout.newTab(), true);
-
-        tabLayout.addTab(tabLayout.newTab());
-        tabLayout.addTab(tabLayout.newTab());
+//        tabLayout.addTab(tabLayout.newTab(), true);
+//        tabLayout.addTab(tabLayout.newTab());
+//        tabLayout.addTab(tabLayout.newTab());
 
         tabLayout.clearOnTabSelectedListeners();
 
-        LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
-        for(int i = 0; i < tabStrip.getChildCount(); i++) {
+        LinearLayout tabStrip = ((LinearLayout) tabLayout.getChildAt(0));
+        for (int i = 0; i < tabStrip.getChildCount(); i++) {
             tabStrip.getChildAt(i).setOnTouchListener((v, event) -> true);
         }
     }
