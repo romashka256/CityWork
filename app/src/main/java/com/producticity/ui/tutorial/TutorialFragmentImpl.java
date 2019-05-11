@@ -1,5 +1,6 @@
 package com.producticity.ui.tutorial;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 public class TutorialFragmentImpl extends Fragment implements TutorialFragment {
 
@@ -43,13 +45,13 @@ public class TutorialFragmentImpl extends Fragment implements TutorialFragment {
 
     private UIUtils UIUtils;
 
-    public static Bundle getInstance(String titleText, String subTitleText, int imageId) {
-        Bundle bundle = new Bundle();
-        bundle.putString("titleText", titleText);
-        bundle.putString("subTitleText", subTitleText);
-        bundle.putInt("imageId", imageId);
+    @Getter
+    private TutorialActivity tutorialActivity;
 
-        return bundle;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        tutorialActivity = (TutorialActivity) context;
     }
 
     @Nullable

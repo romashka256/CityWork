@@ -154,21 +154,24 @@ public class CityFragment extends Fragment {
                 }
 
                 if (prevItem != scrollTo) {
+                    cityTabsAdapter.setSelected(scrollTo);
                     tabRV.smoothScrollToPosition(scrollTo);
 
                     CityTabsAdapter.CityTabsAdapterVH viewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(scrollTo);
                     if (viewHolder != null) {
+                        Timber.i("to selected");
                         viewHolder.textView.setTextColor(Color.BLACK);
                         viewHolder.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg_selected, null));
                     }
 
                     CityTabsAdapter.CityTabsAdapterVH prevViewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(prevItem);
                     if (prevViewHolder != null) {
+                        Timber.i("to default");
                         prevViewHolder.textView.setTextColor(Color.WHITE);
                         prevViewHolder.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg, null));
                     }
 
-                    cityTabsAdapter.setSelected(scrollTo);
+                //    cityTabsAdapter.setSelected(scrollTo);
                     Timber.i("scrollTo : " + scrollTo);
                     prevItem = scrollTo;
                 }
