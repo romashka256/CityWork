@@ -1,9 +1,7 @@
 package com.producticity.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +30,15 @@ public class CityTabsAdapter extends RecyclerView.Adapter<CityTabsAdapter.CityTa
 
     private int selected;
 
+    private TextView previousSelected;
+
     public CityTabsAdapter(List<City> cities, Context context) {
         this.cities = cities;
         this.context = context;
         dates = new ArrayList<>();
         selected = 0;
+
+        setHasStableIds(true);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM");
 
@@ -59,22 +61,31 @@ public class CityTabsAdapter extends RecyclerView.Adapter<CityTabsAdapter.CityTa
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull CityTabsAdapterVH cityTabsAdapterVH, int i) {
         cityTabsAdapterVH.textView.setText(dates.get(i));
 
         Timber.i("to default adapter");
-        cityTabsAdapterVH.textView.setTextColor(Color.WHITE);
-        cityTabsAdapterVH.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg, null));
+        cityTabsAdapterVH.textView.setPressed(false);
 
-
+        Timber.i("pos : " + i + " // selected : " + selected);
         if (selected == i) {
-            Timber.i("to selected adapter");
-            cityTabsAdapterVH.textView.setTextColor(Color.BLACK);
-            cityTabsAdapterVH.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg_selected, null));
+            cityTabsAdapterVH.textView.setPressed(true);
+        }
+
+        if(previousSelected != null){
+            cityTabsAdapterVH.textView.setPressed(false);
         }
 
         if (i == 0)
             itemWidth = cityTabsAdapterVH.textView.getWidth();
+
+
+        previousSelected = cityTabsAdapterVH.textView;
     }
 
     @Override

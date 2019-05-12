@@ -94,7 +94,7 @@ public class NotificationUtils {
             mTimerNotificationBuilder.setVibrate(null);
         }
 
-        RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
+         RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
         //    RemoteViews notificationLayoutExpanded = new RemoteViews(context.getPackageName(), R.layout.notification_large);
 
 

@@ -3,7 +3,6 @@ package com.producticity.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -160,22 +158,18 @@ public class CityFragment extends Fragment {
                     CityTabsAdapter.CityTabsAdapterVH viewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(scrollTo);
                     if (viewHolder != null) {
                         Timber.i("to selected");
-                        viewHolder.textView.setTextColor(Color.BLACK);
-                        viewHolder.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg_selected, null));
+                        viewHolder.textView.setPressed(true);
                     }
 
                     CityTabsAdapter.CityTabsAdapterVH prevViewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(prevItem);
                     if (prevViewHolder != null) {
                         Timber.i("to default");
-                        prevViewHolder.textView.setTextColor(Color.WHITE);
-                        prevViewHolder.textView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.city_tab_bg, null));
+                        prevViewHolder.textView.setPressed(false)   ;
                     }
 
-                //    cityTabsAdapter.setSelected(scrollTo);
                     Timber.i("scrollTo : " + scrollTo);
                     prevItem = scrollTo;
                 }
-
             }
         });
 
