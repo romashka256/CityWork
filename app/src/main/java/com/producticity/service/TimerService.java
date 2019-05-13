@@ -23,6 +23,9 @@ import com.producticity.viewmodels.timerfragment.WorkTimerStrategy;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -100,8 +103,12 @@ public class TimerService extends Service implements TimerCallbacks {
                 timerStrategyContext.setTimerStrategy(new RestTimerStrategy());
             }
 
-            startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(Calculator.getMinutesAndSecondsFromSeconds(
-                    Calculator.getRemainingTime(building.getPomodoro().getStoptime()))));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+
+            startForeground(NotificationUtils.TIMER_NOTIFICATION_ID, notificationUtils.buildTimerNotification(
+                    Calculator.getMinutesAndSecondsFromSeconds(
+                            Calculator.getRemainingTime(building.getPomodoro().getStoptime())),
+                    simpleDateFormat.format(new Date(getPomodoro().getPomodoro().getStoptime()))));
 
             buildingImageId = getResources().getIdentifier(building.getCityIconName(), "drawable", getPackageName());
 

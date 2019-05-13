@@ -4,9 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import com.producticity.App;
+import com.producticity.Constants;
 import com.producticity.model.db.DBHelper;
 import com.producticity.model.db.models.Building;
 import com.producticity.model.db.models.City;
@@ -39,6 +41,9 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
     MutableLiveData<Building> buildingMutableLiveData = new MutableLiveData<>();
 
     @Getter
+    MutableLiveData<Integer> whatToShowLiveData = new MutableLiveData<>();
+
+    @Getter
     MutableLiveData<City> cityMutableLiveData = new MutableLiveData<>();
 
     @Override
@@ -66,6 +71,13 @@ public class MainActivityViewModel extends ViewModel implements IMainActivityVie
         //TODO INJECT
         notificationUtils = new NotificationUtils(context);
         cityUtils = new CityUtils();
+    }
+
+    @Override
+    public void processIntent(Intent intent) {
+        int result = intent.getIntExtra(Constants.TIMER_NOT_INTENT_KEY, 0);
+
+        whatToShowLiveData.setValue(result);
     }
 
     @Override

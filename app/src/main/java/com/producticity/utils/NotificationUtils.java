@@ -6,9 +6,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 
+import com.producticity.App;
+import com.producticity.Constants;
 import com.producticity.R;
 import com.producticity.ui.MainActivity;
 
@@ -24,16 +30,18 @@ public class NotificationUtils {
     private NotificationManager notificationManager;
     private Context context;
 
-    private RemoteViews mTimerCustomView;
-    private NotificationCompat mTimerNotification;
+    private SharedPrefensecUtils sharedPrefensecUtils;
     private NotificationCompat.Builder mTimerNotificationBuilder;
 
     private String timerNotTitle;
+    private Resources resources;
 
     public NotificationUtils(Context context) {
         this.context = context;
         timerNotTitle = context.getResources().getString(R.string.building_building);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        resources = context.getResources();
+        sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
     }
 
     public void showAlarmNotification() {
@@ -55,27 +63,42 @@ public class NotificationUtils {
             builder = new Notification.Builder(context);
         }
 
-        builder.setContentTitle("Здание построено")
-                .setSubText("Пора отдохнуть")
+        Intent smallRestIntent = new Intent(context, MainActivity.class);
+        Bundle smallRestIntentbundle = new Bundle();
+        smallRestIntentbundle.putInt(Constants.TIMER_NOT_INTENT_KEY, Constants.TIMER_NOT_INTENT_SMALLREST);
+        smallRestIntent.putExtras(smallRestIntentbundle);
+
+        Intent bigRestIntent = new Intent(context, MainActivity.class);
+        Bundle taskIntentBundle = new Bundle();
+        taskIntentBundle.putInt(Constants.TIMER_NOT_INTENT_KEY, Constants.TIMER_NOT_INTENT_BIGREST);
+        bigRestIntent.putExtras(taskIntentBundle);
+
+        PendingIntent smallRestIntentpendingIntent = PendingIntent.getActivity(context, 4, smallRestIntent, 0);
+        PendingIntent bigRestIntentpendingIntent = PendingIntent.getActivity(context, 5, bigRestIntent, 0);
+
+        builder.setContentTitle(resources.getString(R.string.success_not_title))
                 .setSmallIcon(R.drawable.small_wh)
-                .setContentText("Нажмите чтобы посмотреть")
+                .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.icongreen))
+                .addAction(R.drawable.ic_timer_icon_focused, sharedPrefensecUtils.getShortBreak() / 60 + " " + resources.getString(R.string.minute), smallRestIntentpendingIntent)
+                .addAction(R.drawable.ic_timer_icon_focused, sharedPrefensecUtils.getLongBreak() / 60 + " " + resources.getString(R.string.minute), bigRestIntentpendingIntent)
+                .setContentText(resources.getString(R.string.success_not_subtitle))
                 .setContentIntent(pendIntent);
 
         return builder.build();
     }
 
-    public void showTimerNotification(String time) {
+    public void showTimerNotification(String time, String endTime) {
         Timber.i("showTimerNotification : %s", time);
-        notificationManager.notify(TIMER_NOTIFICATION_ID, buildTimerNotification(time));
+        notificationManager.notify(TIMER_NOTIFICATION_ID, buildTimerNotification(time, endTime));
     }
 
     public void updateTimerNotification(String time, int percent, int imageId) {
-        mTimerNotificationBuilder.setSubText(timerNotTitle + " " + time);
+        mTimerNotificationBuilder.setSubText(time);
 
         notificationManager.notify(TIMER_NOTIFICATION_ID, mTimerNotificationBuilder.build());
     }
 
-    public Notification buildTimerNotification(String time) {
+    public Notification buildTimerNotification(String time, String endTime) {
         Timber.i("buildTimerNotification : %s", time);
         // Create an Intent for the activity you want to start
         Intent intentNotif = new Intent(context, MainActivity.class);
@@ -94,28 +117,29 @@ public class NotificationUtils {
             mTimerNotificationBuilder.setVibrate(null);
         }
 
-          RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
+        Intent stopIntent = new Intent(context, MainActivity.class);
+        Bundle stopIntentbundle = new Bundle();
+        stopIntentbundle.putInt(Constants.TIMER_NOT_INTENT_KEY, Constants.TIMER_NOT_INTENT_STOP);
+        stopIntent.putExtras(stopIntentbundle);
 
-        Intent deleteIntent = new Intent(context, MainActivity.class);
+        Intent taskIntent = new Intent(context, MainActivity.class);
+        Bundle taskIntentBundle = new Bundle();
+        taskIntentBundle.putInt(Constants.TIMER_NOT_INTENT_KEY, Constants.TIMER_NOT_INTENT_TASKS);
+        taskIntent.putExtras(taskIntentBundle);
 
-        Intent archiveIntent = new Intent(context, MainActivity.class);
+        PendingIntent taskpendingIntent = PendingIntent.getActivity(context, 2, taskIntent, 0);
+        PendingIntent stoppendingIntent = PendingIntent.getActivity(context, 3, stopIntent, 0);
 
-        mTimerNotificationBuilder.addAction(R.drawable.ic_timer_icon_focused, "Delete", PendingIntent.getActivity(context, TIMER_NOTIFICATION_ID, deleteIntent, 0));
-        mTimerNotificationBuilder.addAction(R.drawable.ic_timer_icon_focused, "Archive", PendingIntent.getActivity(context, TIMER_NOTIFICATION_ID, archiveIntent, 0));
-
-        mTimerNotificationBuilder.setContentIntent(pendIntent)
+        return mTimerNotificationBuilder.setContentIntent(pendIntent)
                 .setOngoing(true)
+                .addAction(R.drawable.ic_timer_icon_focused, context.getResources().getString(R.string.stop), stoppendingIntent)
+                .addAction(R.drawable.ic_timer_icon_focused, context.getResources().getString(R.string.tasks_dialog_title), taskpendingIntent)
+                .setContentText(context.getResources().getString(R.string.timer_not_subtitle) + " " +  endTime)
+                .setContentTitle(context.getResources().getString(R.string.timer_not_title))
                 .setShowWhen(false)
-             //   .setContent(notificationLayout)
-                .setSmallIcon(R.drawable.small_wh);
-
-        return mTimerNotificationBuilder.build();
-    }
-
-    private RemoteViews createTimerNotifLayout(String time) {
-        mTimerCustomView = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
-       // mTimerCustomView.setTextViewText(R.id.timer_notification_time, time);
-        return mTimerCustomView;
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                .setSmallIcon(R.drawable.small_wh)
+                .build();
     }
 
     public void closeTimerNotification() {

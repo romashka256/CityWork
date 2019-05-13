@@ -17,4 +17,7 @@ public class SharedViewModel extends ViewModel {
     @Getter
     MutableLiveData<City> cityMutableLiveData = new SingleLiveEvent<>();
 
+    @Getter
+    MutableLiveData<Integer> whatToShowLiveData = new SingleLiveEvent<>();
+
 }

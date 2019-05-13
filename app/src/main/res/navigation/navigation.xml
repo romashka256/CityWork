@@ -10,6 +10,8 @@
         android:name="com.producticity.ui.timerfragment.TimerFragment"
         android:label="timer_fragment"
         tools:layout="@layout/timer_fragment">
+        <argument android:name="action"
+            app:argType="string"/>
         <action
             android:id="@+id/action_timerFragment_to_cityFragment"
             app:destination="@id/cityFragment"

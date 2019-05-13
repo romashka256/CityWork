@@ -91,7 +91,7 @@ public class CityManager {
         long startTime = System.currentTimeMillis();
         long stopTime = startTime + timerValue * 1000;
 
-        pomodoro.setStarttime(startTime);    
+        pomodoro.setStarttime(startTime);
         pomodoro.setStoptime(stopTime);
         building.setPeople_count(calculatePeopleCount(startTime, stopTime));
 
@@ -135,7 +135,7 @@ public class CityManager {
     }
 
     public int prepareBeforeStart() {
-        if (pomodoro.getTimerState() != TimerState.REST && pomodoro.getTimerState() != TimerState.REST_ONGOING) {
+        if (pomodoro.getTimerState() != TimerState.REST && pomodoro.getTimerState() != TimerState.REST_ONGOING && pomodoro.getTimerState() != TimerState.WORK_COMPLETED) {
             pomodoro.setTimerState(TimerState.ONGOING);
             return TimerState.ONGOING;
         } else {

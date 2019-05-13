@@ -10,6 +10,12 @@ public class Constants {
     public final static String TIMER_SUCCES = "timer_success";
     public final static String TIMER_FAILURE = "timer_failure";
 
+    public final static int TIMER_NOT_INTENT_STOP = 123;
+    public final static int TIMER_NOT_INTENT_TASKS = 124;
+    public final static int TIMER_NOT_INTENT_SMALLREST = 125;
+    public final static int TIMER_NOT_INTENT_BIGREST = 126;
+
+    public final static String TIMER_NOT_INTENT_KEY = "intentType";
 
     public final static String DIALOG_SUCCESS_TAG = "dialog_success";
     public final static int DEFAULT_MIN_TIMER_VALUE = 600;

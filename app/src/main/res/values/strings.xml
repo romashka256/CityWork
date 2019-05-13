@@ -22,6 +22,10 @@
     <string name="cancel">Отмена</string>
     <string name="stop">Остановить</string>
     <string name="are_u_sure">Вы точно хотите \n остановить?</string>
+    <string name="timer_not_title">Ваше здание еще не построено</string>
+    <string name="timer_not_subtitle">Здание построится в </string>
+    <string name="success_not_title">Здание успешно построено</string>
+    <string name="success_not_subtitle">Выберите время отдыха</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>

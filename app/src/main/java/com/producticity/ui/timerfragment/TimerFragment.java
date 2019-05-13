@@ -19,7 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.navigation.NavArgument;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.producticity.App;
 import com.producticity.Constants;
@@ -92,6 +97,8 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     private MainActivity mainActivity;
     private SuccessDialogFragment successDialogFragment;
     private UIUtils UIUtils;
+
+    private StopDialog stopDialog;
 
 
     @Override
@@ -169,6 +176,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         });
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -193,10 +201,14 @@ public class TimerFragment extends Fragment implements ITimerFragment {
 
         startButton.setOnClickListener(v -> iTimerFragmentViewModel.onStartClicked());
 
-        stopButton.setOnClickListener(v -> new StopDialog(mainActivity, v1 -> {
+        stopDialog = new StopDialog(mainActivity, v1 -> {
             circleTimer.disable();
             iTimerFragmentViewModel.onStopClicked();
-        }).show());
+        });
+
+        stopButton.setOnClickListener(v -> {
+            stopDialog.show();
+        });
 
         mBuidlingView.setOnClickListener(v -> {
             //    iTimerFragmentViewModel.onDebugBtnClicked();
@@ -281,6 +293,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         if (successDialogFragment != null && successDialogFragment.getDialog() != null && successDialogFragment.getDialog().isShowing()) {
             successDialogFragment.dismiss();
         }
+
     }
 
     @Override
@@ -296,6 +309,25 @@ public class TimerFragment extends Fragment implements ITimerFragment {
 
         ViewModelProviders.of(mainActivity).get(SharedViewModel.class).getCityMutableLiveData().observe(mainActivity, city -> {
             iTimerFragmentViewModel.cityReceived(city);
+        });
+
+        ViewModelProviders.of(mainActivity).get(SharedViewModel.class).getWhatToShowLiveData().observe(mainActivity, what -> {
+            switch (what) {
+                case Constants.TIMER_NOT_INTENT_STOP:
+                    stopDialog.show();
+                    break;
+                case Constants.TIMER_NOT_INTENT_TASKS:
+                    TasksDialog.getInstance().show(mainActivity.getSupportFragmentManager(), TasksDialog.TAG);
+                    break;
+                case Constants.TIMER_NOT_INTENT_SMALLREST:
+                    Timber.i("TIMER_NOT_INTENT_SMALLREST");
+                    iTimerFragmentViewModel.on5MinRestClicked();
+                    break;
+                case Constants.TIMER_NOT_INTENT_BIGREST:
+                    Timber.i("TIMER_NOT_INTENT_BIGREST");
+                    iTimerFragmentViewModel.on10MinRestClicked();
+                    break;
+            }
         });
     }
 

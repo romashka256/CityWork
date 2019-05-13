@@ -15,7 +15,12 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 
+import androidx.navigation.NavArgument;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.producticity.App;
 import com.producticity.R;
@@ -39,30 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean mBound = false;
     private Intent intent;
 
-//    @BindView(R.id.nav_item)
-//    BottomNaigationLayout bottomNaigationLayout;
-//    @BindView(R.id.bottom_navigation_timer_btn)
-//    BottomNavigationItemView timerTabBtn;
-//    @BindView(R.id.bottom_navigation_city_btn)
-//    BottomNavigationItemView cityTabBtn;
-
     @BindView(R.id.bottom_bar_city)
     BubbleToggleView cityBtn;
     @BindView(R.id.bottom_bar_timer)
     BubbleToggleView timerBtn;
     @BindView(R.id.bottom_bar)
     BubbleNavigationLinearView bottomBar;
-
-//    @BindView(R.id.likes_icon_text)
-//    TextView likesIconText;
-//    @BindView(R.id.home_icon_text)
-//    TextView homeIconText;
-//    @BindView(R.id.home_icon)
-//    ImageView homeIcon;
-//    @BindView(R.id.likes_icon)
-//    ImageView likesIcon;
-
-    private int currentFragment;
 
     private IMainActivityViewModel iMainActivityViewModel;
 
@@ -73,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
 
@@ -87,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         intent = new Intent(getApplicationContext(), TimerService.class);
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        iMainActivityViewModel.processIntent(getIntent());
 
         UIUtils = App.getsAppComponent().getFontUtils();
 
@@ -103,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         iMainActivityViewModel.getCityMutableLiveData().observe(this, city -> {
             ViewModelProviders.of(this).get(SharedViewModel.class).getCityMutableLiveData().setValue(city);
             Timber.i("Last city posted");
+        });
+
+        iMainActivityViewModel.getWhatToShowLiveData().observe(this, what -> {
+            ViewModelProviders.of(this).get(SharedViewModel.class).getWhatToShowLiveData().setValue(what);
+            Timber.i("What to show posted");
         });
 
         MainActivity mainActivity = this;
@@ -122,13 +116,15 @@ public class MainActivity extends AppCompatActivity {
 
         iMainActivityViewModel.onCreate();
 
-        if (sharedPrefensecUtils.isFirstRun()) {
+       // if (sharedPrefensecUtils.isFirstRun()) {
+        if (true) {
             Intent intent = new Intent(this, TutorialActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
 
     }
+
 
     @Override
     protected void onResume() {
@@ -173,13 +169,11 @@ public class MainActivity extends AppCompatActivity {
             TimerService.TimerServiceBinder timerServiceBinder = (TimerService.TimerServiceBinder) service;
             timerService = timerServiceBinder.getService();
 
-            //  if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            Timber.i("Stop Timer");
+            Timber.i("Stop Service and Timer");
 
             timerService.stopForeground(true);
             timerService.stopSelf();
             timerService.cancelTimer();
-            // }
         }
 
         @Override
