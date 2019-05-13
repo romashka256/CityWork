@@ -28,8 +28,11 @@ public class NotificationUtils {
     private NotificationCompat mTimerNotification;
     private NotificationCompat.Builder mTimerNotificationBuilder;
 
+    private String timerNotTitle;
+
     public NotificationUtils(Context context) {
         this.context = context;
+        timerNotTitle = context.getResources().getString(R.string.building_building);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -67,11 +70,8 @@ public class NotificationUtils {
     }
 
     public void updateTimerNotification(String time, int percent, int imageId) {
-        mTimerCustomView.setTextViewText(R.id.timer_notification_time, time);
-        mTimerCustomView.setTextViewText(R.id.timer_notification_percentv, percent + "%");
-        mTimerCustomView.setImageViewResource(R.id.imageView, imageId);
-        mTimerCustomView.setImageViewResource(R.id.imageView4, R.drawable.ic_not_timer_icon);
-        mTimerCustomView.setProgressBar(R.id.timer_notification_progressbar, 100, percent, false);
+        mTimerNotificationBuilder.setSubText(timerNotTitle + " " + time);
+
         notificationManager.notify(TIMER_NOTIFICATION_ID, mTimerNotificationBuilder.build());
     }
 
@@ -94,22 +94,27 @@ public class NotificationUtils {
             mTimerNotificationBuilder.setVibrate(null);
         }
 
-         RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
-        //    RemoteViews notificationLayoutExpanded = new RemoteViews(context.getPackageName(), R.layout.notification_large);
+          RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
 
+        Intent deleteIntent = new Intent(context, MainActivity.class);
+
+        Intent archiveIntent = new Intent(context, MainActivity.class);
+
+        mTimerNotificationBuilder.addAction(R.drawable.ic_timer_icon_focused, "Delete", PendingIntent.getActivity(context, TIMER_NOTIFICATION_ID, deleteIntent, 0));
+        mTimerNotificationBuilder.addAction(R.drawable.ic_timer_icon_focused, "Archive", PendingIntent.getActivity(context, TIMER_NOTIFICATION_ID, archiveIntent, 0));
 
         mTimerNotificationBuilder.setContentIntent(pendIntent)
                 .setOngoing(true)
-                .setContent(notificationLayout)
-                .setSmallIcon(R.drawable.small_wh)
-                .setContent(createTimerNotifLayout(time));
+                .setShowWhen(false)
+             //   .setContent(notificationLayout)
+                .setSmallIcon(R.drawable.small_wh);
 
         return mTimerNotificationBuilder.build();
     }
 
     private RemoteViews createTimerNotifLayout(String time) {
         mTimerCustomView = new RemoteViews(context.getPackageName(), R.layout.timer_notification);
-        mTimerCustomView.setTextViewText(R.id.timer_notification_time, time);
+       // mTimerCustomView.setTextViewText(R.id.timer_notification_time, time);
         return mTimerCustomView;
     }
 
