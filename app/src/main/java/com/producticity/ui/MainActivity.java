@@ -116,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         iMainActivityViewModel.onCreate();
 
-       // if (sharedPrefensecUtils.isFirstRun()) {
-        if (true) {
+        if (sharedPrefensecUtils.isFirstRun()) {
             Intent intent = new Intent(this, TutorialActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

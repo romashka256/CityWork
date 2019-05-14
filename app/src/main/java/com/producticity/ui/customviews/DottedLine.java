@@ -20,6 +20,7 @@ import com.producticity.utils.commonutils.ViewUtils;
 public class DottedLine extends View {
 
     private Paint mPaint;
+    private LinearGradient linearGradient;
 
     public DottedLine(Context context) {
         super(context);
@@ -36,7 +37,6 @@ public class DottedLine extends View {
         init();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DottedLine(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -62,12 +62,14 @@ public class DottedLine extends View {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setShader(new LinearGradient(0f, 0f, 0f, getHeight(), Color.TRANSPARENT, Color.WHITE, Shader.TileMode.MIRROR));
+        linearGradient = new LinearGradient(0f, 0f, 0f, getHeight(), Color.TRANSPARENT, Color.WHITE, Shader.TileMode.MIRROR);
+        mPaint.setShader(linearGradient);
 
         canvas.drawLine(getWidth() / 2, getHeight(), getWidth() / 2, 0, mPaint);
     }
