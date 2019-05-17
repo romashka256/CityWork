@@ -322,7 +322,8 @@ public class CircleTimer extends View {
                         mCurrentRadian = 0;
                     }
                     if (mCurrentRadian >= minRadian) {
-                        mCurrentTime = (int) (60 / (2 * Math.PI) * mCurrentRadian * 60);
+                        mCurrentTime = (int) Math.round(60 / (2 * Math.PI) * mCurrentRadian * 60);
+                        mCurrentTime += 0;
                     } else {
                         mCurrentRadian = minRadian;
                         mCurrentTime = minTime;

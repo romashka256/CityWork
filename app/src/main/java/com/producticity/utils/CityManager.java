@@ -115,13 +115,11 @@ public class CityManager {
 
     public int setComleted() {
         int toreturn = 0;
-      //  if (pomodoro.getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
-        if (pomodoro.getTimerState() == TimerState.ONGOING) {
+        if (pomodoro.getTimerState() == TimerState.ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStoptime()) <= 0) {
             pomodoro.setTimerState(TimerState.WORK_COMPLETED);
             cityPeopleCount += building.getPeople_count();
             toreturn = TimerState.WORK_COMPLETED;
-     //   } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStopresttime()) <= 0) {
-        } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING) {
+        } else if (pomodoro.getTimerState() == TimerState.REST_ONGOING && Calculator.getRemainingTime(building.getPomodoro().getStopresttime()) <= 0) {
             pomodoro.setTimerState(TimerState.COMPLETED);
             toreturn = TimerState.COMPLETED;
         }

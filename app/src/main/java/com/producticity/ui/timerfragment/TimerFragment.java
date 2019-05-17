@@ -359,7 +359,7 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         startButton.setVisibility(View.VISIBLE);
         mTodoTV.setVisibility(View.VISIBLE);
         circleTimer.disable();
-        //  refreshBuildingView();
+      //  refreshBuildingView();
         mBuidlingView.setVisibility(View.VISIBLE);
         circleTimer.setTime(iTimerFragmentViewModel.getTimerValue());
     }
