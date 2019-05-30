@@ -216,6 +216,8 @@ public class LineChart extends View {
 
         for (int i = 0; i < bars.size(); i++) {
             RectF rectF = bars.get(i);
+            if(rectF == null)
+                continue;
             if (selected) {
                 if (selectedIndex == i) {
                     canvas.drawRect(rectF, selectedBarPaint);
