@@ -34,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import lombok.Getter;
 import timber.log.Timber;
 
@@ -86,7 +87,12 @@ public class CityFragment extends Fragment {
     private Context context;
     private UIUtils UIUtils;
 
+    private boolean cityScrolling = false;
+
+    private int currentTab = 0;
     private int prevItem = 0;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,7 @@ public class CityFragment extends Fragment {
         cityFragmentViewModel = ViewModelProviders.of(this).get(CityFragmentViewModel.class);
 
         cityFragmentViewModel.onCreate();
+
     }
 
     @Nullable
@@ -137,12 +144,13 @@ public class CityFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                cityListlinearLayoutManager.setMillisPerInch(200f);
 
                 int item1 = cityListlinearLayoutManager.findFirstVisibleItemPosition();
                 int item2 = cityListlinearLayoutManager.findLastCompletelyVisibleItemPosition();
                 int item3 = cityListlinearLayoutManager.findFirstCompletelyVisibleItemPosition();
 
-                int scrollTo = 0;
+                int scrollTo;
                 if (item2 != -1) {
                     scrollTo = item2;
                 } else if (item3 != -1) {
@@ -152,25 +160,37 @@ public class CityFragment extends Fragment {
                 }
 
                 if (prevItem != scrollTo) {
-                    cityTabsAdapter.setSelected(scrollTo);
-                    tabRV.smoothScrollToPosition(scrollTo);
+                    currentTab = scrollTo;
 
-                    CityTabsAdapter.CityTabsAdapterVH viewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(scrollTo);
-                    if (viewHolder != null) {
-                        Timber.i("to selected");
-                        viewHolder.textView.setPressed(true);
-                    }
+                    if (cityScrolling)
+                        tabRV.smoothScrollToPosition(scrollTo);
 
-                    CityTabsAdapter.CityTabsAdapterVH prevViewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(prevItem);
-                    if (prevViewHolder != null) {
-                        Timber.i("to default");
-                        prevViewHolder.textView.setPressed(false)   ;
-                    }
+                    changeTabState(scrollTo, true);
+                    changeTabState(prevItem, false);
+
 
                     Timber.i("scrollTo : " + scrollTo);
                     prevItem = scrollTo;
                 }
             }
+        });
+
+        tabRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                changeTabState(currentTab, true);
+            }
+        });
+
+        recyclerView.setOnTouchListener((v, event) -> {
+            cityScrolling = true;
+            CityTabsAdapter.CityTabsAdapterVH viewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(currentTab);
+            if (viewHolder != null) {
+                Timber.i("to selected");
+                viewHolder.textView.setPressed(true);
+            }
+            return false;
         });
 
 
@@ -181,7 +201,12 @@ public class CityFragment extends Fragment {
 
         cityFragmentViewModel.getCitiesLoaded().observe(this, cities -> {
             List<City> cityList = cities.subList(0, 14);
-            cityTabsAdapter = new CityTabsAdapter(cityList, context);
+            cityTabsAdapter = new CityTabsAdapter(cityList, context, pos -> {
+                cityScrolling = false;
+                cityListlinearLayoutManager.setMillisPerInch(50f);
+                recyclerView.smoothScrollToPosition(pos);
+                cityTabsAdapter.setSelected(pos);
+            });
 
             //TODO ITEMVIEW WIDTH
 
@@ -231,6 +256,13 @@ public class CityFragment extends Fragment {
         cityFragmentViewModel.onDaySelected();
     }
 
+    private void changeTabState(int position, boolean state) {
+        CityTabsAdapter.CityTabsAdapterVH viewHolder = (CityTabsAdapter.CityTabsAdapterVH) tabRV.findViewHolderForAdapterPosition(position);
+        if (viewHolder != null) {
+            viewHolder.textView.setPressed(state);
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -260,6 +292,18 @@ public class CityFragment extends Fragment {
         mPeopleCountTextTV.setTypeface(UIUtils.getLight());
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.clear();
+    }
 
     private void initStatTabs() {
         pomoCountTV = pomoStat.findViewById(R.id.text_stat_item_number);

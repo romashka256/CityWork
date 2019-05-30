@@ -8,7 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
+import lombok.Setter;
+
 public class SmoothScrollLinearLayManager extends LinearLayoutManager {
+
+    @Setter
+    private float millisPerInch = 200f;
 
     public SmoothScrollLinearLayManager(Context context) {
         super(context);
@@ -26,7 +31,6 @@ public class SmoothScrollLinearLayManager extends LinearLayoutManager {
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
         final LinearSmoothScroller linearSmoothScroller =
                 new LinearSmoothScroller(recyclerView.getContext()) {
-                    private static final float MILLISECONDS_PER_INCH = 200f;
 
                     @Override
                     public PointF computeScrollVectorForPosition(int targetPosition) {
@@ -37,10 +41,12 @@ public class SmoothScrollLinearLayManager extends LinearLayoutManager {
                     @Override
                     protected float calculateSpeedPerPixel
                             (DisplayMetrics displayMetrics) {
-                        return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
+                        return millisPerInch / displayMetrics.densityDpi;
                     }
                 };
         linearSmoothScroller.setTargetPosition(position);
         startSmoothScroll(linearSmoothScroller);
     }
+
+
 }
