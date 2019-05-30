@@ -15,12 +15,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 
-import androidx.navigation.NavArgument;
-import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
-import androidx.navigation.NavInflater;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.producticity.App;
 import com.producticity.R;
@@ -116,20 +111,17 @@ public class MainActivity extends AppCompatActivity {
 
         iMainActivityViewModel.onCreate();
 
-       // if (sharedPrefensecUtils.isFirstRun()) {
-        if (true) {
+        if (sharedPrefensecUtils.isFirstRun()) {
             Intent intent = new Intent(this, TutorialActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
     }
-
-
-    @Override
+        @Override
     protected void onResume() {
         super.onResume();
         Timber.i("onResume");
+
         bindService(intent, serviceConnection, 0);
         if (mBound) {
             timerService.stopForeground(true);

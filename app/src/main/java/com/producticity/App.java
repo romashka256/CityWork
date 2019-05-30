@@ -2,11 +2,10 @@ package com.producticity;
 
 import android.app.Application;
 
-import com.producticity.BuildConfig;
+import com.crashlytics.android.Crashlytics;
 import com.producticity.di.AppComponent;
 import com.producticity.di.DaggerAppComponent;
 import com.producticity.di.modules.AppModule;
-import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
