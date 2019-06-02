@@ -29,14 +29,6 @@
             android:value="9e114ed4700fdeee15021d34821011a4cfa28a58" />
 
         <activity
-            android:name="com.producticity.ui.SettingsActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="com.producticity.ui.tutorial.TutorialActivity"
             android:noHistory="true"
             android:screenOrientation="portrait">

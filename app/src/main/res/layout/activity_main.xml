@@ -17,7 +17,7 @@
         app:navGraph="@navigation/navigation"
         tools:layout_editor_absoluteX="0dp" />
 
-    <com.producticity.ui.customviews.bottomnav.BubbleNavigationLinearView
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navigation_height"
@@ -28,40 +28,101 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.producticity.ui.customviews.bottomnav.BubbleToggleView
-            android:id="@+id/bottom_bar_timer"
+        <LinearLayout
+            android:id="@+id/bottom_bar_todo_btn_block"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:bt_active="true"
-            app:bt_colorActive="@color/nav_icon_color"
-            app:bt_colorInactive="@color/nav_icon_color"
-            app:bt_icon="@drawable/ic_timer_icon_focused"
-            app:bt_padding="12dp"
-            app:bt_leftPadding="24dp"
-            app:bt_rightPadding="24dp"
-            app:bt_badgeTextSize="12sp"
-            app:bt_shape="@drawable/transitions_navigation_bg"
-            app:bt_title="@string/timer"
-            app:bt_titlePadding="8dp" />
+            android:clickable="true"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bottom_bar_timer_btn_block"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.producticity.ui.customviews.bottomnav.BubbleToggleView
-            android:id="@+id/bottom_bar_city"
+            <ImageView
+                android:id="@+id/bottom_bar_todo"
+                android:duplicateParentState="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/selector_todo_icon" />
+
+            <TextView
+                android:id="@+id/bottom_bar_todo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/tasks"
+                android:duplicateParentState="true"
+                android:textColor="@drawable/selector_bottobnav_text"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_timer_btn_block"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:bt_active="true"
-            app:bt_colorActive="@color/nav_icon_color"
-            app:bt_colorInactive="@color/nav_icon_color"
-            app:bt_icon="@drawable/ic_city_icon_focused"
-            app:bt_padding="12dp"
-            app:bt_leftPadding="24dp"
-            app:bt_badgeTextSize="12sp"
-            app:bt_rightPadding="24dp"
-            app:bt_shape="@drawable/transitions_navigation_bg"
-            app:bt_title="@string/city"
-            app:bt_titlePadding="8dp" />
+            android:orientation="vertical"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bottom_bar_city_btn_block"
+            app:layout_constraintStart_toEndOf="@+id/bottom_bar_todo_btn_block"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/bottom_bar_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="true"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/selector_timer_icon" />
+
+            <TextView
+                android:id="@+id/bottom_bar_timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="true"
+                android:layout_marginTop="3dp"
+                android:text="@string/timer"
+                android:textColor="@drawable/selector_bottobnav_text"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_city_btn_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bottom_bar_timer_btn_block"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/bottom_bar_city"
+                android:layout_width="wrap_content"
+                android:duplicateParentState="true"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/selector_city_icon" />
+
+            <TextView
+                android:id="@+id/bottom_bar_city_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:duplicateParentState="true"
+                android:text="@string/city"
+                android:textColor="@drawable/selector_bottobnav_text"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <!-- Add more child items here - max upto 5 -->
 
-    </com.producticity.ui.customviews.bottomnav.BubbleNavigationLinearView>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

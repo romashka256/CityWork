@@ -9,19 +9,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
 import com.producticity.App;
 import com.producticity.R;
 import com.producticity.service.TimerService;
-import com.producticity.ui.customviews.bottomnav.BubbleNavigationLinearView;
-import com.producticity.ui.customviews.bottomnav.BubbleToggleView;
 import com.producticity.ui.tutorial.TutorialActivity;
 import com.producticity.utils.SharedPrefensecUtils;
 import com.producticity.utils.commonutils.UIUtils;
@@ -31,26 +33,46 @@ import com.producticity.viewmodels.interfaces.IMainActivityViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TimerService timerService;
     private boolean mBound = false;
     private Intent intent;
 
+    @BindView(R.id.bottom_bar_city_btn_block)
+    LinearLayout cityBtnBlock;
+    @BindView(R.id.bottom_bar_timer_btn_block)
+    LinearLayout timerBtnBlock;
+    @BindView(R.id.bottom_bar_todo_btn_block)
+    LinearLayout todoBtnBlock;
     @BindView(R.id.bottom_bar_city)
-    BubbleToggleView cityBtn;
+    ImageView cityBtn;
     @BindView(R.id.bottom_bar_timer)
-    BubbleToggleView timerBtn;
+    ImageView timerBtn;
+    @BindView(R.id.bottom_bar_todo)
+    ImageView todoBtn;
+    @BindView(R.id.bottom_bar_city_text)
+    TextView cityBtnTV;
+    @BindView(R.id.bottom_bar_timer_text)
+    TextView timerBtnTV;
+    @BindView(R.id.bottom_bar_todo_text)
+    TextView todoBtnTV;
     @BindView(R.id.bottom_bar)
-    BubbleNavigationLinearView bottomBar;
+    ConstraintLayout bottomBar;
 
+    private NavigationHandler navigationHandler;
     private IMainActivityViewModel iMainActivityViewModel;
 
     private UIUtils UIUtils;
 
     private SharedPrefensecUtils sharedPrefensecUtils;
+
+    private Unbinder unbinder;
+
+    private int currentItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         sharedPrefensecUtils = App.getsAppComponent().getSharedPrefs();
+        navigationHandler = new NavigationHandler();
+        UIUtils = App.getsAppComponent().getFontUtils();
+        intent = new Intent(getApplicationContext(), TimerService.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -66,13 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
-        intent = new Intent(getApplicationContext(), TimerService.class);
+        unbinder = ButterKnife.bind(this);
 
         iMainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         iMainActivityViewModel.processIntent(getIntent());
 
-        UIUtils = App.getsAppComponent().getFontUtils();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -94,22 +117,11 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("What to show posted");
         });
 
-        MainActivity mainActivity = this;
-
-        bottomBar.setNavigationChangeListener((view, position) -> {
-            switch (position) {
-                case 1:
-                    Navigation.findNavController(mainActivity, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
-                    break;
-                case 0:
-                    Navigation.findNavController(mainActivity, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
-                    break;
-            }
-        });
-
-        bottomBar.setTypeface(UIUtils.getRegular());
+        initBottomNavigation();
 
         iMainActivityViewModel.onCreate();
+
+
 
         if (sharedPrefensecUtils.isFirstRun()) {
             Intent intent = new Intent(this, TutorialActivity.class);
@@ -117,7 +129,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-        @Override
+
+    @Override
+    public void onClick(View v) {
+        Timber.i("onClick");
+        switch (v.getId()) {
+            case R.id.bottom_bar_timer_btn_block:
+                navigationHandler.clicked(NavigationHandler.TIMER_ITEM, v);
+                break;
+            case R.id.bottom_bar_city_btn_block:
+                navigationHandler.clicked(NavigationHandler.CITY_ITEM, v);
+                break;
+            case R.id.bottom_bar_todo_btn_block:
+                navigationHandler.clicked(NavigationHandler.TODO_ITEM, v);
+                break;
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Timber.i("onResume");
@@ -149,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         iMainActivityViewModel.onDestroy();
+        unbinder.unbind();
         Timber.i("onDestroy");
     }
 
@@ -174,6 +204,34 @@ public class MainActivity extends AppCompatActivity {
             Timber.i("onServiceDisconnected");
         }
     };
+
+    private void initBottomNavigation(){
+        todoBtnBlock.setOnClickListener(this);
+        timerBtnBlock.setOnClickListener(this);
+        cityBtnBlock.setOnClickListener(this);
+
+        timerBtnBlock.setSelected(true);
+        navigationHandler.init(1, timerBtnBlock);
+
+        navigationHandler.setOnButtomNavItemChangedListener(((view, item) -> {
+            switch (item) {
+                case NavigationHandler.CITY_ITEM:
+                    Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_timerFragment_to_cityFragment);
+
+                    break;
+                case NavigationHandler.TIMER_ITEM:
+                    Navigation.findNavController(this, R.id.nav_host).navigate(R.id.action_cityFragment_to_timerFragment);
+
+                    break;
+                case NavigationHandler.TODO_ITEM:
+
+                    break;
+            }
+            view.setSelected(true);
+            if (navigationHandler.getPreviousView() != null)
+                navigationHandler.getPreviousView().setSelected(false);
+        }));
+    }
 
     public void showBottomNav() {
         bottomBar.setVisibility(View.VISIBLE);
