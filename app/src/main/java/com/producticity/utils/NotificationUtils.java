@@ -133,7 +133,6 @@ public class NotificationUtils {
         return mTimerNotificationBuilder.setContentIntent(pendIntent)
                 .setOngoing(true)
                 .addAction(R.drawable.ic_timer_icon_focused, context.getResources().getString(R.string.stop), stoppendingIntent)
-                .addAction(R.drawable.ic_timer_icon_focused, context.getResources().getString(R.string.tasks_dialog_title), taskpendingIntent)
                 .setContentText(context.getResources().getString(R.string.timer_not_subtitle) + " " +  endTime)
                 .setContentTitle(context.getResources().getString(R.string.timer_not_title))
                 .setShowWhen(false)

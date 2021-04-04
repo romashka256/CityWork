@@ -73,10 +73,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
     ImageView mSettingsBtn;
     @BindView(R.id.timer_fragment_building)
     BuldingProgressView mBuidlingView;
-    @BindView(R.id.timer_fragment_todobtn)
-    LinearLayout mTodoBtn;
-    @BindView(R.id.timer_fragment_todotv)
-    TextView mTodoTV;
     @BindView(R.id.timer_fragment_resttv)
     TextView mRestTV;
     @BindView(R.id.toolbar_share_iv)
@@ -248,15 +244,10 @@ public class TimerFragment extends Fragment implements ITimerFragment {
             Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_settingsFragment);
         });
 
-        mTodoBtn.setOnClickListener(v -> {
-
-            TasksDialog.getInstance().show(mainActivity.getSupportFragmentManager(), TasksDialog.TAG);
-            // Navigation.findNavController(v).navigate(R.id.action_timerFragment_to_tasksDialog);
-        });
-
         mShareIV.setOnClickListener(v -> {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Producticity");
             String shareBody = "https://play.google.com/apps/testing/com.producticity";
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
@@ -293,7 +284,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         if (successDialogFragment != null && successDialogFragment.getDialog() != null && successDialogFragment.getDialog().isShowing()) {
             successDialogFragment.dismiss();
         }
-
     }
 
     @Override
@@ -357,7 +347,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         m10minRest.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
         startButton.setVisibility(View.VISIBLE);
-        mTodoTV.setVisibility(View.VISIBLE);
         circleTimer.disable();
       //  refreshBuildingView();
         mBuidlingView.setVisibility(View.VISIBLE);
@@ -372,7 +361,6 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         stopButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.VISIBLE);
-        mTodoTV.setVisibility(View.GONE);
         mBuidlingView.setVisibility(View.INVISIBLE);
         circleTimer.setTime(0);
         circleTimer.enable();
@@ -389,13 +377,11 @@ public class TimerFragment extends Fragment implements ITimerFragment {
         stopButton.setVisibility(View.VISIBLE);
         startButton.setVisibility(View.GONE);
         m5minRest.setVisibility(View.GONE);
-        mTodoTV.setVisibility(View.VISIBLE);
         m10minRest.setVisibility(View.GONE);
         mBuidlingView.setVisibility(View.VISIBLE);
     }
 
     private void setFonts() {
-        mTodoTV.setTypeface(UIUtils.getLight());
         startButton.setTypeface(UIUtils.getRegular());
         mRestTV.setTypeface(UIUtils.getLight());
         mCityPeopleCountTV.setTypeface(UIUtils.getBold());

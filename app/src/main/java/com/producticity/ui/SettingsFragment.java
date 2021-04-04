@@ -32,8 +32,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     ImageView backButtomIV;
     @BindView(R.id.settings_long_winnotif_block)
     RelativeLayout winnotifBlock;
-    @BindView(R.id.settings_long_deleteafter24_block)
-    RelativeLayout deleteAfter24Block;
     @BindView(R.id.settings_long_startendsound_block)
     RelativeLayout startendsoundBlock;
     @BindView(R.id.settings_long_notifbar_block)
@@ -44,8 +42,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     LinearLayout longBreakBlock;
     @BindView(R.id.settings_long_winnotif_switch)
     ToggleButton winnotifSwitch;
-    @BindView(R.id.settings_long_deleteafter24_switch)
-    ToggleButton deleteAfter24Switch;
     @BindView(R.id.settings_long_startendsound_switch)
     ToggleButton startendsoundSwitch;
     @BindView(R.id.settings_long_notifbar_switch)
@@ -95,9 +91,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         if (settingsViewModel.getIsWinNotifEnabled())
             winnotifSwitch.toggle();
 
-        if (settingsViewModel.getIsDelete24HEnabled())
-            deleteAfter24Switch.toggle();
-
         if (settingsViewModel.getIsNotifBarEnabled())
             notifbarSwitch.toggle();
 
@@ -106,10 +99,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         winnotifSwitch.setOnToggleChanged(on -> {
             settingsViewModel.onWinOnNotifToggleChanged(on);
-        });
-
-        deleteAfter24Switch.setOnToggleChanged(on -> {
-            settingsViewModel.on24HDeleteToggleChanged(on);
         });
 
         startendsoundSwitch.setOnToggleChanged(on -> {
@@ -131,7 +120,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         });
 
         winnotifBlock.setOnClickListener(this);
-        deleteAfter24Block.setOnClickListener(this);
         startendsoundBlock.setOnClickListener(this);
         notifbarBlock.setOnClickListener(this);
 
@@ -176,9 +164,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.settings_long_winnotif_block:
                 winnotifSwitch.toggle();
-                break;
-            case R.id.settings_long_deleteafter24_block:
-                deleteAfter24Switch.toggle();
                 break;
             case R.id.settings_long_startendsound_block:
                 startendsoundSwitch.toggle();
