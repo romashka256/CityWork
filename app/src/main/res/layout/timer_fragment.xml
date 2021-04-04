@@ -40,35 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circle_timer">
 
-
-        <LinearLayout
-            android:id="@+id/timer_fragment_todobtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/timer_fragment_todoiv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/todo_icon_bg"
-                android:padding="15dp"
-                app:srcCompat="@drawable/todo_icon" />
-
-
-            <TextView
-                android:id="@+id/timer_fragment_todotv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:text="@string/tasks_dialog_title"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
-
         <Button
             android:id="@+id/timer_fragment_10min_rest"
             style="@style/transparentbtn"
@@ -85,13 +56,12 @@
             style="@style/whitebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginEnd="16dp"
             android:text="5 минут"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/timer_fragment_10min_rest"
-            app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -99,12 +69,11 @@
             style="@style/transparentbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:text="Остановить"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -112,12 +81,11 @@
             style="@style/whitebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:text="Старт"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/timer_fragment_todobtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
@@ -138,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/rest_picture"
+            app:srcCompat="@drawable/rest_picture"
             android:layout_weight="1" />
 
         <TextView
